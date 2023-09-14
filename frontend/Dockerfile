@@ -30,3 +30,6 @@ EXPOSE 80
 
 # Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
+
+# docker build -t cs3219-web .
+# docker run -p 8080:80 cs3219-web
