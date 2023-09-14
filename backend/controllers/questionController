@@ -1,0 +1,14 @@
+const Question = require('../models/question');
+
+module.exports = {
+    // Controller function to get questions
+    getQuestions: (req, res) => {
+        Question.find()
+        .then((questions) => {
+            res.json(questions);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'Error fetching questions' });
+        });
+    },
+};
