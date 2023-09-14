@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  web:
+    container_name: cs3219-web
+    image: cs3219-web
+    build: ./frontend
+    ports:
+      - "20:3000"
