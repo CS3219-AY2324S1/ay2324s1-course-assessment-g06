@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install --silent
 
 # Copy the rest of the application code
-COPY ./build .
+COPY . ./
 
 # Build the app
 RUN npm run build
@@ -20,7 +20,7 @@ RUN npm run build
 FROM arm64v8/nginx:latest
 
 # Copy NGINX configuration file
-# COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy files to NGINX
 COPY --from=build /app/build /usr/share/nginx/html
