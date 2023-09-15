@@ -5,6 +5,8 @@ const questionSchema = new mongoose.Schema({
   frontendQuestionId: Number,
   difficulty: String,
   content: String,
+  category: String, 
+  topics: String,
 });
 
 const Question = mongoose.model('Question', questionSchema);

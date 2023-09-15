@@ -1,14 +1,23 @@
 const Question = require('../models/question');
 
 module.exports = {
-    // Controller function to get questions
+    // Controller function to get questions with optional difficulty filter
     getQuestions: (req, res) => {
-        Question.find()
-        .then((questions) => {
-            res.json(questions);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'Error fetching questions' });
-        });
+        const { difficulty } = req.query; // Get the difficulty query parameter if provided
+
+        const filter = {}; // Initialize an empty filter object
+
+        // If difficulty is provided, add it to the filter
+        if (difficulty) {
+            filter.difficulty = difficulty;
+        }
+
+        Question.find(filter)
+            .then((questions) => {
+                res.json(questions);
+            })
+            .catch((error) => {
+                res.status(500).json({ error: 'Error fetching questions' });
+            });
     },
 };

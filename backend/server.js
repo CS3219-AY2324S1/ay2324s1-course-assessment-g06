@@ -45,6 +45,8 @@ db.once('open', () => {
 // Use the question routes
 app.use('/api/questions', questionRoutes);
 
+
+
 // The root route
 app.get('/', async (req, res) => {
   res.send('Hello World!');
