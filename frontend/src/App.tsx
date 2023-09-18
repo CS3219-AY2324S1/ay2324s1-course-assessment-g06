@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<BasicTable />} />
-        <Route path="/questions/:frontendQuestionId" element={<Question />} />
+        <Route path="/questions/:id" element={<Question />} />
       </Routes>
     </div>
   );
