@@ -1,5 +1,5 @@
 // Use env file
-require("dotenv").config();
+require('dotenv').config({ path: '../.env' });
 const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
