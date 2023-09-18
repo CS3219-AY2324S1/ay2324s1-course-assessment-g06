@@ -5,4 +5,7 @@ const questionController = require("../controllers/questionController");
 // Route for retrieving questions
 router.get("/", questionController.getQuestions);
 
+// No difference if i add the below
+// router.get("/", "add-question");
+
 module.exports = router;
