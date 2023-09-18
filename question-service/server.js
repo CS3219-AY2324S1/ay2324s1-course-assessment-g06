@@ -13,6 +13,7 @@ app.use(cors());
 
 // Parse JSON request bodies
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(3000, () => {
@@ -36,6 +37,7 @@ mongoose.connect(uri, {
 
 // Check for MongoDB Atlas connection
 const db = mongoose.connection;
+
 db.on("error", (error) => {
   console.error("MongoDB connection error:", error);
 });
