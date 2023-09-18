@@ -16,7 +16,7 @@ module.exports = {
   // Usage: Get request to http://localhost:3000/api/questions/:id
   getQuestionById: (req, res) => {
     const { id } = req.params; // Get the _id from the request params
-
+    console.log(id);
     Question.findById(id)
       .then((question) => {
         if (!question) {

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import "./Question.css";
 
 interface Question {
+  _id: string;
   title: string;
   frontendQuestionId: string;
   difficulty: string;
@@ -12,19 +13,18 @@ interface Question {
 }
 
 export default function Question() {
-  const { frontendQuestionId } = useParams<{ frontendQuestionId: string }>();
-  console.log(frontendQuestionId);
+  const { id } = useParams<{ id: string }>();
+  console.log(id);
   const [question, setQuestion] = useState<Question | null>(null);
 
   const fetchData = () => {
-    console.log("Fetching data for frontendQuestionId:", frontendQuestionId);
+    console.log("Fetching data for id:", id);
     fetch(
-      `http://localhost:3000/api/questions?frontendQuestionId=${frontendQuestionId}`
+      `http://localhost:3000/api/questions/${id}`
     )
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData[0]);
-        setQuestion(responseData[0]);
+        setQuestion(responseData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -34,7 +34,7 @@ export default function Question() {
 
   useEffect(() => {
     fetchData();
-  }, [frontendQuestionId]);
+  }, [id]);
 
   if (question === null) {
     return <div>Loading...</div>;
