@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 // Import customised components
 import { FormInputText } from "./questionform_components/FormInputText";
 import { FormInputDropdown } from "./questionform_components/FormInputDropdown";
-// import { FormRichTextEditor } from "./questionform_components/FormRichTextEditor";
+import FormInputTextEditor from "./questionform_components/FormInputTextEditor";
 
 interface IFormInput {
   questionTitle: string;
@@ -21,6 +21,19 @@ const defaultValues = {
   categoryDropdownValue: "",
   complexityDropdownValue: "",
   questionDescription: "",
+};
+
+// Editor should have some fixed input
+const editorContent = "";
+
+const editorHandleChange = (newContent: string) => {
+  // Update the state or perform any other actions with the new content
+};
+
+const editorClass = {
+  editorWrapper: "your-editor-wrapper-class",
+  editor: "your-editor-class",
+  editorLinkPopup: "your-link-popup-class",
 };
 
 const dropdownCategoryOptions = [
@@ -84,6 +97,12 @@ export default function QuestionForm () {
       />
 
       <FormInputText name="description" control={control} label="Description" options={[]} />
+
+      <FormInputTextEditor
+      onChange={editorHandleChange}
+      content={editorContent}
+      classes={editorClass}
+      />
 
       {/* Submit question button */}
       <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
