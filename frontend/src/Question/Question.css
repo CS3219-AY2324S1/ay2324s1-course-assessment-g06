@@ -1,0 +1,84 @@
+.box {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 130vh; /* Adjust the height as needed */
+}
+
+.box .question-wrapper {
+  color: #000000;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  font-family: "Inter-Bold", Helvetica;
+  font-size: 15px;
+  font-weight: 500;
+  left: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 50px;
+  width: 409px;
+}
+
+.box .category-group-wrapper {
+  height: 45px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 131px;
+}
+
+.box .category-group {
+  background-color: rgb(231, 231, 231);
+  border-radius: 50px;
+  height: 70%;
+  position: relative;
+  width: 90%;
+  left: 130%;
+  top: 300%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box .difficulty-group-wrapper {
+  height: 45px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 131px;
+}
+
+.box .difficulty-group {
+  background-color: pink;
+  border-radius: 50px;
+  height: 70%;
+  position: relative;
+  width: 90%;
+  left: 23%;
+  top: 300%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box .content-group-wrapper {
+  height: 45px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 30px;
+  flex-wrap: wrap;
+}
+
+.box .content-group {
+  left: 32px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 450%;
+}
