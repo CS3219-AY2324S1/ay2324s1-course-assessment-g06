@@ -62,6 +62,7 @@ class FormInputTextEditor extends React.Component<Props, State> {
           onEditorStateChange={this.onEditorStateChange}
           editorStyle= {{border: "1px solid rgb(237, 240, 245)",}}
           stripPastedStyles= {true}
+          placeholder='Enter description here'
           toolbar={{
             options: [
               'inline', 
