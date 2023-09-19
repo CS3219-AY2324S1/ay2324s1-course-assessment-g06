@@ -30,35 +30,47 @@ const editorHandleChange = (newContent: string) => {
   // Update the state or perform any other actions with the new content
 };
 
-const editorClass = {
-  editorWrapper: "your-editor-wrapper-class",
-  editor: "your-editor-class",
-  editorLinkPopup: "your-link-popup-class",
+const editorStyle = {
+  editorWrapper: {
+    marginTop: '1rem',
+  },
+  editor: {
+    border: '1px solid #f1f1f1',
+    height: '500px',
+    padding: '1rem',
+    overflow: 'scroll',
+  },
+  editorLinkPopup: {
+    height: 'auto',
+  },
+  editorImagePopup: {
+    left: '-100%',
+  },
 };
 
 const dropdownCategoryOptions = [
   {
     label: "Data Structures",
-    value: "1",
+    value: "Data Structures",
   },
   {
     label: "Algorithms",
-    value: "2",
+    value: "Algorithms",
   },
 ];
 
 const dropdownComplexityOptions = [
   {
     label: "Easy",
-    value: "1",
+    value: "Easy",
   },
   {
     label: "Medium",
-    value: "2",
+    value: "Medium",
   },
   {
     label: "Hard",
-    value: "3",
+    value: "Hard",
   }
 ];
  
@@ -96,21 +108,24 @@ export default function QuestionForm () {
         options={dropdownComplexityOptions}
       />
 
-      <FormInputText name="description" control={control} label="Description" options={[]} />
+      <h4>Description:</h4>
 
       <FormInputTextEditor
-      onChange={editorHandleChange}
-      content={editorContent}
-      classes={editorClass}
+        onChange={editorHandleChange}
+        content={editorContent} 
+        classes={editorContent} 
       />
 
-      {/* Submit question button */}
+      {/* to change classes below */}
+
+      <br></br>
+      <br></br>
+
       <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
         {" "}
         Submit{" "}
       </Button>
 
-      {/* Reset button, can remove if dont want */}
       <Button onClick={() => reset()} variant={"outlined"}>
         {" "}
         Reset{" "}
