@@ -12,25 +12,6 @@ type Props = {
 
 type State = {
   editorState: EditorState
-  showError: boolean;
-}
-
-const stylesheet = {
-  editorWrapper: {
-    marginTop: '1rem',
-  },
-  editor: {
-    border: '1px solid #f1f1f1',
-    height: '500px',
-    padding: '1rem',
-    overflow: 'scroll',
-  },
-  editorLinkPopup: {
-    height: 'auto',
-  },
-  editorImagePopup: {
-    left: '-100%',
-  },
 }
 
 class FormInputTextEditor extends React.Component<Props, State> {
@@ -39,7 +20,6 @@ class FormInputTextEditor extends React.Component<Props, State> {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
-      showError: false, // Initialize error state
     };
   }
 
@@ -50,16 +30,20 @@ class FormInputTextEditor extends React.Component<Props, State> {
   }
 
   convertHTMLtoEditorState(html: string): EditorState {
-    const contentBlock = htmlToDraft(html)
-    return EditorState.createEmpty()
+    const contentBlock = htmlToDraft(html);
+    if (contentBlock) {
+      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+      return EditorState.createWithContent(contentState);
+    }
+    return EditorState.createEmpty();
   }
 
   onEditorStateChange = (editorState: EditorState) => {
     this.setState({
       editorState,
-      showError: !editorState.getCurrentContent().hasText(),
     });
-    console.log('Editor state changed'); // Add this line for debugging
+    const html = stateToHTML(editorState.getCurrentContent());
+    this.props.onChange(html); // Update the parent component's state with the HTML content
   };
 
   render() {

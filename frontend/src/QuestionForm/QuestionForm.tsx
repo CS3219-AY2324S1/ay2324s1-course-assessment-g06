@@ -2,7 +2,7 @@
 import React, {useState} from "react";
 import { Link } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form";
-import { TextField, FormControl, Button , Paper, Typography } from "@mui/material";
+import { TextField, FormControl, Button , Paper, Typography, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Import customised components
@@ -22,13 +22,6 @@ const defaultValues = {
   categoryDropdownValue: "",
   complexityDropdownValue: "",
   questionDescription: "",
-};
-
-// Editor should have some fixed input
-const editorContent = "";
-
-const editorHandleChange = (newContent: string) => {
-  // Update the state or perform any other actions with the new content
 };
 
 const editorStyle = {
@@ -78,7 +71,21 @@ const dropdownComplexityOptions = [
 export default function QuestionForm () {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue, watch} = methods;
-  const onSubmit = (data: IFormInput) => console.log(data);
+  const [editorContent, setEditorContent] = useState("");
+
+  const onSubmit = (data: IFormInput) => {
+    // Include editor content in the form data
+    const formDataWithEditorContent = {
+      ...data,
+      questionDescription: editorContent,
+    };
+    console.log(formDataWithEditorContent);
+  };
+
+  // Update editor content when it changes
+  const editorHandleChange = (newContent: string) => {
+    setEditorContent(newContent);
+  };
 
   return (
     <Paper
@@ -93,7 +100,7 @@ export default function QuestionForm () {
       <Typography variant="h6">Add a new question</Typography>
 
       {/* Add input components */}
-      <FormInputText name="questionTitleValue" control={control} label="Question Title" options={[]} />
+      <FormInputText name="questionTitle" control={control} label="Question Title" options={[]} />
 
       <FormInputDropdown
         name="categoryDropdownValue"
@@ -109,11 +116,13 @@ export default function QuestionForm () {
         options={dropdownComplexityOptions}
       />
 
+      <Container maxWidth="md">
       <h4>Description:</h4>
-      <FormInputTextEditor
-        onChange={editorHandleChange}
-        content={editorContent}
-      />
+        <FormInputTextEditor
+          onChange={editorHandleChange}
+          content={editorContent}
+        />
+      </Container>
 
       <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
         {" "}
