@@ -58,19 +58,21 @@ class FormInputTextEditor extends React.Component<Props, State> {
     const { classes } = this.props
     return (
       <Editor
-        localization={{
-          locale: 'ko',
-        }}
         editorState={this.state.editorState}
         onEditorStateChange={this.onEditorStateChange}
         wrapperClassName={classes.editorWrapper}
         editorClassName={classes.editor}
         toolbar={{
-          fontFamily: {
-            options: ['Nanum Square', 'Arial', 'Georgia', 'Impact', 'Tahoma', 'Verdana'],
-          },
-          link: {
-            popupClassName: classes.editorLinkPopup,
+          options: [
+            'inline', 
+            'list', 
+            'textAlign', 
+            'link',
+            'image',
+            'history'
+          ],
+          list: {
+            options: ['unordered', 'ordered'],
           },
         }}
       />
