@@ -64,6 +64,7 @@ class FormInputTextEditor extends React.Component<Props, State> {
 
   render() {
     const { editorState } = this.state;
+    const html = stateToHTML(editorState.getCurrentContent())
     
     return (
       <React.Fragment>
@@ -71,7 +72,10 @@ class FormInputTextEditor extends React.Component<Props, State> {
         <Editor
           editorState={editorState}
           onEditorStateChange={this.onEditorStateChange}
-          editorStyle={{ border: "1px solid rgb(237, 240, 245)"}}
+          editorStyle= {{border: "1px solid rgb(237, 240, 245)",}}
+          // Brings about opposite problem, window width too small other components will protrude to at least 500px
+          // borderRadius: '4px',maxWidth: '500px',
+          // wordWrap: 'break-word'}} 
           toolbar={{
             options: [
               'inline', 
@@ -91,11 +95,11 @@ class FormInputTextEditor extends React.Component<Props, State> {
         </div>
 
         <div>
-        <textarea 
-          disabled
-          value={stateToHTML(editorState.getCurrentContent())}
-          />
+          <h4>Description Converted to HTML</h4>
+          {html}
         </div>
+
+        <br></br>
       </React.Fragment>
     )
   }
