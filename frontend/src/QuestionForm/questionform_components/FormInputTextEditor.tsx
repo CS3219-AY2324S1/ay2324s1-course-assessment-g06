@@ -8,11 +8,28 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 type Props = {
   onChange: (val: string) => void;
   content: string;
-  classes: {}
 }
 
 type State = {
   editorState: EditorState
+}
+
+const stylesheet = {
+  editorWrapper: {
+    marginTop: '1rem',
+  },
+  editor: {
+    border: '1px solid #f1f1f1',
+    height: '500px',
+    padding: '1rem',
+    overflow: 'scroll',
+  },
+  editorLinkPopup: {
+    height: 'auto',
+  },
+  editorImagePopup: {
+    left: '-100%',
+  },
 }
 
 class FormInputTextEditor extends React.Component<Props, State> {
@@ -68,9 +85,8 @@ class FormInputTextEditor extends React.Component<Props, State> {
 
         <div>
         <textarea 
-          disabled 
-          // style={{ width: 800, height: 300, marginTop: 20 }}
-          value={stateToHTML(editorState.getCurrentContent())} 
+          disabled
+          value={stateToHTML(editorState.getCurrentContent())}
           />
         </div>
       </React.Fragment>

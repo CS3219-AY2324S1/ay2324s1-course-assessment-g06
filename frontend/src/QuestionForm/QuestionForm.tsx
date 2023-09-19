@@ -1,8 +1,9 @@
 // Import MUI components
 import React, {useState} from "react";
+import { Link } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form";
 import { TextField, FormControl, Button , Paper, Typography } from "@mui/material";
-import { Link } from "react-router-dom"
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Import customised components
 import { FormInputText } from "./questionform_components/FormInputText";
@@ -109,14 +110,10 @@ export default function QuestionForm () {
       />
 
       <h4>Description:</h4>
-
       <FormInputTextEditor
         onChange={editorHandleChange}
-        content={editorContent} 
-        classes={editorContent} 
+        content={editorContent}
       />
-
-      {/* to change classes below */}
 
       <br></br>
       <br></br>
