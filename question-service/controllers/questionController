@@ -31,6 +31,7 @@ module.exports = {
   // Controller function to create a new question
   // Usage: Post request to http://localhost:3000/api/questions
   createQuestion: (req, res) => {
+    console.log("Mongo posting question to http://localhost:3000/api/questions")
     const { title, frontendQuestionId, difficulty, content, category, topics } = req.body;
 
     const newQuestion = new Question({
