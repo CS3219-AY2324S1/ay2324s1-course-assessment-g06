@@ -10,6 +10,7 @@ import "./Table.css";
 import { Link, useNavigate } from "react-router-dom";
 
 interface Question {
+  _id: string; 
   title: String;
   frontendQuestionId: String;
   difficulty: String;
@@ -64,7 +65,7 @@ export default function BasicTable() {
                   backgroundColor: index % 2 === 0 ? "#E6E6E6" : "#D8D8D8",
                 }}
                 className="table-row"
-                onClick={() => navigate(`/questions/${row.frontendQuestionId}`)}
+                onClick={() => navigate(`/questions/${row._id}`)}
               >
                 <TableCell component="th" scope="row">
                   {row.title}

@@ -1,27 +1,100 @@
 const Question = require("../models/question");
 
 module.exports = {
-  // Controller function to get questions with optional difficulty filter
-  getQuestions: (req, res) => {
-    const { frontendQuestionId } = req.query; // Get the difficulty query parameter if provided
-
-    const filter = {}; // Initialize an empty filter object
-
-    // // If difficulty is provided, add it to the filter
-    // if (difficulty) {
-    //   filter.difficulty = difficulty;
-    // }
-
-    if (frontendQuestionId) {
-      filter.frontendQuestionId = frontendQuestionId;
-    }
-
-    Question.find(filter)
+  // Controller function to get all questions
+  // Usage: Get request to http://localhost:3000/api/questions/
+  getAllQuestions: (req, res) => {
+    Question.find()
       .then((questions) => {
         res.json(questions);
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error fetching questions" });
+        res.status(500).json({ error: 'Error fetching questions' });
       });
   },
+  // Controller function to get a question by its _id
+  // Usage: Get request to http://localhost:3000/api/questions/:id
+  getQuestionById: (req, res) => {
+    const { id } = req.params; // Get the _id from the request params
+    console.log(id);
+    Question.findById(id)
+      .then((question) => {
+        if (!question) {
+          return res.status(404).json({ error: "Question not found" });
+        }
+        res.json(question);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error fetching question" });
+      });
+  },
+  // Controller function to create a new question
+  // Usage: Post request to http://localhost:3000/api/questions
+  createQuestion: (req, res) => {
+    const { title, frontendQuestionId, difficulty, content, category, topics } = req.body;
+
+    const newQuestion = new Question({
+      title,
+      frontendQuestionId,
+      difficulty,
+      content,
+      category,
+      topics,
+    });
+
+    newQuestion
+      .save()
+      .then((question) => {
+        res.json(question);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error creating question" });
+      });
+  },
+  // Controller function to update an existing question by ID
+  // Usage: Put request to http://localhost:3000/api/questions/{id}
+  updateQuestion: (req, res) => {
+    const { id } = req.params; // Get the question ID from the route parameters
+    // Put only the fields that you want to change in the body
+    // Use x-www-form-urlencoded
+    const { title, frontendQuestionId, difficulty, content, category, topics } = req.body;
+
+    Question.findByIdAndUpdate(
+      id,
+      {
+        title,
+        frontendQuestionId,
+        difficulty,
+        content,
+        category,
+        topics,
+      },
+      { new: true } // Return the updated document
+    )
+      .then((question) => {
+        if (!question) {
+          return res.status(404).json({ error: "Question not found" });
+        }
+        res.json(question);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error updating question" });
+      });
+  },
+  // Controller function to delete a question by ID
+  // Usage: Delete request to http://localhost:3000/api/questions/{id}
+  deleteQuestion: (req, res) => {
+    const { id } = req.params; // Get the question ID from the route parameters
+
+    Question.findByIdAndRemove(id)
+      .then((question) => {
+        if (!question) {
+          return res.status(404).json({ error: "Question not found" });
+        }
+        res.json({ message: "Question deleted successfully" });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error deleting question" });
+      });
+  }
 };
