@@ -116,6 +116,7 @@ export default function QuestionForm () {
         options={dropdownComplexityOptions}
       />
 
+      {/* Placed Container outside of text editor to keep the FormInputTextEditor flexible for other usage */}
       <Container maxWidth="md">
       <h4>Description:</h4>
         <FormInputTextEditor

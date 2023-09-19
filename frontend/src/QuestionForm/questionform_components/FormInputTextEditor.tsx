@@ -2,8 +2,11 @@ import React, { Component } from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 import { EditorState, ContentState, convertToRaw } from 'draft-js'
 import htmlToDraft from 'html-to-draftjs'
-import {stateToHTML} from 'draft-js-export-html';
+import draftToHtml from 'draftjs-to-html'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
+
+// Represents the conversion of HTML from draft editor
+let html = ""
 
 type Props = {
   onChange: (val: string) => void;
@@ -14,8 +17,8 @@ type State = {
   editorState: EditorState
 }
 
+
 class FormInputTextEditor extends React.Component<Props, State> {
-  // static defaultProps = {}
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -23,6 +26,7 @@ class FormInputTextEditor extends React.Component<Props, State> {
     };
   }
 
+  // Ensure component mounted on DOM
   componentDidMount() {
     this.setState({
       editorState: this.convertHTMLtoEditorState(this.props.content),
@@ -38,17 +42,17 @@ class FormInputTextEditor extends React.Component<Props, State> {
     return EditorState.createEmpty();
   }
 
+  // Called when there is a change on the draft editor, to mainly edit the converted html contents
   onEditorStateChange = (editorState: EditorState) => {
     this.setState({
       editorState,
     });
-    const html = stateToHTML(editorState.getCurrentContent());
-    this.props.onChange(html); // Update the parent component's state with the HTML content
+    html = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
+    this.props.onChange(html);
   };
 
   render() {
     const { editorState } = this.state;
-    const html = stateToHTML(editorState.getCurrentContent())
     
     return (
       <React.Fragment>
@@ -57,16 +61,12 @@ class FormInputTextEditor extends React.Component<Props, State> {
           editorState={editorState}
           onEditorStateChange={this.onEditorStateChange}
           editorStyle= {{border: "1px solid rgb(237, 240, 245)",}}
-          // Brings about opposite problem, window width too small other components will protrude to at least 500px
-          // borderRadius: '4px',maxWidth: '500px',
-          // wordWrap: 'break-word'}} 
           toolbar={{
             options: [
               'inline', 
               'list', 
               'textAlign', 
               'fontFamily',
-              // Link and image buttons event not set up yet
               'link',
               'image',
               'history'
