@@ -12,6 +12,7 @@ type Props = {
 
 type State = {
   editorState: EditorState
+  showError: boolean;
 }
 
 const stylesheet = {
@@ -37,7 +38,8 @@ class FormInputTextEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      editorState: EditorState.createEmpty()
+      editorState: EditorState.createEmpty(),
+      showError: false, // Initialize error state
     };
   }
 
@@ -55,23 +57,27 @@ class FormInputTextEditor extends React.Component<Props, State> {
   onEditorStateChange = (editorState: EditorState) => {
     this.setState({
       editorState,
-    })
-  }
+      showError: !editorState.getCurrentContent().hasText(),
+    });
+    console.log('Editor state changed'); // Add this line for debugging
+  };
 
   render() {
     const { editorState } = this.state;
-    const html = stateToHTML(this.state.editorState.getCurrentContent());
     
     return (
       <React.Fragment>
+        <div>
         <Editor
           editorState={editorState}
           onEditorStateChange={this.onEditorStateChange}
+          editorStyle={{ border: "1px solid rgb(237, 240, 245)"}}
           toolbar={{
             options: [
               'inline', 
               'list', 
               'textAlign', 
+              'fontFamily',
               // Link and image buttons event not set up yet
               'link',
               'image',
@@ -82,6 +88,7 @@ class FormInputTextEditor extends React.Component<Props, State> {
             },
           }}
         />
+        </div>
 
         <div>
         <textarea 

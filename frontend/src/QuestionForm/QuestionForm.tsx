@@ -77,7 +77,7 @@ const dropdownComplexityOptions = [
  
 export default function QuestionForm () {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, setValue, watch } = methods;
+  const { handleSubmit, reset, control, setValue, watch} = methods;
   const onSubmit = (data: IFormInput) => console.log(data);
 
   return (
@@ -114,9 +114,6 @@ export default function QuestionForm () {
         onChange={editorHandleChange}
         content={editorContent}
       />
-
-      <br></br>
-      <br></br>
 
       <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
         {" "}

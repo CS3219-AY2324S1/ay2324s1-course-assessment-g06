@@ -23,6 +23,7 @@ export const FormInputDropdown: React.FC<FormInputProps> = ({
     <FormControl size={"small"}>
       <InputLabel>{label}</InputLabel>
       <Controller
+        rules={{ required: "Required" }}
         render={({ field: { onChange, value } }) => (
           <Select onChange={onChange} value={value}>
             {generateSingleOptions()}

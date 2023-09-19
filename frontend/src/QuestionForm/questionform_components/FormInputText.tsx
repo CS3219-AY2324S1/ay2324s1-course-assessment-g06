@@ -8,6 +8,7 @@ export const FormInputText = ({ name, control, label }: FormInputProps) => {
     <Controller
       name={name}
       control={control}
+      rules={{ required: "Required" }}
       render={({
         field: { onChange, value },
         fieldState: { error },
