@@ -17,6 +17,7 @@ module.exports = {
     }
 
     Question.find(filter)
+      .limit(10)
       .then((questions) => {
         res.json(questions);
       })
