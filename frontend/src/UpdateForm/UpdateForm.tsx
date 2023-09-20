@@ -10,6 +10,7 @@ import { FormInputText } from "../form_components/FormInputText";
 import { FormInputDropdown } from "../form_components/FormInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
+// Update form submission attributes
 interface IFormInput {
   title: string;
   category: string;
@@ -25,38 +26,24 @@ const defaultValues = {
 };
 
 const dropdownCategoryOptions = [
-  {
-    label: "Data Structures",
-    value: "Data Structures",
-  },
-  {
-    label: "Algorithms",
-    value: "Algorithms",
-  },
+  { label: "Data Structures", value: "Data Structures", },
+  { label: "Algorithms", value: "Algorithms", },
 ];
 
 const dropdownComplexityOptions = [
-  {
-    label: "Easy",
-    value: "Easy",
-  },
-  {
-    label: "Medium",
-    value: "Medium",
-  },
-  {
-    label: "Hard",
-    value: "Hard",
-  }
+  {label: "Easy", value: "Easy", },
+  { label: "Medium", value: "Medium", },
+  { label: "Hard", value: "Hard", }
 ];
- 
+
 export default function UpdateForm () {
+  // Initialise form attributes
   const { id } = useParams<{ id: string }>();
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue, watch} = methods;
   const [editorContent, setEditorContent] = useState("");
 
-
+  // Called when clicking on update button
   const onUpdate = (data: IFormInput) => {
     console.log("Obtaining contents of ", id);
     // Include editor content in the form data
@@ -77,7 +64,7 @@ export default function UpdateForm () {
     .then((responseData) => {
       console.log("Question posted successfully", responseData);
 
-      // You can also navigate to a different page or reset the form here
+      // Nvigate to a different page or reset the form here
     })
     .catch((error) => {
       // Handle the error (e.g., show an error message)
@@ -90,6 +77,7 @@ export default function UpdateForm () {
     setEditorContent(newContent);
   };
 
+  // Showcases the FE visible components
   return (
     <Paper
       style={{

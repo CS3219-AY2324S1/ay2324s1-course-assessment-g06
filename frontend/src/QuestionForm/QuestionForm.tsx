@@ -6,9 +6,9 @@ import { TextField, FormControl, Button , Paper, Typography, Container } from "@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Import customised components
-import { FormInputText } from "./questionform_components/FormInputText";
-import { FormInputDropdown } from "./questionform_components/FormInputDropdown";
-import FormInputTextEditor from "./questionform_components/FormInputTextEditor";
+import { FormInputText } from "../form_components/FormInputText";
+import { FormInputDropdown } from "../form_components/FormInputDropdown";
+import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
 interface IFormInput {
   title: string;
@@ -24,48 +24,15 @@ const defaultValues = {
   content: "",
 };
 
-const editorStyle = {
-  editorWrapper: {
-    marginTop: '1rem',
-  },
-  editor: {
-    border: '1px solid #f1f1f1',
-    height: '500px',
-    padding: '1rem',
-    overflow: 'scroll',
-  },
-  editorLinkPopup: {
-    height: 'auto',
-  },
-  editorImagePopup: {
-    left: '-100%',
-  },
-};
-
 const dropdownCategoryOptions = [
-  {
-    label: "Data Structures",
-    value: "Data Structures",
-  },
-  {
-    label: "Algorithms",
-    value: "Algorithms",
-  },
+  { label: "Data Structures", value: "Data Structures", },
+  { label: "Algorithms", value: "Algorithms", },
 ];
 
 const dropdownComplexityOptions = [
-  {
-    label: "Easy",
-    value: "Easy",
-  },
-  {
-    label: "Medium",
-    value: "Medium",
-  },
-  {
-    label: "Hard",
-    value: "Hard",
-  }
+  {label: "Easy", value: "Easy", },
+  { label: "Medium", value: "Medium", },
+  { label: "Hard", value: "Hard", }
 ];
  
 export default function QuestionForm () {
