@@ -3,7 +3,13 @@ import { Controller, useFormContext } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { FormInputProps } from "./FormInputProps";
 
-export const FormInputText = ({ name, control, label }: FormInputProps) => {
+export const FormInputText: React.FC<FormInputProps> = ({
+  name,
+  control,
+  label,
+  options,
+  defaultValue
+}) => {
   return (
     <Controller
       name={name}
@@ -19,7 +25,7 @@ export const FormInputText = ({ name, control, label }: FormInputProps) => {
           size="small"
           error={!!error}
           onChange={onChange}
-          value={value}
+          value={defaultValue}
           fullWidth
           label={label}
           variant="outlined"

@@ -7,7 +7,8 @@ export const FormInputDropdown: React.FC<FormInputProps> = ({
   name,
   control,
   label,
-  options
+  options,
+  defaultValue
 }) => {
   const generateSingleOptions = () => {
     return options.map((option: any) => {
@@ -27,7 +28,7 @@ export const FormInputDropdown: React.FC<FormInputProps> = ({
         render={({ field: { onChange, value } }) => (
           <Select 
             onChange={onChange} 
-            value={value}
+            value={defaultValue}
             >
             {generateSingleOptions()}
           </Select>
