@@ -15,4 +15,7 @@ router.put("/:id", questionController.updateQuestion);
 // Delete a question by frontendQuestionId
 router.delete("/:id", questionController.deleteQuestion);
 
+// No difference if i add the below
+// router.get("/", "add-question");
+
 module.exports = router;
