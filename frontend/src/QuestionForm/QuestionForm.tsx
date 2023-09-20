@@ -10,6 +10,7 @@ import { FormInputText } from "../form_components/FormInputText";
 import { FormInputDropdown } from "../form_components/FormInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
+// To instantiate form components
 interface IFormInput {
   title: string;
   category: string;

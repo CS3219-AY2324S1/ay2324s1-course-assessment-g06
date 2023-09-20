@@ -74,16 +74,17 @@ export default function UpdateForm () {
     }, [id]);
     
   console.log(question)
+
   // Called when clicking on update button
   const onUpdate = (data: IFormInput) => {
-    console.log("Obtaining contents of ", id);
+    console.log("Putting contents of ", id);
     // Include editor content in the form data
     const formDataWithEditorContent = {
       ...data,
       content: editorContent,
     };
     console.log(formDataWithEditorContent);
-    fetch('http://localhost:3000/api/questions/${id}', {  
+    fetch(`http://localhost:3000/api/questions/${id}`, {  
       method: 'PUT', 
       mode: 'cors',
       headers: {
