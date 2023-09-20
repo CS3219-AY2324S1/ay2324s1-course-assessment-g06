@@ -52,12 +52,17 @@ export default function BasicTable() {
 
   const navigate = useNavigate();
 
+  const handleAddButtonClick = () => {
+    navigate("/questions/add-question");
+  };
+
   return (
     <div>
       {/* Place the "Add" button here */}
       <AddButton
         variant="contained"
         style={{ marginBottom: "20px", marginLeft: "1225px" }}
+        onClick={handleAddButtonClick}
       >
         Add
       </AddButton>
