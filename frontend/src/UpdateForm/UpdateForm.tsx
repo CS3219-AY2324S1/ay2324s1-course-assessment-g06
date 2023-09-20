@@ -51,7 +51,6 @@ export default function UpdateForm () {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue, watch} = methods;
   const [editorContent, setEditorContent] = useState("");
-
   const [question, setQuestion] = useState<Question | null>(null);
 
   const fetchData = () => {
@@ -62,7 +61,16 @@ export default function UpdateForm () {
       .then((response) => response.json())
       .then((responseData) => {
         setQuestion(responseData);
+        // Update default form values based on fetched data
+        const updatedDefaultValues = {
+          title: responseData.title,
+          category: responseData.category,
+          difficulty: responseData.difficulty,
+          content: responseData.content,
+        };
+        methods.reset(updatedDefaultValues);
       })
+      
       .catch((error) => {
         console.error("Error fetching data:", error);
         setQuestion(null);
