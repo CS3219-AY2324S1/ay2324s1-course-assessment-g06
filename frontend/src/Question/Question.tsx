@@ -1,6 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./Question.css";
+import { styled } from "@mui/material/styles";
+import { Button } from "@mui/material";
+
+const UpdateButton = styled(Button)`
+  background-color: #ff5733; /* Change the background color */
+  color: black; /* Change the text color */
+  border-radius: 5px; /* Add rounded corners */
+  font-size: 16px; /* Adjust the font size */
+  font-weight: bold;
+  &:hover {
+    background-color: #fe6848; /* Change the background color on hover */
+  }
+`;
 
 interface Question {
   _id: string;
@@ -19,9 +32,7 @@ export default function Question() {
 
   const fetchData = () => {
     console.log("Fetching data for id:", id);
-    fetch(
-      `http://localhost:3000/api/questions/${id}`
-    )
+    fetch(`http://localhost:3000/api/questions/${id}`)
       .then((response) => response.json())
       .then((responseData) => {
         setQuestion(responseData);
@@ -64,6 +75,9 @@ export default function Question() {
               <div className="content-group">
                 <div dangerouslySetInnerHTML={{ __html: question.content }} />
               </div>
+            </div>
+            <div className="button-container">
+              <UpdateButton variant="contained">Update</UpdateButton>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@
   align-items: center;
   font-family: "Inter-Bold", Helvetica;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: bolder;
   left: 32px;
   letter-spacing: 0;
   line-height: normal;
@@ -23,7 +23,7 @@
 
 .box .category-group-wrapper {
   height: 45px;
-  left: 0;
+  left: 5px;
   position: absolute;
   top: 0;
   width: 131px;
@@ -32,6 +32,7 @@
 .box .category-group {
   background-color: rgb(231, 231, 231);
   border-radius: 50px;
+  font-weight: bold;
   height: 70%;
   position: relative;
   width: 90%;
@@ -53,6 +54,7 @@
 .box .difficulty-group {
   background-color: pink;
   border-radius: 50px;
+  font-weight: bold;
   height: 70%;
   position: relative;
   width: 90%;
@@ -68,8 +70,7 @@
   left: 0;
   position: absolute;
   top: 0;
-  width: 30px;
-  flex-wrap: wrap;
+  width: 100%;
 }
 
 .box .content-group {
@@ -81,4 +82,18 @@
   justify-content: center;
   align-items: center;
   top: 450%;
+}
+
+.update-button {
+  background-color: red; /* Change the background color */
+  color: #c44747; /* Change the text color */
+  border-radius: 5px; /* Add rounded corners */
+  font-size: 16px; /* Adjust the font size */
+}
+
+.button-container {
+  display: flex;
+  position: relative;
+  top: -90%;
+  left: 700%;
 }
