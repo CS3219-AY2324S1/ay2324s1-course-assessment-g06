@@ -80,8 +80,6 @@ export default function UpdateForm () {
     useEffect(() => {
       fetchData();
     }, [id]);
-    
-  console.log(question)
 
   // Called when clicking on update button
   const onUpdate = (data: IFormInput) => {
@@ -162,11 +160,6 @@ export default function UpdateForm () {
         {" "}
         Update{" "}
       </Button>
-
-      {/* <Button onClick={() => reset()} variant={"outlined"}>
-        {" "}
-        Reset{" "}
-      </Button> */}
 
     </Paper>
   );
