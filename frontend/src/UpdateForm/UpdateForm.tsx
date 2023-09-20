@@ -10,7 +10,16 @@ import { FormInputText } from "../form_components/FormInputText";
 import { FormInputDropdown } from "../form_components/FormInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
-// Update form submission attributes
+interface Question {
+  _id: string;
+  title: string;
+  frontendQuestionId: string;
+  difficulty: string;
+  content: string;
+  category: string;
+  topics: string;
+}
+
 interface IFormInput {
   title: string;
   category: string;
@@ -43,6 +52,28 @@ export default function UpdateForm () {
   const { handleSubmit, reset, control, setValue, watch} = methods;
   const [editorContent, setEditorContent] = useState("");
 
+  const [question, setQuestion] = useState<Question | null>(null);
+
+  const fetchData = () => {
+    console.log("Fetching data for id:", id);
+    fetch(
+      `http://localhost:3000/api/questions/${id}`
+    )
+      .then((response) => response.json())
+      .then((responseData) => {
+        setQuestion(responseData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setQuestion(null);
+      });
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, [id]);
+    
+  console.log(question)
   // Called when clicking on update button
   const onUpdate = (data: IFormInput) => {
     console.log("Obtaining contents of ", id);
@@ -56,7 +87,7 @@ export default function UpdateForm () {
       method: 'PUT', 
       mode: 'cors',
       headers: {
-      "Content-Type": "application/json", // Set the content type to JSON
+      "Content-Type": "application/json", 
     },
     body: JSON.stringify(formDataWithEditorContent), // Send the modified data
   })
@@ -68,12 +99,16 @@ export default function UpdateForm () {
     .catch((error) => {
       console.error("Error putting question", error);
     });
-};
+  };
 
   // Update editor content when it changes
   const editorHandleChange = (newContent: string) => {
     setEditorContent(newContent);
   };
+
+  if (question === null) {
+    return <div>Loading...</div>;
+  }
 
   // Showcases the FE visible components
   return (
@@ -110,7 +145,7 @@ export default function UpdateForm () {
       <h4>Description:</h4>
         <FormInputTextEditor
           onChange={editorHandleChange}
-          content={editorContent}
+          content={question.content}
         />
       </Container>
 
