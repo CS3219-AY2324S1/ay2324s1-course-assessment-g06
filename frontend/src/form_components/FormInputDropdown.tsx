@@ -7,8 +7,7 @@ export const FormInputDropdown: React.FC<FormInputProps> = ({
   name,
   control,
   label,
-  options,
-  defaultValue
+  options
 }) => {
   const generateSingleOptions = () => {
     return options.map((option: any) => {
@@ -21,15 +20,19 @@ export const FormInputDropdown: React.FC<FormInputProps> = ({
   };
 
   return (
-    <FormControl size={"small"}>
-      <InputLabel>{label}</InputLabel>
+    <FormControl size={"small"} required>
+      <InputLabel id="labelid" htmlFor="age-native-required">{label}</InputLabel>
       <Controller
         rules={{ required: "Required" }}
         render={({ field: { onChange, value } }) => (
           <Select 
             onChange={onChange} 
             value={value}
-            defaultValue=""
+            inputProps={{
+              id: 'age-native-required',
+            }}
+            labelId="labelid"
+            label={label}
             >
             {generateSingleOptions()}
           </Select>

@@ -8,7 +8,6 @@ export const FormInputText: React.FC<FormInputProps> = ({
   control,
   label,
   options,
-  defaultValue
 }) => {
   return (
     <Controller
@@ -21,6 +20,7 @@ export const FormInputText: React.FC<FormInputProps> = ({
         formState,
       }) => (
         <TextField
+          required
           helperText={error ? error.message : null}
           size="small"
           error={!!error}

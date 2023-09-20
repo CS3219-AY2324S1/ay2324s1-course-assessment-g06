@@ -17,7 +17,6 @@ type State = {
   editorState: EditorState
 }
 
-
 class FormInputTextEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);

@@ -4,5 +4,4 @@ export interface FormInputProps {
   label: string;
   setValue?: any;
   options: any;
-  defaultValue?: string;
 }
