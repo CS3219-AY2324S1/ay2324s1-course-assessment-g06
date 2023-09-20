@@ -53,8 +53,8 @@ export default function UpdateForm () {
     };
     console.log(formDataWithEditorContent);
     fetch('http://localhost:3000/api/questions/${id}', {  
-      method: 'POST', 
-      mode: 'cors', 
+      method: 'PUT', 
+      mode: 'cors',
       headers: {
       "Content-Type": "application/json", // Set the content type to JSON
     },
@@ -62,13 +62,11 @@ export default function UpdateForm () {
   })
     .then((response) => response.json())
     .then((responseData) => {
-      console.log("Question posted successfully", responseData);
-
-      // Nvigate to a different page or reset the form here
+      console.log("Question put successfully", responseData);
+      // Navigate to a different page or reset the form here
     })
     .catch((error) => {
-      // Handle the error (e.g., show an error message)
-      console.error("Error posting question", error);
+      console.error("Error putting question", error);
     });
 };
 
