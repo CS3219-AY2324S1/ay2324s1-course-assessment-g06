@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/auth/";
+const API_URL = "http://localhost:3001/api/auth/";
 
 class AuthService {
   // This will perform a POST request to the backend API with the user's username and password.
@@ -46,4 +46,6 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+module.exports = AuthService;
+
+// export default new AuthService();

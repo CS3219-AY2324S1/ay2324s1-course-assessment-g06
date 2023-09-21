@@ -1,30 +1,37 @@
-//importing modules
-const {Sequelize, DataTypes} = require('sequelize')
+const config = require("../config/db.config.js");
 
+const Sequelize = require("sequelize");
+const sequelize = new Sequelize(
+  config.DB,
+  config.USER,
+  config.PASSWORD,
+  {
+    host: config.HOST,
+    dialect: config.dialect,
+    pool: {
+      max: config.pool.max,
+      min: config.pool.min,
+      acquire: config.pool.acquire,
+      idle: config.pool.idle
+    }
+  }
+);
 
-// MySQL credentials
-const dbUsername = process.env.SQL_USERNAME;
-const dbPassword = process.env.SQL_PASSWORD;
-const dbName = 'user';
+const db = {};
 
-const sequelize = new Sequelize(dbName,dbUsername,dbPassword, {
-  host: process.env.SQL_HOST,
-  dialect: 'mysql'
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.user = require("../models/user.model.js")(sequelize, Sequelize);
+db.role = require("../models/role.model.js")(sequelize, Sequelize);
+
+db.role.belongsToMany(db.user, {
+  through: "user_roles"
+});
+db.user.belongsToMany(db.role, {
+  through: "user_roles"
 });
 
-//checking if connection is done
-    sequelize.authenticate().then(() => {
-        console.log(`Database connected to discover`)
-    }).catch((err) => {
-        console.log(err)
-    })
+db.ROLES = ["user", "admin", "moderator"];
 
-    const db = {}
-    db.Sequelize = Sequelize
-    db.sequelize = sequelize
-
-//connecting to model
-db.users = require('./userModel') (sequelize, DataTypes)
-
-//exporting the module
-module.exports = db
+module.exports = db;
