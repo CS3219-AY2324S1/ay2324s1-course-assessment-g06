@@ -20,7 +20,7 @@ export const login = (username: string, password: string) => {
       if (response.data.accessToken) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
-
+      
       return response.data;
     });
 };
@@ -34,4 +34,8 @@ export const getCurrentUser = () => {
   if (userStr) return JSON.parse(userStr);
 
   return null;
+};
+export const deleteUser = (id: string)=> {
+  return axios.delete(API_URL + "removeuser", {params: { id: id }})
+  .catch(err => {console.log(err)});
 };
