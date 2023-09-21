@@ -9,7 +9,7 @@ module.exports = {
         res.json(questions);
       })
       .catch((error) => {
-        res.status(500).json({ error: 'Error fetching questions' });
+        res.status(500).json({ error: "Error fetching questions" });
       });
   },
   // Controller function to get a question by its _id
@@ -31,8 +31,11 @@ module.exports = {
   // Controller function to create a new question
   // Usage: Post request to http://localhost:3000/api/questions
   createQuestion: (req, res) => {
-    console.log("Mongo posting question to http://localhost:3000/api/questions")
-    const { title, frontendQuestionId, difficulty, content, category, topics } = req.body;
+    console.log(
+      "Mongo posting question to http://localhost:3000/api/questions"
+    );
+    const { title, frontendQuestionId, difficulty, content, category, topics } =
+      req.body;
 
     const newQuestion = new Question({
       title,
@@ -58,7 +61,8 @@ module.exports = {
     const { id } = req.params; // Get the question ID from the route parameters
     // Put only the fields that you want to change in the body
     // Use x-www-form-urlencoded
-    const { title, frontendQuestionId, difficulty, content, category, topics } = req.body;
+    const { title, frontendQuestionId, difficulty, content, category, topics } =
+      req.body;
 
     Question.findByIdAndUpdate(
       id,
@@ -97,5 +101,5 @@ module.exports = {
       .catch((error) => {
         res.status(500).json({ error: "Error deleting question" });
       });
-  }
+  },
 };
