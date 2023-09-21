@@ -1,6 +1,6 @@
 // Import MUI components
 import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom"
+import { useParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { TextField, FormControl, Button , Paper, Typography, Container } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -10,7 +10,16 @@ import { FormInputText } from "../form_components/FormInputText";
 import { FormInputDropdown } from "../form_components/FormInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
-// To instantiate form components
+interface Question {
+  _id: string;
+  title: string;
+  frontendQuestionId: string;
+  difficulty: string;
+  content: string;
+  category: string;
+  topics: string;
+}
+
 interface IFormInput {
   title: string;
   category: string;
@@ -35,46 +44,80 @@ const dropdownComplexityOptions = [
   { label: "Medium", value: "Medium", },
   { label: "Hard", value: "Hard", }
 ];
- 
-export default function QuestionForm () {
+
+export default function UpdateForm () {
+  // Initialise form attributes
+  const { id } = useParams<{ id: string }>();
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue, watch} = methods;
   const [editorContent, setEditorContent] = useState("");
+  const [question, setQuestion] = useState<Question | null>(null);
 
+  const fetchData = () => {
+    console.log("Fetching data for id:", id);
+    fetch(
+      `http://localhost:3000/api/questions/${id}`
+    )
+      .then((response) => response.json())
+      .then((responseData) => {
+        setQuestion(responseData);
+        // Update default form values based on fetched data
+        const updatedDefaultValues = {
+          title: responseData.title,
+          category: responseData.category,
+          difficulty: responseData.difficulty,
+          content: responseData.content,
+        };
+        methods.reset(updatedDefaultValues);
+      })
+      
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setQuestion(null);
+      });
+    };
 
-  const onSubmit = (data: IFormInput) => {
+    useEffect(() => {
+      fetchData();
+    }, [id]);
+
+  // Called when clicking on update button
+  const onUpdate = (data: IFormInput) => {
+    console.log("Putting contents of ", id);
     // Include editor content in the form data
     const formDataWithEditorContent = {
       ...data,
       content: editorContent,
     };
     console.log(formDataWithEditorContent);
-
-    fetch('http://localhost:3000/api/questions', {  
-      method: 'POST', 
-      mode: 'cors', 
+    fetch(`http://localhost:3000/api/questions/${id}`, {  
+      method: 'PUT', 
+      mode: 'cors',
       headers: {
-      "Content-Type": "application/json", // Set the content type to JSON
+      "Content-Type": "application/json", 
     },
     body: JSON.stringify(formDataWithEditorContent), // Send the modified data
   })
     .then((response) => response.json())
     .then((responseData) => {
-      console.log("Question posted successfully", responseData);
-
-      // You can also navigate to a different page or reset the form here
+      console.log("Question put successfully", responseData);
+      // Navigate to a different page or reset the form here
     })
     .catch((error) => {
-      // Handle the error (e.g., show an error message)
-      console.error("Error posting question", error);
+      console.error("Error putting question", error);
     });
-};
+  };
 
   // Update editor content when it changes
   const editorHandleChange = (newContent: string) => {
     setEditorContent(newContent);
   };
 
+  if (question === null) {
+    return <div>Loading...</div>;
+  }
+
+  // Showcases the FE visible components
   return (
     <Paper
       style={{
@@ -85,7 +128,7 @@ export default function QuestionForm () {
       }}
     >
       {/* Show Title of Form */}
-      <Typography variant="h6">Add a new question</Typography>
+      <Typography variant="h6">Update a question</Typography>
 
       {/* Add input components */}
       <FormInputText name="title" control={control} label="Question Title" options={[]} />
@@ -109,18 +152,13 @@ export default function QuestionForm () {
       <h4>Description:</h4>
         <FormInputTextEditor
           onChange={editorHandleChange}
-          content={editorContent}
+          content={question.content}
         />
       </Container>
 
-      <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
+      <Button onClick={handleSubmit(onUpdate)} variant={"contained"}>
         {" "}
-        Submit{" "}
-      </Button>
-
-      <Button onClick={() => reset()} variant={"outlined"}>
-        {" "}
-        Reset{" "}
+        Update{" "}
       </Button>
 
     </Paper>

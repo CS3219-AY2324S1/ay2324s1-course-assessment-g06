@@ -17,7 +17,6 @@ type State = {
   editorState: EditorState
 }
 
-
 class FormInputTextEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -79,10 +78,11 @@ class FormInputTextEditor extends React.Component<Props, State> {
         />
         </div>
 
-        <div>
+        {/* Uncomment below to show html conversion while typing */}
+        {/* <div>
           <h4>Description Converted to HTML</h4>
           {html}
-        </div>
+        </div> */}
 
         <br></br>
       </React.Fragment>
