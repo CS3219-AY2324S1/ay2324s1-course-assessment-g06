@@ -26,7 +26,6 @@ export const FormInputText: React.FC<FormInputProps> = ({
           error={!!error}
           onChange={onChange}
           value={value}
-          defaultValue=""
           fullWidth
           label={label}
           variant="outlined"
