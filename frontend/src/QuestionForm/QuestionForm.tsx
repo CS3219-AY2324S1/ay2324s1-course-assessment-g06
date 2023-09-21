@@ -31,7 +31,7 @@ const dropdownCategoryOptions = [
 ];
 
 const dropdownComplexityOptions = [
-  {label: "Easy", value: "Easy", },
+  { label: "Easy", value: "Easy", },
   { label: "Medium", value: "Medium", },
   { label: "Hard", value: "Hard", }
 ];
@@ -60,8 +60,6 @@ export default function QuestionForm () {
   })
     .then((response) => response.json())
     .then((responseData) => {
-      console.log("Question posted successfully", responseData);
-
       // You can also navigate to a different page or reset the form here
     })
     .catch((error) => {
@@ -81,7 +79,7 @@ export default function QuestionForm () {
         display: "grid",
         gridRowGap: "20px",
         padding: "20px",
-        margin: "10px 200px",
+        margin: "10px 100px",
       }}
     >
       {/* Show Title of Form */}
