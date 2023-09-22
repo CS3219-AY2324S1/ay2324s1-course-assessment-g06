@@ -98,6 +98,10 @@ export default function QuestionForm () {
       });
   };
 
+  const handleBack = () => {
+    navigate(`/`);
+  }
+
   // Update editor content when it changes
   const editorHandleChange = (newContent: string) => {
     setEditorContent(newContent);
@@ -154,6 +158,11 @@ export default function QuestionForm () {
       <Button type="submit" variant={"contained"}>
         {" "}
         Submit{" "}
+      </Button>
+
+      <Button onClick={handleBack} variant={"contained"}>
+        {" "}
+        Back{" "}
       </Button>
 
       {/* <Button onClick={() => reset()} variant={"outlined"}>

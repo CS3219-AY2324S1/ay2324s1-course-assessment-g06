@@ -136,6 +136,11 @@ export default function UpdateForm () {
     });
   };
 
+
+  const handleBack = () => {
+    navigate(`/questions/${id}`);
+  }
+
   // Update editor content when it changes
   const editorHandleChange = (newContent: string) => {
     setEditorContent(newContent);
@@ -191,6 +196,11 @@ export default function UpdateForm () {
       <Button type="submit" variant={"contained"}>
         {" "}
         Update{" "}
+      </Button>
+
+      <Button onClick={handleBack} variant={"contained"}>
+        {" "}
+        Back{" "}
       </Button>
 
     </Paper>

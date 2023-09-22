@@ -79,6 +79,10 @@ export default function Question() {
     navigate(`/questions/${id}/update`);
   }
 
+  const handleBack = () => {
+    navigate(`/`);
+  }
+
   if (question === null) {
     return <div>Loading...</div>;
   }
@@ -116,6 +120,11 @@ export default function Question() {
             <div className="button-container">
               <Button variant="contained" onClick={handleUpdate}>
                 Update
+              </Button>
+            </div>
+            <div className="button-container">
+              <Button variant="contained" onClick={handleBack}>
+                Back
               </Button>
             </div>
           </div>
