@@ -1,20 +1,21 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
 import Question from "./Question/Question";
-import QuestionForm from "./QuestionForm/QuestionForm";
-import UpdateForm from "./UpdateForm/UpdateForm";
+import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
+import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<BasicTable />} />
+        <Route path="/" element={<><p><Link to="/questions">Go to Questions</Link></p></>} />
+        <Route path="/questions" element={<BasicTable />} />
         <Route path="/questions/:id" element={<Question />} />
-        <Route path="/questions/:id/update" element={<UpdateForm />} />
-        <Route path="/questions/add-question" element={<QuestionForm />} />
+        <Route path="/questions/:id/update" element={<UpdateQuestionForm />} />
+        <Route path="/questions/add-question" element={<AddQuestionForm />} />
       </Routes>
     </div>
   );

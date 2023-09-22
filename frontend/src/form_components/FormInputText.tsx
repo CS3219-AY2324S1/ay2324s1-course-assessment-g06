@@ -1,5 +1,5 @@
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { FormInputProps } from "./FormInputProps";
 
@@ -8,6 +8,7 @@ export const FormInputText: React.FC<FormInputProps> = ({
   control,
   label,
   options,
+  formSubmitted
 }) => {
   return (
     <Controller
@@ -20,13 +21,12 @@ export const FormInputText: React.FC<FormInputProps> = ({
         formState,
       }) => (
         <TextField
-          required
-          helperText={error ? error.message : null}
+          // required
+          helperText={formSubmitted && value === ""? "Required" : null}
           size="small"
-          error={!!error}
+          error={formSubmitted && value === ""}
           onChange={onChange}
           value={value}
-          defaultValue=""
           fullWidth
           label={label}
           variant="outlined"
