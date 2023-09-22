@@ -7,6 +7,7 @@ import Question from "./Question/Question";
 import QuestionForm from "./QuestionForm/QuestionForm";
 import UpdateForm from "./UpdateForm/UpdateForm";
 import Matching from "./Matching/Matching";
+import CodeSpace from "./Matching/CodeSpace";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/questions/add-question" element={<QuestionForm />} />
         
         <Route path="/matching" element={<Matching />} />
+        <Route path="/match/:roomId" element={<CodeSpace />} />
       </Routes>
     </div>
   );

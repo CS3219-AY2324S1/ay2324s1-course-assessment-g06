@@ -42,7 +42,7 @@ const Matchmaking: React.FC = () => {
         clearInterval(customSocket.timerId);
         customSocket.timerId = null;
       }
-      
+
       setTimeout(() => {
         setIsMatching(false);
         navigate(`/match/${roomId}`); // Redirect to the matched page with the room ID
