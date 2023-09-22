@@ -75,6 +75,10 @@ export default function Question() {
       });
   };
 
+  const handleUpdate = () => {
+    navigate(`/questions/${id}/update`);
+  }
+
   if (question === null) {
     return <div>Loading...</div>;
   }
@@ -108,6 +112,11 @@ export default function Question() {
               <DeleteButton variant="contained" onClick={handleDelete}>
                 Delete
               </DeleteButton>
+            </div>
+            <div className="button-container">
+              <Button variant="contained" onClick={handleUpdate}>
+                Update
+              </Button>
             </div>
           </div>
         </div>
