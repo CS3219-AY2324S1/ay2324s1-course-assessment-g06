@@ -29,24 +29,29 @@ export default function Question() {
   const { id } = useParams<{ id: string }>();
   console.log(id);
   const [question, setQuestion] = useState<Question | null>(null);
-
   const navigate = useNavigate();
 
-  const fetchData = () => {
+  const fetchDataWithDelay = () => {
     console.log("Fetching data for id:", id);
-    fetch(`http://localhost:3000/api/questions/${id}`)
-      .then((response) => response.json())
-      .then((responseData) => {
-        setQuestion(responseData);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setQuestion(null);
-      });
+    
+    // Add a delay of, for example, 1000 milliseconds (1 second)
+    const delay = 100;
+    
+    setTimeout(() => {
+      fetch(`http://localhost:3000/api/questions/${id}`)
+        .then((response) => response.json())
+        .then((responseData) => {
+          setQuestion(responseData);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          setQuestion(null);
+        });
+    }, delay);
   };
-
+  
   useEffect(() => {
-    fetchData();
+    fetchDataWithDelay();
   }, [id]);
 
   const handleDelete = () => {

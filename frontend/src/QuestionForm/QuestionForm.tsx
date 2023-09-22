@@ -1,6 +1,6 @@
 // Import MUI components
 import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form";
 import { TextField, FormControl, Button , Paper, Typography, Container, FormHelperText } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -41,11 +41,7 @@ export default function QuestionForm () {
   const { reset, control, setValue, watch, formState: { errors },} = methods;
   const [editorContent, setEditorContent] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
-
-  const onSubmitClick = () => {
-    console.log("clicked")
-    setFormSubmitted(true);
-  }
+  const navigate = useNavigate();
 
   function handleSubmit(e: { (data: IFormInput): void; preventDefault?: any; }) {
     // e.preventDefault();
@@ -70,10 +66,10 @@ export default function QuestionForm () {
     for (const key in formDataWithEditorContent) {
       if (formDataWithEditorContent.hasOwnProperty(key)) {
         const value = formDataWithEditorContent[key as keyof IFormInput];
-        if (!value) {
+        if (!value || key === "content" && value === "<p></p>\n") {
           console.error(`${key} is empty`);
           setFormSubmitted(true);
-          return
+          return;
         }
       }
     }
@@ -91,8 +87,10 @@ export default function QuestionForm () {
         return response.json();
       })
       .then((responseData) => {
+        console.log("response", responseData);
+        const id = responseData._id;
         console.log("data submitted");
-        // You can also navigate to a different page or reset the form here
+        navigate(`/questions/${id}`);
       })
       .catch((error) => {
         // Handle the error (e.g., show an error message)
