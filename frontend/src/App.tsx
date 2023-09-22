@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
@@ -11,6 +11,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        <Route path="/" element={<><p><Link to="/questions">Go to Questions</Link></p></>} />
         <Route path="/questions" element={<BasicTable />} />
         <Route path="/questions/:id" element={<Question />} />
         <Route path="/questions/:id/update" element={<UpdateQuestionForm />} />
