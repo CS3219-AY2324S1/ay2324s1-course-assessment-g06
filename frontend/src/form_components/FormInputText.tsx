@@ -8,6 +8,7 @@ export const FormInputText: React.FC<FormInputProps> = ({
   control,
   label,
   options,
+  formSubmitted
 }) => {
   return (
     <Controller
@@ -20,10 +21,10 @@ export const FormInputText: React.FC<FormInputProps> = ({
         formState,
       }) => (
         <TextField
-          required
-          helperText={error ? error.message : null}
+          // required
+          helperText={formSubmitted && value == ""? "Required" : null}
           size="small"
-          error={!!error}
+          error={formSubmitted && value == ""}
           onChange={onChange}
           value={value}
           fullWidth

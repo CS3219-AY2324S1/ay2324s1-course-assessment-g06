@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form";
-import { TextField, FormControl, Button , Paper, Typography, Container } from "@mui/material";
+import { TextField, FormControl, Button , Paper, Typography, Container, FormHelperText } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Import customised components
@@ -38,35 +38,67 @@ const dropdownComplexityOptions = [
  
 export default function QuestionForm () {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, setValue, watch} = methods;
+  const { reset, control, setValue, watch, formState: { errors },} = methods;
   const [editorContent, setEditorContent] = useState("");
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
+  const onSubmitClick = () => {
+    console.log("clicked")
+    setFormSubmitted(true);
+  }
 
-  const onSubmit = (data: IFormInput) => {
+  function handleSubmit(e: { (data: IFormInput): void; preventDefault?: any; }) {
+    // e.preventDefault();
+    console.log('You clicked submit.');
+    console.log(e);
+  }
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("in onsubmit");
+  
+    // Access form data using methods.getValues() if you are using react-hook-form
+    const formData = methods.getValues();
+  
     // Include editor content in the form data
     const formDataWithEditorContent = {
-      ...data,
+      ...formData,
       content: editorContent,
     };
-    console.log(formDataWithEditorContent);
-
-    fetch('http://localhost:3000/api/questions', {  
-      method: 'POST', 
-      mode: 'cors', 
+    
+    console.log(formDataWithEditorContent)
+    for (const key in formDataWithEditorContent) {
+      if (formDataWithEditorContent.hasOwnProperty(key)) {
+        const value = formDataWithEditorContent[key as keyof IFormInput];
+        if (!value) {
+          console.error(`${key} is empty`);
+          setFormSubmitted(true);
+          return
+        }
+      }
+    }
+  
+    // Handle form submission logic here
+    fetch('http://localhost:3000/api/questions', {
+      method: 'POST',
+      mode: 'cors',
       headers: {
-      "Content-Type": "application/json", // Set the content type to JSON
-    },
-    body: JSON.stringify(formDataWithEditorContent), // Send the modified data
-  })
-    .then((response) => response.json())
-    .then((responseData) => {
-      // You can also navigate to a different page or reset the form here
+        "Content-Type": "application/json", // Set the content type to JSON
+      },
+      body: JSON.stringify(formDataWithEditorContent), // Send the modified data
     })
-    .catch((error) => {
-      // Handle the error (e.g., show an error message)
-      console.error("Error posting question", error);
-    });
-};
+      .then((response) => {
+        return response.json();
+      })
+      .then((responseData) => {
+        console.log("data submitted");
+        // You can also navigate to a different page or reset the form here
+      })
+      .catch((error) => {
+        // Handle the error (e.g., show an error message)
+        console.error("Error posting question", error);
+      });
+  };
 
   // Update editor content when it changes
   const editorHandleChange = (newContent: string) => {
@@ -74,6 +106,7 @@ export default function QuestionForm () {
   };
 
   return (
+    <form onSubmit={(e) => onSubmit(e)}>
     <Paper
       style={{
         display: "grid",
@@ -86,13 +119,20 @@ export default function QuestionForm () {
       <Typography variant="h6">Add a new question</Typography>
 
       {/* Add input components */}
-      <FormInputText name="title" control={control} label="Question Title" options={[]} />
+      <FormInputText 
+        name="title" 
+        control={control} 
+        label="Question Title" 
+        options={[]} 
+        formSubmitted={formSubmitted} 
+      />
 
       <FormInputDropdown
         name="category"
         control={control}
         label="Category"
         options={dropdownCategoryOptions}
+        formSubmitted={formSubmitted}
       />
 
       <FormInputDropdown
@@ -100,27 +140,30 @@ export default function QuestionForm () {
         control={control}
         label="Complexity"
         options={dropdownComplexityOptions}
+        formSubmitted={formSubmitted}
       />
 
       {/* Placed Container outside of text editor to keep the FormInputTextEditor flexible for other usage */}
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
       <h4>Description:</h4>
         <FormInputTextEditor
           onChange={editorHandleChange}
           content={editorContent}
+          formSubmitted={formSubmitted}
         />
       </Container>
 
-      <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
+      <Button type="submit" variant={"contained"}>
         {" "}
         Submit{" "}
       </Button>
 
-      <Button onClick={() => reset()} variant={"outlined"}>
+      {/* <Button onClick={() => reset()} variant={"outlined"}>
         {" "}
         Reset{" "}
-      </Button>
+      </Button> */}
 
     </Paper>
+    </form>
   );
 };
