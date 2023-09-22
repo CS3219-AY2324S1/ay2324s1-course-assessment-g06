@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
+const { v4: uuidv4 } = require('uuid'); // Import uuidv4 from the 'uuid' package
 
 const app = express();
 const server = http.createServer(app);
@@ -63,6 +64,13 @@ io.on('connection', (socket) => {
 });
 
 function startMatch(user1, user2) {
-  user1.emit('match found', 'You are matched with another user!');
-  user2.emit('match found', 'You are matched with another user!');
+  const roomId = uuidv4(); // Generate a unique room ID (you need to import uuid or use any other method)
+
+  // Emit the room ID to both matched users
+  user1.emit('match found', roomId, 'You are matched with another user!');
+  user2.emit('match found', roomId, 'You are matched with another user!');
+
+  // Have both users join the same room
+  user1.join(roomId);
+  user2.join(roomId);
 }

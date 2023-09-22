@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { socket } from './socket';
 import { Socket } from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
+
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
@@ -16,6 +18,7 @@ const Matchmaking: React.FC = () => {
   const [isMatching, setIsMatching] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('easy');
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     function onConnect() {
@@ -32,17 +35,20 @@ const Matchmaking: React.FC = () => {
       setIsConnected(false);
     }
 
-    function matchFound(msg: string) {
-      setIsMatching(false);
+    function matchFound(roomId: string, msg: string) {
       setMatchStatus(msg);
-      
       // Clear the timer stored on the socket object
       if (customSocket.timerId) {
         clearInterval(customSocket.timerId);
         customSocket.timerId = null;
       }
-    }
-
+      
+      setTimeout(() => {
+        setIsMatching(false);
+        navigate(`/match/${roomId}`); // Redirect to the matched page with the room ID
+      }, 2000); // 2 seconds delay
+    };
+  
     // Handle match canceled event
     function matchCanceled() {
       setIsMatching(false);
