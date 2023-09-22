@@ -4,8 +4,8 @@ import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
 import Question from "./Question/Question";
-import QuestionForm from "./QuestionForm/QuestionForm";
-import UpdateForm from "./UpdateForm/UpdateForm";
+import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
+import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 
 function App() {
   return (
@@ -13,8 +13,8 @@ function App() {
       <Routes>
         <Route path="/" element={<BasicTable />} />
         <Route path="/questions/:id" element={<Question />} />
-        <Route path="/questions/:id/update" element={<UpdateForm />} />
-        <Route path="/questions/add-question" element={<QuestionForm />} />
+        <Route path="/questions/:id/update" element={<UpdateQuestionForm />} />
+        <Route path="/questions/add-question" element={<AddQuestionForm />} />
       </Routes>
     </div>
   );
