@@ -53,7 +53,7 @@ export default function Question() {
     console.log("Fetching data for id:", id);
     
     // Add a delay of, for example, 1000 milliseconds (1 second)
-    const delay = 100;
+    const delay = 200;
     
     setTimeout(() => {
       fetch(`http://localhost:3000/api/questions/${id}`)
