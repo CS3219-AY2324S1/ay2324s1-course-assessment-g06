@@ -106,7 +106,7 @@ export default function Question() {
   }
 
   const handleBack = () => {
-    navigate(`/`);
+    navigate("/questions");
   }
 
   if (question === null) {
