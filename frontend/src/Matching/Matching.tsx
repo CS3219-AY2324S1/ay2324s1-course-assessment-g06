@@ -53,9 +53,7 @@ const Matchmaking: React.FC = () => {
   
     // Handle match canceled event
     function matchCanceled() {
-      setIsMatching(false);
-      setMatchStatus('Matching canceled.');
-      
+      setIsMatching(false);      
       // Clear the timer stored on the socket object
       if (customSocket.timerId) {
         clearInterval(customSocket.timerId);
@@ -120,6 +118,15 @@ const Matchmaking: React.FC = () => {
       setMatchStatus('Matching...');
       console.log(selectedDifficulty);
       socket.emit('match me', selectedDifficulty);
+
+      // Automatically cancel the match after 20 seconds
+      setTimeout(() => {
+        stopTimer();
+        setMatchStatus('No matches available. Try again later.');
+        socket.emit('cancel match'); // Emit a cancel signal to the server
+        setIsMatching(false);
+      }, 30000); // 30 seconds
+
     }
     setIsMatching(!isMatching);
   };
