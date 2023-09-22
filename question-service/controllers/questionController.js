@@ -102,4 +102,32 @@ module.exports = {
         res.status(500).json({ error: "Error deleting question" });
       });
   },
+  // Controller function to get a random question via given filters
+  // Usage: GET request to http://localhost:3000/api/questions/matched?difficulty=<difficulty_level>
+  getRandomQuestionByFilter: (req, res) => {
+    const { difficulty } = req.query; // Get the difficulty level from the query parameter
+
+    // Define a filter object based on the provided difficulty level
+    const filter = {};
+
+    if (difficulty) {
+      filter.difficulty = difficulty;
+    }
+
+    // Use the aggregate function to select a random question based on the filter
+    Question.aggregate([
+      { $match: filter }, // Match questions that meet the filter criteria
+      { $sample: { size: 1 } }, // Select a random question (adjust 'size' for more questions)
+    ])
+      .then((questions) => {
+        if (questions.length === 0) {
+          return res.status(404).json({ error: "No questions found for the given filter" });
+        }
+        res.json(questions[0]); // Return the random question
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error fetching random question" });
+      });
+  },
 };
+

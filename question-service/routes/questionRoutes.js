@@ -4,6 +4,7 @@ const questionController = require("../controllers/questionController");
 
 // Route for retrieving questions
 router.get("/", questionController.getAllQuestions);
+router.get("/matched", questionController.getRandomQuestionByFilter);
 router.get("/:id", questionController.getQuestionById);
 
 // Create a new question
