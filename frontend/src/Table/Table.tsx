@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid, Container} from '@mui/material';
 import "./Table.css";
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
@@ -57,24 +51,19 @@ export default function BasicTable() {
   };
 
   return (
-    <div>
+    <Container maxWidth="lg" style={{ margin: "0 auto" }}> 
+    <Grid sx={{ flexGrow: 1 }} container spacing={1}>
       {/* Place the "Add" button here */}
-      <AddButton
-        variant="contained"
-        style={{ marginBottom: "20px", marginLeft: "1225px" }}
-        onClick={handleAddButtonClick}
-      >
-        Add
-      </AddButton>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-      >
-        <TableContainer component={Paper} sx={{ width: "80%" }}>
+      <Grid item xs={12}>
+        <AddButton
+          variant="contained"
+          onClick={handleAddButtonClick}
+        >
+          Add
+        </AddButton>
+      </Grid>
+      <Grid item xs={12}>
+        <TableContainer component={Paper} sx={{ width: "100%" }}>
           <Table sx={{ minWidth: 550 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -104,7 +93,8 @@ export default function BasicTable() {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
+    </Container>
   );
 }
