@@ -6,6 +6,7 @@ import BasicTable from "./Table/Table";
 import Question from "./Question/Question";
 import QuestionForm from "./QuestionForm/QuestionForm";
 import UpdateForm from "./UpdateForm/UpdateForm";
+import Matching from "./Matching/Matching";
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path="/questions/:id" element={<Question />} />
         <Route path="/questions/:id/update" element={<UpdateForm />} />
         <Route path="/questions/add-question" element={<QuestionForm />} />
+        
+        <Route path="/matching" element={<Matching />} />
       </Routes>
     </div>
   );
