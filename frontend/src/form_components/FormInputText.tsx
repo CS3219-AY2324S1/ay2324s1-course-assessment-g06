@@ -1,5 +1,5 @@
 import React from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { FormInputProps } from "./FormInputProps";
 
@@ -22,9 +22,9 @@ export const FormInputText: React.FC<FormInputProps> = ({
       }) => (
         <TextField
           // required
-          helperText={formSubmitted && value == ""? "Required" : null}
+          helperText={formSubmitted && value === ""? "Required" : null}
           size="small"
-          error={formSubmitted && value == ""}
+          error={formSubmitted && value === ""}
           onChange={onChange}
           value={value}
           fullWidth

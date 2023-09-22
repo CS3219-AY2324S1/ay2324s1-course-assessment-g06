@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 import { EditorState, ContentState, convertToRaw } from 'draft-js'
 import htmlToDraft from 'html-to-draftjs'
 import draftToHtml from 'draftjs-to-html'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
-import { FormHelperText, colors } from '@mui/material'
+import { FormHelperText } from '@mui/material'
 
 // Represents the conversion of HTML from the draft editor
 let html = ""; // Variable to store the converted HTML
@@ -91,7 +91,7 @@ class FormInputTextEditor extends React.Component<Props, State> {
           {html}
         </div> */}
         <div>
-        {this.props.formSubmitted && this.props.content == "" && (
+        {this.props.formSubmitted && this.props.content === "" && (
           <FormHelperText style={{color: "red"}}>Required</FormHelperText>
         )}
         </div>

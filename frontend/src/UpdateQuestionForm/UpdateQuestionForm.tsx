@@ -1,9 +1,8 @@
 // Import MUI components
 import React, {useEffect, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FormProvider, useForm } from "react-hook-form";
-import { TextField, FormControl, Button , Paper, Typography, Container } from "@mui/material";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useForm } from "react-hook-form";
+import { Button , Paper, Typography, Container } from "@mui/material";
 
 // Import customised components
 import { FormInputText } from "../form_components/FormInputText";
@@ -50,48 +49,42 @@ export default function UpdateForm () {
   // Initialise form attributes
   const { id } = useParams<{ id: string }>();
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { reset, control, setValue, watch} = methods;
+  const { control, setValue } = methods;
   const [editorContent, setEditorContent] = useState("");
   const [question, setQuestion] = useState<Question | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
 
   // Called at the start to retrieve existing data
+  // Called at the start to retrieve existing data
+useEffect(() => {
   const fetchData = () => {
     console.log("Fetching data for id:", id);
-    fetch(
-      `http://localhost:3000/api/questions/${id}`
-    )
+    fetch(`http://localhost:3000/api/questions/${id}`)
       .then((response) => response.json())
       .then((responseData) => {
-        setQuestion(responseData);
+        setQuestion((prevQuestion) => ({
+          ...prevQuestion,
+          ...responseData,
+        }));
         // Update default form values based on fetched data
-        
-        const {title, category, difficulty, content} = responseData
+        const { title, category, difficulty, content } = responseData;
         setValue("title", title);
         setValue("category", category);
         setValue("difficulty", difficulty);
-        setEditorContent(content)
-        // const updatedDefaultValues = {
-        //   title: responseData.title,
-        //   category: responseData.category,
-        //   difficulty: responseData.difficulty,
-        //   content: responseData.content,
-        // };
-        // methods.reset(updatedDefaultValues);
-        
+        setEditorContent(content);
       })
-      
       .catch((error) => {
         console.error("Error fetching data:", error);
         setQuestion(null);
       });
-    };
+  };
 
-    useEffect(() => {
-      fetchData();
-    }, [id]);
+  fetchData(); // Call the fetchData function immediately
+}, [id, setValue]);
+
+  
+
 
   // Called when clicking on update button to submit new data
   const onUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -115,7 +108,7 @@ export default function UpdateForm () {
     }
 
     console.log(formDataWithEditorContent);
-    navigate("/");
+    navigate("/questions");
     navigate(`/questions/${id}`);
 
     fetch(`http://localhost:3000/api/questions/${id}`, {  

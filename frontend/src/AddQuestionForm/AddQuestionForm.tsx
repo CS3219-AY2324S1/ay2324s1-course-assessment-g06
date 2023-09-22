@@ -1,9 +1,8 @@
 // Import MUI components
-import React, {useEffect, useState} from "react";
-import { Link, useNavigate } from "react-router-dom"
-import { FormProvider, useForm } from "react-hook-form";
-import { TextField, FormControl, Button , Paper, Typography, Container, FormHelperText } from "@mui/material";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useState} from "react";
+import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import { Button , Paper, Typography, Container } from "@mui/material";
 
 // Import customised components
 import { FormInputText } from "../form_components/FormInputText";
@@ -38,16 +37,10 @@ const dropdownComplexityOptions = [
  
 export default function QuestionForm () {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { reset, control, setValue, watch, formState: { errors },} = methods;
+  const { control } = methods;
   const [editorContent, setEditorContent] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
   const navigate = useNavigate();
-
-  function handleSubmit(e: { (data: IFormInput): void; preventDefault?: any; }) {
-    // e.preventDefault();
-    console.log('You clicked submit.');
-    console.log(e);
-  }
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -66,7 +59,7 @@ export default function QuestionForm () {
     for (const key in formDataWithEditorContent) {
       if (formDataWithEditorContent.hasOwnProperty(key)) {
         const value = formDataWithEditorContent[key as keyof IFormInput];
-        if (!value || key === "content" && value === "<p></p>\n") {
+        if ((!value) || ((key === "content") && (value === "<p></p>\n"))) {
           console.error(`${key} is empty`);
           setFormSubmitted(true);
           return;
@@ -99,7 +92,7 @@ export default function QuestionForm () {
   };
 
   const handleBack = () => {
-    navigate(`/`);
+    navigate("/questions");
   }
 
   // Update editor content when it changes

@@ -15,7 +15,7 @@ const DeleteButton = styled(Button)`
   }
 `;
 
-interface Question {
+interface QuestionInt {
   _id: string;
   title: string;
   frontendQuestionId: string;
@@ -46,30 +46,31 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
 export default function Question() {
   const { id } = useParams<{ id: string }>();
   console.log(id);
-  const [question, setQuestion] = useState<Question | null>(null);
+  const [question, setQuestion] = useState<QuestionInt | null>(null);
   const navigate = useNavigate();
 
-  const fetchDataWithDelay = () => {
-    console.log("Fetching data for id:", id);
-    
-    // Add a delay of, for example, 1000 milliseconds (1 second)
-    const delay = 200;
-    
-    setTimeout(() => {
-      fetch(`http://localhost:3000/api/questions/${id}`)
-        .then((response) => response.json())
-        .then((responseData) => {
-          setQuestion(responseData);
-        })
-        .catch((error) => {
-          console.error("Error fetching data:", error);
-          setQuestion(null);
-        });
-    }, delay);
-  };
-  
   useEffect(() => {
-    fetchDataWithDelay();
+    const fetchDataWithDelay = () => {
+      console.log("Fetching data for id:", id);
+  
+      // Add a delay of, for example, 1000 milliseconds (1 second)
+      const delay = 200;
+  
+      setTimeout(() => {
+        fetch(`http://localhost:3000/api/questions/${id}`)
+          .then((response) => response.json())
+          .then((responseData) => {
+            setQuestion(responseData);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            setQuestion(null);
+          });
+      }, delay);
+    };
+  
+    fetchDataWithDelay(); // Call the function immediately
+  
   }, [id]);
 
 
@@ -90,7 +91,7 @@ export default function Question() {
       .then((response) => {
         if (response.status === 200) {
           console.log("Question deleted successfully");
-          navigate("/");
+          navigate("/questions");
         } else {
           console.error("Error deleting question:", response.statusText);
         }
