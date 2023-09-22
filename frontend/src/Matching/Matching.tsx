@@ -16,7 +16,7 @@ const Matchmaking: React.FC = () => {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('easy');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy');
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
   const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ const Matchmaking: React.FC = () => {
 
       setTimeout(() => {
         setIsMatching(false);
-        navigate(`/match/${roomId}`); // Redirect to the matched page with the room ID
+        navigate(`/match/${roomId}`, { state: { socketId: socket.id, difficulty: selectedDifficulty } });
       }, 2000); // 2 seconds delay
     };
   
@@ -72,7 +72,7 @@ const Matchmaking: React.FC = () => {
       socket.off('match found', matchFound);
       socket.off('match canceled', matchCanceled); // Remove the event listener
     };
-  }, []);
+  }, [selectedDifficulty]);
 
   const startTimer = () => {
     if (timerInterval === null) {
@@ -140,9 +140,9 @@ const Matchmaking: React.FC = () => {
               onChange={handleDifficultyChange}
               disabled={isMatching}
             >
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
             </select>
           </div>
         </div>
