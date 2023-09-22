@@ -18,6 +18,7 @@ const Matchmaking: React.FC = () => {
   const [isMatching, setIsMatching] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy');
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
+  const [isMatchFound, setIsMatchFound] = useState<boolean>(false); // Track if a match is found
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const Matchmaking: React.FC = () => {
     }
 
     function matchFound(roomId: string, msg: string) {
+      setIsMatchFound(true); // Set match found to true
       setMatchStatus(msg);
       // Clear the timer stored on the socket object
       if (customSocket.timerId) {
@@ -150,7 +152,7 @@ const Matchmaking: React.FC = () => {
 
       <div className="row mt-3">
         <div className="col-md-4">
-          <button id="matchButton" className="btn btn-primary" onClick={handleMatchClick} >
+          <button id="matchButton" className="btn btn-primary" onClick={handleMatchClick} disabled={isMatchFound} >
             {isMatching ? 'Cancel Match' : 'Match'}
           </button>
           <div className="d-flex align-items-center mt-2">
