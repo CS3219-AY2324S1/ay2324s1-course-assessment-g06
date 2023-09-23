@@ -18,7 +18,6 @@
   line-height: normal;
   position: absolute;
   top: 50px;
-  width: 409px;
 }
 
 .box .category-group-wrapper {
@@ -29,7 +28,7 @@
   width: 131px;
 }
 
-.box .category-group {
+.category-group {
   background-color: rgb(231, 231, 231);
   border-radius: 50px;
   font-weight: bold;
@@ -43,15 +42,7 @@
   align-items: center;
 }
 
-.box .difficulty-group-wrapper {
-  height: 45px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 131px;
-}
-
-.box .difficulty-group {
+.difficulty-group {
   background-color: pink;
   border-radius: 50px;
   font-weight: bold;
@@ -96,4 +87,11 @@
   position: relative;
   top: -90%;
   left: 700%;
+}
+.content-wrapper {
+  word-wrap: break-word;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
 }
