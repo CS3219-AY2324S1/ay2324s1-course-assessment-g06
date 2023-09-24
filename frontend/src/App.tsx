@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
@@ -14,11 +14,28 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
+import Protected from "./components/Protected";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
 
 import EventBus from "./common/EventBus";
+
+interface ProtectedRouteProps {
+  element: React.ReactElement;
+  path: string;
+  loggedIn: boolean;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ loggedIn, ...props }) => {
+  if (!loggedIn) {
+    // If the user is not logged in, redirect to the login page
+    return <Navigate to="/login" />;
+  }
+
+  // If the user is logged in, render the desired route
+  return <Route {...props} />;
+};
 
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
@@ -55,11 +72,11 @@ const App: React.FC = () => {
           PeerPrep
         </Link>
         <div className="navbar-nav mr-auto">
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link to={"/home"} className="nav-link">
               Home
             </Link>
-          </li>
+          </li> */}
 
           {showModeratorBoard && (
             <li className="nav-item">
@@ -120,14 +137,19 @@ const App: React.FC = () => {
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/" element={<><p><Link to="/questions">Go to Questions</Link></p></>} />
-          <Route path="/home" element={<Home />} />
+          {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           {/* <Route path="/user" element={<BoardUser />} />
           <Route path="/mod" element={<BoardModerator />} />
           <Route path="/admin" element={<BoardAdmin />} /> */}
-          <Route path="/questions" element={<BasicTable />} />
+          {/* Can only access questions if there is logged in user */}
+          <Route path="/questions" element={
+            <Protected isLoggedIn={!!currentUser}>
+              <BasicTable />
+            </Protected>
+          } />
           <Route path="/questions/:id" element={<Question />} />
           <Route path="/questions/:id/update" element={<UpdateQuestionForm />} />
           <Route path="/questions/add-question" element={<AddQuestionForm />} />
