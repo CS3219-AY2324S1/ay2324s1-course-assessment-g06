@@ -1,12 +1,15 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
+import "./Table/Table";
+import BasicTable from "./Table/Table";
+import Question from "./Question/Question";
+import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
+import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
+import { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import * as AuthService from "./services/auth.service";
 import IUser from './types/user.type';
-
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
@@ -115,7 +118,8 @@ const App: React.FC = () => {
 
       <div className="container mt-3">
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<><p><Link to="/questions">Go to Questions</Link></p></>} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -123,6 +127,10 @@ const App: React.FC = () => {
           {/* <Route path="/user" element={<BoardUser />} />
           <Route path="/mod" element={<BoardModerator />} />
           <Route path="/admin" element={<BoardAdmin />} /> */}
+          <Route path="/questions" element={<BasicTable />} />
+          <Route path="/questions/:id" element={<Question />} />
+          <Route path="/questions/:id/update" element={<UpdateQuestionForm />} />
+          <Route path="/questions/add-question" element={<AddQuestionForm />} />
         </Routes>
       </div>
     </div>

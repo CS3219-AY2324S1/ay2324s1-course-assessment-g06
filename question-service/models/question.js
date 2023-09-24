@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
   title: String,
-  frontendQuestionId: Number,
+  frontendQuestionId: String,
   difficulty: String,
   content: String,
-  category: String, 
+  category: String,
   topics: String,
 });
 
-const Question = mongoose.model('Question', questionSchema);
+const Question = mongoose.model("Question", questionSchema);
 
 module.exports = Question;

@@ -1,8 +1,0 @@
-const express = require('express');
-const router = express.Router();
-const questionController = require('../controllers/questionController');
-
-// Route for retrieving questions
-router.get('/', questionController.getQuestions);
-
-module.exports = router;
