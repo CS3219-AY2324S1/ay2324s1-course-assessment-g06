@@ -24,7 +24,11 @@ const Home: React.FC = () => {
   return (
     <div className="container">
       <header className="jumbotron">
-        <h3>{content}</h3>
+        <div>
+          Link to questions: <a href="/questions">Questions</a>
+        </div>
+        <div>This is a test.</div>
+        <div>{content}</div>
       </header>
     </div>
   );
