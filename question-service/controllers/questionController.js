@@ -36,25 +36,36 @@ module.exports = {
     );
     const { title, frontendQuestionId, difficulty, content, category, topics } =
       req.body;
-
-    const newQuestion = new Question({
-      title,
-      frontendQuestionId,
-      difficulty,
-      content,
-      category,
-      topics,
-    });
-
-    newQuestion
-      .save()
-      .then((question) => {
-        res.json(question);
+  
+    // Check if a question with the same title already exists
+    Question.findOne({ title })
+      .then((existingQuestion) => {
+        if (existingQuestion) {
+          return res.status(400).json({ error: "Question with this title already exists" });
+        }
+  
+        const newQuestion = new Question({
+          title,
+          frontendQuestionId,
+          difficulty,
+          content,
+          category,
+          topics,
+        });
+  
+        newQuestion
+          .save()
+          .then((question) => {
+            res.json(question);
+          })
+          .catch((error) => {
+            res.status(500).json({ error: "Error creating question" });
+          });
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error creating question" });
+        res.status(500).json({ error: "Error checking for existing question" });
       });
-  },
+  },  
   // Controller function to update an existing question by ID
   // Usage: Put request to http://localhost:3000/api/questions/{id}
   updateQuestion: (req, res) => {
