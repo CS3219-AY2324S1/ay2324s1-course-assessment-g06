@@ -47,8 +47,6 @@ export default function QuestionForm() {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("in onsubmit");
-
     // Access form data using methods.getValues() if you are using react-hook-form
     const formData = methods.getValues();
 
@@ -93,7 +91,6 @@ export default function QuestionForm() {
       .then((responseData) => {
         console.log("response", responseData);
         const id = responseData._id;
-        console.log("data submitted");
         navigate(`/questions/${id}`);
       })
       .catch((error) => {
