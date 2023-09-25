@@ -31,26 +31,20 @@ interface ProtectedRouteProps {
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
   const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<boolean>(false);
+  // const [currentUser, setCurrentUser] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<boolean>(()=>localStorage.getItem("user")?true:false);
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
     
     if (user) {
-      // console.log(user);
-      console.log("AHSFHJASKFJ");
-      // setCurrentUser(user as IUser);
-      // console.log(user as IUser);
-      setCurrentUser(true);
+      // setCurrentUser(true);
       setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
       setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
-      console.log(currentUser);
     }
 
     EventBus.on("logout", logOut);
-    console.log(user);
-    console.log(currentUser);
-    
+
     return () => {
       EventBus.remove("logout", logOut);
     };
