@@ -4,7 +4,6 @@ import { getCurrentUser } from "../services/auth.service";
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
   // for updating the user, 
-
   return (
     <div className="container">
       <header className="jumbotron">

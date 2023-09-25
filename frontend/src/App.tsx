@@ -27,32 +27,30 @@ interface ProtectedRouteProps {
   loggedIn: boolean;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ loggedIn, ...props }) => {
-  if (!loggedIn) {
-    // If the user is not logged in, redirect to the login page
-    return <Navigate to="/login" />;
-  }
-
-  // If the user is logged in, render the desired route
-  return <Route {...props} />;
-};
 
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
   const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<IUser | undefined>(undefined);
+  const [currentUser, setCurrentUser] = useState<boolean>(false);
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-
+    
     if (user) {
-      setCurrentUser(user);
+      // console.log(user);
+      console.log("AHSFHJASKFJ");
+      // setCurrentUser(user as IUser);
+      // console.log(user as IUser);
+      setCurrentUser(true);
       setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
       setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+      console.log(currentUser);
     }
 
     EventBus.on("logout", logOut);
-
+    console.log(user);
+    console.log(currentUser);
+    
     return () => {
       EventBus.remove("logout", logOut);
     };
@@ -62,7 +60,7 @@ const App: React.FC = () => {
     AuthService.logout();
     setShowModeratorBoard(false);
     setShowAdminBoard(false);
-    setCurrentUser(undefined);
+    setCurrentUser(false);
   };
 
   return (
@@ -107,7 +105,7 @@ const App: React.FC = () => {
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link to={"/profile"} className="nav-link">
-                {currentUser.username}
+                profile
               </Link>
             </li>
             <li className="nav-item">
@@ -146,7 +144,7 @@ const App: React.FC = () => {
           <Route path="/admin" element={<BoardAdmin />} /> */}
           {/* Can only access questions if there is logged in user */}
           <Route path="/questions" element={
-            <Protected isLoggedIn={!!currentUser}>
+            <Protected isLoggedIn={currentUser}>
               <BasicTable />
             </Protected>
           } />

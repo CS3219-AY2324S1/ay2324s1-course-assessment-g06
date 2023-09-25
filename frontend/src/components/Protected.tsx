@@ -7,6 +7,7 @@ interface ProtectedProps {
 }
 
 const Protected: React.FC<ProtectedProps> = ({ isLoggedIn, children }) => {
+  console.log(isLoggedIn);
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }
