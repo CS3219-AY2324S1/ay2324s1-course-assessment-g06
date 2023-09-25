@@ -132,7 +132,10 @@ const App: React.FC = () => {
           {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={
+            <Protected isLoggedIn={currentUser}>
+              <Profile />
+            </Protected>} />
           {/* <Route path="/user" element={<BoardUser />} />
           <Route path="/mod" element={<BoardModerator />} />
           <Route path="/admin" element={<BoardAdmin />} /> */}
