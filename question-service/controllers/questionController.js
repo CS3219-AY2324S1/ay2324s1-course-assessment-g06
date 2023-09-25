@@ -16,7 +16,7 @@ module.exports = {
   // Usage: Get request to http://localhost:3000/api/questions/:id
   getQuestionById: (req, res) => {
     const { id } = req.params; // Get the _id from the request params
-    console.log(id);
+    console.log("Getting Qn with ID:", id);
     Question.findById(id)
       .then((question) => {
         if (!question) {
@@ -70,29 +70,41 @@ module.exports = {
   // Usage: Put request to http://localhost:3000/api/questions/{id}
   updateQuestion: (req, res) => {
     const { id } = req.params; // Get the question ID from the route parameters
+    console.log(
+      `Mongo putting/updating question to http://localhost:3000/api/questions/${id}`
+    );
     // Put only the fields that you want to change in the body
     // Use x-www-form-urlencoded
     const { title, frontendQuestionId, difficulty, content, category, topics } =
       req.body;
 
-    Question.findByIdAndUpdate(
-      id,
-      {
-        title,
-        frontendQuestionId,
-        difficulty,
-        content,
-        category,
-        topics,
-      },
-      { new: true } // Return the updated document
-    )
+    // Check if a question with the same title other than itself already exists
+    Question.findOne({ title })
+    .then((existingQuestion) => {
+      if (existingQuestion  && (existingQuestion.id != id)) {
+        return res.status(400).json({ error: "Question with this title already exists" });
+      }
+
+      // Update the question
+      Question.findByIdAndUpdate(
+        id,
+        {
+          title,
+          frontendQuestionId,
+          difficulty,
+          content,
+          category,
+          topics,
+        },
+        { new: true } // Return the updated document
+        )
       .then((question) => {
         if (!question) {
           return res.status(404).json({ error: "Question not found" });
         }
         res.json(question);
       })
+    })
       .catch((error) => {
         res.status(500).json({ error: "Error updating question" });
       });
@@ -141,4 +153,3 @@ module.exports = {
       });
   },
 };
-
