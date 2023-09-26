@@ -36,7 +36,7 @@ const CodeSpace = () => {
       socket.emit('codeChange', val, roomId); // Pass roomId or any identifier
       console.log('emitting codeChange from client');
     }
-  }, [socket]);
+  }, [socket, roomId]);
 
   const fetchData = () => {
     fetch(`http://localhost:3002/api/room/${roomId}`)
@@ -70,6 +70,12 @@ const CodeSpace = () => {
       setValue(newCode); // Update the value with the new code
     });
 
+    // Listen for 'languageChange' events from the server
+    matchedSocket.on('languageChange', (newLanguage: string) => {
+      console.log('receive language from server');
+      setSelectedLanguage(newLanguage); // Update the selected language
+    });
+
     setSocket(matchedSocket);
     fetchData();
 
@@ -79,7 +85,12 @@ const CodeSpace = () => {
   }, [roomId]);
 
   const handleLanguageChange = (selectedLanguage: string) => {
+    console.log(selectedLanguage)
     setSelectedLanguage(selectedLanguage);
+    // Emit a 'languageChange' event to the server to inform other users
+    if (socket) {
+      socket.emit('languageChange', selectedLanguage, roomId);
+    }
   };
 
   const getCodeMirrorExtensions = () => {

@@ -102,7 +102,16 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Listen for the 'codeChange' event from the client
+  socket.on('languageChange', (newLanguage, roomId) => {
+    console.log('emit languagechange from server');
 
+    // Check if the sender belongs to the same room
+    if (socket.rooms.has(roomId)) {
+      // Broadcast the code change only to sockets in the same room
+      io.to(roomId).emit('languageChange', newLanguage);
+    }
+  });
 
 });
 
