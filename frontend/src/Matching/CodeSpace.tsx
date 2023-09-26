@@ -3,6 +3,9 @@ import { useParams, useLocation } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
+import { langNames, langs } from '@uiw/codemirror-extensions-langs';
+
+console.log('langNames:', langNames); // To show the available language supported by codemirror
 
 interface Question {
   _id: string;
@@ -22,15 +25,16 @@ const CodeSpace = () => {
   const [question, setQuestion] = useState<Question | null>(null);
   const [code, setCode] = useState("console.log('hello world!');");
   const [value, setValue] = React.useState("console.log('hello world!');");
+  const [selectedLanguage, setSelectedLanguage] = useState('c'); // Default language is C
 
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
     console.log('val:', val);
     setValue(val);
-  
+
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
       socket.emit('codeChange', val, roomId); // Pass roomId or any identifier
-      console.log('emiting codechange from client');
+      console.log('emitting codeChange from client');
     }
   }, [socket]);
 
@@ -74,6 +78,21 @@ const CodeSpace = () => {
     };
   }, [roomId]);
 
+  const handleLanguageChange = (selectedLanguage: string) => {
+    setSelectedLanguage(selectedLanguage);
+  };
+
+  const getCodeMirrorExtensions = () => {
+    switch (selectedLanguage) {
+      case 'python':
+        return [langs.python()];
+      case 'java':
+        return [langs.java()];
+      default:
+        return [javascript()]; // Default to JavaScript if none selected
+    }
+  };
+
   return (
     <div>
       <h2>Welcome, {socketId || 'Loading...'}</h2>
@@ -101,7 +120,30 @@ const CodeSpace = () => {
       <br />
 
       <div>
-        <CodeMirror value={value} height="200px" onChange={onChange} />
+        <label>Select Language:</label>
+        <select
+          value={selectedLanguage}
+          onChange={(e) => handleLanguageChange(e.target.value)}
+        >
+          <option value="c">C</option>
+          <option value="cpp">C++</option>
+          <option value="csharp">C#</option>
+          <option value="go">Go</option>
+          <option value="java">Java</option>
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="ruby">Ruby</option>
+          <option value="typescript">TypeScript</option>
+        </select>
+      </div>
+
+      <div>
+        <CodeMirror
+          value={value}
+          height="200px"
+          onChange={onChange}
+          extensions={getCodeMirrorExtensions()}
+        />
       </div>
     </div>
   );
