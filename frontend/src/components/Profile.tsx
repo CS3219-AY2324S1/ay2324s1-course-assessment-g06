@@ -33,10 +33,9 @@ const Profile: React.FC = () => {
       window.location.reload();
     }
   };
+  // update user
 
-  useEffect(() => {
-
-  });
+  // update password
   
   return (
     <div className="container">
@@ -61,6 +60,8 @@ const Profile: React.FC = () => {
           currentUser.roles.map((role: string, index: number) => <li key={index}>{role}</li>)}
       </ul>
       <button onClick={toggleDeleteModal}>Delete</button>
+      <button>update profile</button>
+      <button>change password</button>
       <Dialog
         open={openDeleteModel}
         onClose={toggleDeleteModal}
