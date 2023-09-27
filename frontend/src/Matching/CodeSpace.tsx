@@ -23,7 +23,6 @@ const CodeSpace = () => {
   const { socketId, difficulty } = location.state || {};
   const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
-  const [code, setCode] = useState("console.log('hello world!');");
   const [value, setValue] = React.useState(() => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";

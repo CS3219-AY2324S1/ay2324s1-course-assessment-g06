@@ -52,18 +52,20 @@ const waitingQueue = [];
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('match me', (selectedDifficulty) => {
+  socket.on('match me', (selectedDifficulty, selectedTopic) => {
+    console.log(selectedDifficulty)
     const matchingUserIndex = waitingQueue.findIndex(
-      (user) => user.selectedDifficulty === selectedDifficulty
+      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic
     );
 
     if (matchingUserIndex !== -1) {
       console.log('User match!');
       const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
-      startMatch(user1, socket, selectedDifficulty);
+      startMatch(user1, socket, selectedDifficulty, selectedTopic);
     } else {
       console.log('No user found');
       socket.selectedDifficulty = selectedDifficulty;
+      socket.selectedTopic = selectedTopic;
       waitingQueue.push(socket);
     }
   });
@@ -115,10 +117,10 @@ io.on('connection', (socket) => {
 
 });
 
-function startMatch(user1, user2, selectedDifficulty) {
+function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
   const roomId = uuidv4();
 
-  generateQuestion(selectedDifficulty)
+  generateQuestion(selectedDifficulty, selectedTopic)
     .then((question) => {
       if (question) {
         rooms.set(roomId, { questionId: question._id });
@@ -140,9 +142,9 @@ function startMatch(user1, user2, selectedDifficulty) {
     });
 }
 
-async function generateQuestion(difficulty) {
+async function generateQuestion(difficulty, topic) {
   try {
-    const response = await fetch(`http://localhost:3000/api/questions/matched?difficulty=${difficulty}`);
+    const response = await fetch(`http://localhost:3000/api/questions/matched?difficulty=${difficulty}&topics=${topic}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }

@@ -17,6 +17,7 @@ const Matchmaking: React.FC = () => {
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy');
+  const [selectedTopic, setSelectedTopic] = useState<string>('Array'); // Track the selected topic
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
   const [isMatchFound, setIsMatchFound] = useState<boolean>(false); // Track if a match is found
   const navigate = useNavigate();
@@ -116,8 +117,8 @@ const Matchmaking: React.FC = () => {
     } else {
       startTimer();
       setMatchStatus('Matching...');
-      console.log(selectedDifficulty);
-      socket.emit('match me', selectedDifficulty);
+      console.log(selectedDifficulty, selectedTopic); // Include selectedTopic in the console log
+      socket.emit('match me', selectedDifficulty , selectedTopic);
 
       // Automatically cancel the match after 20 seconds
       setTimeout(() => {
@@ -134,6 +135,12 @@ const Matchmaking: React.FC = () => {
   const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectedDifficulty(value);
+  };
+
+  // Handle topic change
+  const handleTopicChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    setSelectedTopic(value);
   };
 
   return (
@@ -155,11 +162,33 @@ const Matchmaking: React.FC = () => {
             </select>
           </div>
         </div>
+
+        <div className="col-md-4">
+          <div className="form-group">
+            <label htmlFor="topics">Select topics:</label>
+            <select
+              id="topics"
+              className="form-control"
+              value={selectedTopic}
+              onChange={handleTopicChange}
+              disabled={isMatching}
+            >
+              <option value="Array">Array</option>
+              <option value="Binary Search">Binary Search</option>
+              <option value="Hash Table">Hash Table</option>
+              <option value="Stack">Stack</option>
+              <option value="String">String</option>
+              <option value="Tree">Tree</option>
+              <option value="Math">Math</option>
+              <option value="Matrix">Matrix</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div className="row mt-3">
         <div className="col-md-4">
-          <button id="matchButton" className="btn btn-primary" onClick={handleMatchClick} disabled={isMatchFound} >
+          <button id="matchButton" className="btn btn-primary" onClick={handleMatchClick} disabled={isMatchFound}>
             {isMatching ? 'Cancel Match' : 'Match'}
           </button>
           <div className="d-flex align-items-center mt-2">
