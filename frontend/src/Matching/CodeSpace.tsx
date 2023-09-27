@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
+import ScrollToBottom from 'react-scroll-to-bottom';
 import './CodeSpace.css'; 
 
 console.log('langNames:', langNames); // To show the available language supported by codemirror
@@ -25,6 +26,7 @@ interface ChatMessage {
   message: string;
   time: string;
 }
+
 
 const CodeSpace = () => {
   const { roomId } = useParams();
@@ -210,6 +212,7 @@ const CodeSpace = () => {
             <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> {/* Added inline style */}
               <h2>Chat</h2>
               <div className="chat-messages">
+                <ScrollToBottom className='message-container'>
                 {messageList.map((messageContent, index) => (
                   <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "other"}>
                     <div className='message-content'>
@@ -220,6 +223,7 @@ const CodeSpace = () => {
                     </div>
                   </div>
                 ))}
+                </ScrollToBottom>
               </div>
               <div className="chat-input">
                 <input
@@ -227,13 +231,11 @@ const CodeSpace = () => {
                   placeholder="Type your message..."
                   value={newMessage}
                   onChange={handleNewMessageChange}
+                  onKeyPress={(event) => event.key === "Enter" && handleSendMessage()}
                 />
                 <button onClick={handleSendMessage}>Send</button>
               </div>
             </div>
-        
-
-
       </div>
     </div>
   );

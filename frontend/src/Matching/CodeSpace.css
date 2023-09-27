@@ -60,12 +60,6 @@
     background-color: #0056b3;
   }
   
-
-/* CSS for Chat Messages */
-.chat-messages {
-    /* Your existing styles for chat messages container */
-  }
-  
   .chat-message {
     display: flex;
     margin-bottom: 8px;
@@ -79,12 +73,20 @@
     color: gray;
     /* Add styles for meta information here */
   }
+
+  .message-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
   
   /* Style for 'own' messages */
   #own {
     justify-content: flex-start;
     background-color: #53d769;
     float: right;
+    margin-right: 15px;
     clear: both;
   }
   
