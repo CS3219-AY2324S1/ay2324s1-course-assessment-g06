@@ -35,7 +35,8 @@ export const getCurrentUser = () => {
 
   return null;
 };
+
 export const deleteUser = (id: string)=> {
-  return axios.delete(API_URL + "removeuser", {params: { id: id }})
+  return axios.delete(API_URL + `removeuser/${id}`)
   .catch(err => {console.log(err)});
 };

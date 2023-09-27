@@ -1,9 +1,43 @@
-import React from "react";
-import { getCurrentUser } from "../services/auth.service";
+import {useEffect,useState} from "react";
+import { getCurrentUser, deleteUser, logout } from "../services/auth.service";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { NavigateFunction, useNavigate, useLocation } from "react-router-dom";
+
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
-  // for updating the user, 
+  // const location = useLocation();
+  // const setCurrentUser = location.state;
+  let navigate: NavigateFunction = useNavigate();
+  // delete code
+  const [openDeleteModel, setOpenDeleteModal] = useState(false);
+  const toggleDeleteModal = () => {
+    setOpenDeleteModal(!openDeleteModel);
+  }
+
+  const deleteUserAccount = async () => {
+    try {
+      await deleteUser(currentUser.id);
+      logout();
+    } catch (err) {
+      // useState to log api error?
+      console.log(err);
+    } finally {
+      // need to figure out how to not force it without context
+      navigate("/login");
+      window.location.reload();
+    }
+  };
+
+  useEffect(() => {
+
+  });
+  
   return (
     <div className="container">
       <header className="jumbotron">
@@ -26,6 +60,28 @@ const Profile: React.FC = () => {
         {currentUser.roles &&
           currentUser.roles.map((role: string, index: number) => <li key={index}>{role}</li>)}
       </ul>
+      <button onClick={toggleDeleteModal}>Delete</button>
+      <Dialog
+        open={openDeleteModel}
+        onClose={toggleDeleteModal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {`Delete your account? ${currentUser.username}`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           "Are you sure you want to delete your account?"
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={toggleDeleteModal}>Disagree</Button>
+          <Button onClick={deleteUserAccount} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
