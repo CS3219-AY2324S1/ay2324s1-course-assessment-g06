@@ -126,15 +126,19 @@ module.exports = {
       });
   },
   // Controller function to get a random question via given filters
-  // Usage: GET request to http://localhost:3000/api/questions/matched?difficulty=<difficulty_level>
+  // Usage: GET request to http://localhost:3000/api/questions/matched?difficulty=<difficulty_level>&topics=<topics>
   getRandomQuestionByFilter: (req, res) => {
-    const { difficulty } = req.query; // Get the difficulty level from the query parameter
+    const { difficulty, topics } = req.query; // Get the difficulty level and topics from the query parameters
 
-    // Define a filter object based on the provided difficulty level
+    // Define a filter object based on the provided difficulty level and topics
     const filter = {};
 
     if (difficulty) {
       filter.difficulty = difficulty;
+    }
+
+    if (topics) {
+      filter.topics = { $regex: `.*${topics}.*`, $options: 'i' }; // Match topics containing <topics> (case-insensitive)
     }
 
     // Use the aggregate function to select a random question based on the filter
@@ -151,5 +155,5 @@ module.exports = {
       .catch((error) => {
         res.status(500).json({ error: "Error fetching random question" });
       });
-  },
+  },  
 };
