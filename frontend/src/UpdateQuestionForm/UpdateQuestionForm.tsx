@@ -3,12 +3,13 @@ import React, {useEffect, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button , Paper, Typography, Container } from "@mui/material";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 // Import customised components
 import { FormInputText } from "../form_components/FormInputText";
 import { FormInputDropdown } from "../form_components/FormInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
-
 
 interface Question {
   _id: string;
@@ -53,41 +54,40 @@ export default function UpdateForm () {
   const [editorContent, setEditorContent] = useState("");
   const [question, setQuestion] = useState<Question | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   // Called at the start to retrieve existing data
-  // Called at the start to retrieve existing data
-useEffect(() => {
-  const fetchData = () => {
-    console.log("Fetching data for id:", id);
-    fetch(`http://localhost:3000/api/questions/${id}`)
-      .then((response) => response.json())
-      .then((responseData) => {
-        setQuestion((prevQuestion) => ({
-          ...prevQuestion,
-          ...responseData,
-        }));
-        // Update default form values based on fetched data
-        const { title, category, difficulty, content } = responseData;
-        setValue("title", title);
-        setValue("category", category);
-        setValue("difficulty", difficulty);
-        setEditorContent(content);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setQuestion(null);
-      });
-  };
+  useEffect(() => {
+    const fetchData = () => {
+      console.log("Fetching data for id:", id);
+      fetch(`http://localhost:3000/api/questions/${id}`)
+        .then((response) => response.json())
+        .then((responseData) => {
+          setQuestion((prevQuestion) => ({
+            ...prevQuestion,
+            ...responseData,
+          }));
+          // Update default form values based on fetched data
+          const { title, category, difficulty, content } = responseData;
+          setValue("title", title);
+          setValue("category", category);
+          setValue("difficulty", difficulty);
+          setEditorContent(content);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          setQuestion(null);
+        });
+    };
 
-  fetchData(); // Call the fetchData function immediately
-}, [id, setValue]);
-
-  
-
+    fetchData();
+  }, [id, setValue]);
 
   // Called when clicking on update button to submit new data
   const onUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Access form data using methods.getValues() if you are using react-hook-form
     const formData = methods.getValues();
 
     // Include editor content in the form data
@@ -96,20 +96,18 @@ useEffect(() => {
       content: editorContent,
     };
 
+    console.log(formDataWithEditorContent)
     for (const key in formDataWithEditorContent) {
       if (formDataWithEditorContent.hasOwnProperty(key)) {
         const value = formDataWithEditorContent[key as keyof IFormInput];
-        if (!value) {
+        if ((!value) || ((key === "content") && (value === "<p></p>\n"))) {
           console.error(`${key} is empty`);
           setFormSubmitted(true);
+          setErrorMessage(`${key} is empty`);
           return;
         }
       }
     }
-
-    console.log(formDataWithEditorContent);
-    navigate("/questions");
-    navigate(`/questions/${id}`);
 
     fetch(`http://localhost:3000/api/questions/${id}`, {  
       method: 'PUT', 
@@ -118,17 +116,25 @@ useEffect(() => {
       "Content-Type": "application/json", 
     },
     body: JSON.stringify(formDataWithEditorContent), // Send the modified data
-  })
-    .then((response) => response.json())
+    })
+    .then((response) => {
+      if (response.status === 400) {
+        // Title already exists, show an alert
+        return response.json().then((responseData) => {
+          setErrorMessage(responseData.error);
+          throw new Error("Title already exists");
+        });
+      }
+      response.json();
+    })
     .then((responseData) => {
-      console.log("Question put successfully", responseData);
+      navigate(`/questions/${id}`);
       // Navigate to a different page or reset the form here
     })
     .catch((error) => {
       console.error("Error putting question", error);
     });
   };
-
 
   const handleBack = () => {
     navigate(`/questions/${id}`);
@@ -195,6 +201,13 @@ useEffect(() => {
         {" "}
         Back{" "}
       </Button>
+
+      {errorMessage && (
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {errorMessage}
+        </Alert>
+      )}
 
     </Paper>
     </form>

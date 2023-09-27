@@ -4,6 +4,8 @@ import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
 import Question from "./Question/Question";
+import Matching from "./Matching/Matching";
+import CodeSpace from "./Matching/CodeSpace";
 import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
 import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
@@ -18,14 +20,7 @@ import Protected from "./components/Protected";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
-
 import EventBus from "./common/EventBus";
-
-interface ProtectedRouteProps {
-  element: React.ReactElement;
-  path: string;
-  loggedIn: boolean;
-}
 
 
 const App: React.FC = () => {
@@ -146,6 +141,8 @@ const App: React.FC = () => {
             </Protected>
           } />
           <Route path="/questions/:id" element={<Question />} />
+          <Route path="/matching" element={<Matching />} />
+          <Route path="/match/:roomId" element={<CodeSpace />} />
           <Route path="/questions/:id/update" element={<UpdateQuestionForm />} />
           <Route path="/questions/add-question" element={<AddQuestionForm />} />
         </Routes>
