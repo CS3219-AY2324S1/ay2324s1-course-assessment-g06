@@ -33,7 +33,8 @@ const CodeSpace = () => {
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
     console.log('val:', val);
     setValue(val);
-
+// Save the code value to localStorage
+    localStorage.setItem('code', val);
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
       socket.emit('codeChange', val, roomId); // Pass roomId or any identifier
