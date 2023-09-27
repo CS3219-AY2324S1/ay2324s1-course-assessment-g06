@@ -1,56 +1,40 @@
-// Use env file
-require('dotenv').config();
-const cors = require('cors');
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser'); // For parsing JSON request bodies
-const questionRoutes = require('./routes/questionRoutes');
+const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
-// Enable CORS for all routes
+
 app.use(cors());
 
-// Parse JSON request bodies
-app.use(bodyParser.json());
+// parse requests of content-type - application/json
+app.use(express.json());
 
-app.listen(3000, () => {
-  console.log('Server has started! Open http://localhost:3000');
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
+// database
+const db = require("./models");
+const Role = db.role;
+
+db.sequelize.sync();
+// force: true will drop the table if it already exists
+// db.sequelize.sync({force: true}).then(() => {
+//   console.log('Drop and Resync Database with { force: true }');
+//   initial();
+// });
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Hello World" });
 });
 
-// MongoDB Atlas credentials
-const dbUsername = encodeURIComponent(process.env.DB_USERNAME);
-const dbPassword = encodeURIComponent(process.env.DB_PASSWORD);
-const clusterUrl = process.env.DB_CLUSTER_URL;
-const dbName = 'questions';
+// routes
+require('./routes/auth.routes')(app);
+require('./routes/user.routes')(app);
 
-// Connection URI for MongoDB Atlas
-const uri = `mongodb+srv://${dbUsername}:${dbPassword}@${clusterUrl}/${dbName}?retryWrites=true&w=majority`;
-
-// Establish the MongoDB connection
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+// set port, listen for requests
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });
-
-// Check for MongoDB Atlas connection
-const db = mongoose.connection;
-db.on('error', (error) => {
-  console.error('MongoDB connection error:', error);
-});
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
-
-// Use the question routes
-app.use('/api/questions', questionRoutes);
-
-
-
-// The root route
-app.get('/', async (req, res) => {
-  res.send('Hello World!');
-});
-
-
 
