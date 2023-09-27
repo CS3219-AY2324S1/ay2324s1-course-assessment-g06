@@ -24,7 +24,10 @@ const CodeSpace = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [code, setCode] = useState("console.log('hello world!');");
-  const [value, setValue] = React.useState("console.log('hello world!');");
+  const [value, setValue] = React.useState(() => {
+    // Retrieve the code value from localStorage or set a default value
+    return localStorage.getItem('code') || "console.log('hello world!')";
+  });
   const [selectedLanguage, setSelectedLanguage] = useState('c'); // Default language is C
 
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
