@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
+import './CodeSpace.css'; 
 
 console.log('langNames:', langNames); // To show the available language supported by codemirror
 
@@ -17,6 +18,14 @@ interface Question {
   topics: string;
 }
 
+// Define type for chat messages
+interface ChatMessage {
+  roomId: string;
+  author: string;
+  message: string;
+  time: string;
+}
+
 const CodeSpace = () => {
   const { roomId } = useParams();
   const location = useLocation();
@@ -28,11 +37,38 @@ const CodeSpace = () => {
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
   const [selectedLanguage, setSelectedLanguage] = useState('c'); // Default language is C
+  // Initialize the state with an empty array of ChatMessage objects
+  const [messageList, setMessageList] = useState<ChatMessage[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+
+  const handleNewMessageChange = (e: any) => {
+    setNewMessage(e.target.value);
+  };
+
+  const handleSendMessage = () => {
+    if (newMessage !== '') {
+      const messageData = {
+        roomId: roomId,
+        author: socketId,
+        message: newMessage,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+  
+      if (socket) {
+        socket.emit('sendMessage', messageData);
+      }
+
+      // Clear the input field
+      setNewMessage('');
+
+    }
+
+  };
 
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
     console.log('val:', val);
     setValue(val);
-// Save the code value to localStorage
+    // Save the code value to localStorage
     localStorage.setItem('code', val);
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
@@ -78,6 +114,12 @@ const CodeSpace = () => {
       console.log('receive language from server');
       setSelectedLanguage(newLanguage); // Update the selected language
     });
+
+    // Listen for 'receive message' events from the server
+    matchedSocket.on('receiveMessage', (data) => {
+      console.log('receiveMessage from server');
+      setMessageList((list) => [...list, data]); // Update the selected language
+    }); 
 
     setSocket(matchedSocket);
     fetchData();
@@ -158,6 +200,40 @@ const CodeSpace = () => {
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
         />
+
+            <br/>
+            <br/>
+            <br/>
+
+
+            {/* Chat UI */}
+            <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> {/* Added inline style */}
+              <h2>Chat</h2>
+              <div className="chat-messages">
+                {messageList.map((messageContent, index) => (
+                  <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "other"}>
+                    <div className='message-content'>
+                      {messageContent.message}
+                    </div>
+                    <div className='message-meta'>
+                      {messageContent.time}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="chat-input">
+                <input
+                  type="text"
+                  placeholder="Type your message..."
+                  value={newMessage}
+                  onChange={handleNewMessageChange}
+                />
+                <button onClick={handleSendMessage}>Send</button>
+              </div>
+            </div>
+        
+
+
       </div>
     </div>
   );

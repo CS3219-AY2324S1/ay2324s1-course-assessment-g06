@@ -115,6 +115,17 @@ io.on('connection', (socket) => {
     }
   });
 
+  // Listen for the 'sendMessage' event from the client
+  socket.on('sendMessage', (data) => {
+    console.log('emit receiveMessage from server');
+    // Check if the sender belongs to the same room
+    if (socket.rooms.has(data.roomId)) {
+      // Broadcast the code change only to sockets in the same room
+      io.to(data.roomId).emit('receiveMessage', data);
+    }
+  });
+
+
 });
 
 function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
@@ -154,10 +165,4 @@ async function generateQuestion(difficulty, topic) {
     console.error("Error fetching data:", error);
     return null;
   }
-}
-
-
-function getRoomId(socket) {
-  const rooms = Object.keys(socket.rooms);
-  return rooms.length > 1 ? rooms[1] : null;
 }
