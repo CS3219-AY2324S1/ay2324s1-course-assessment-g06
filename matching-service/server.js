@@ -2,14 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
-const { v4: uuidv4 } = require('uuid'); // Import uuidv4 from the 'uuid' package
+const { v4: uuidv4 } = require('uuid');
 const rooms = new Map();
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ['http://localhost:3001', 'http://localhost:3002'], // Add the additional site's URL here
+    origin: ['http://localhost:3001', 'http://localhost:3002'],
   },
 });
 
@@ -31,18 +31,15 @@ app.get('/api/room/:roomId', (req, res) => {
     fetch(`http://localhost:3000/api/questions/${questionId}`)
       .then((response) => {
         if (!response.ok) {
-          // Handle non-successful HTTP responses (e.g., 404, 500, etc.)
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
         }
-        return response.json(); // Parse JSON if the response is OK
+        return response.json();
       })
       .then((responseData) => {
-        console.log(responseData);
         res.json(responseData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        // Send an error response to the client
         res.status(500).json({ error: 'Error fetching data from external API' });
       });
   } else {
@@ -50,14 +47,12 @@ app.get('/api/room/:roomId', (req, res) => {
   }
 });
 
-
 const waitingQueue = [];
 
 io.on('connection', (socket) => {
   console.log('A user connected');
 
   socket.on('match me', (selectedDifficulty) => {
-    // Check if there's a user with the same selected difficulty in the queue
     const matchingUserIndex = waitingQueue.findIndex(
       (user) => user.selectedDifficulty === selectedDifficulty
     );
@@ -73,14 +68,19 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Handle cancel match event
   socket.on('cancel match', () => {
     const index = waitingQueue.indexOf(socket);
     if (index !== -1) {
       waitingQueue.splice(index, 1);
       console.log('Matching canceled by user');
-      socket.emit('match canceled'); // Notify the client that the match is canceled
+      socket.emit('match canceled');
     }
+  });
+
+  // Listen for the 'joinRoom' event from the client
+  socket.on('joinRoom', (roomId) => {
+    // Use Socket.IO's join method to add the socket to the room
+    socket.join(roomId);
   });
 
   socket.on('disconnect', () => {
@@ -90,33 +90,49 @@ io.on('connection', (socket) => {
       waitingQueue.splice(index, 1);
     }
   });
+
+  // Listen for the 'codeChange' event from the client
+  socket.on('codeChange', (newCode, roomId) => {
+    console.log('emit codechange from server');
+
+    // Check if the sender belongs to the same room
+    if (socket.rooms.has(roomId)) {
+      // Broadcast the code change only to sockets in the same room
+      io.to(roomId).emit('codeChange', newCode);
+    }
+  });
+
+  // Listen for the 'codeChange' event from the client
+  socket.on('languageChange', (newLanguage, roomId) => {
+    console.log('emit languagechange from server');
+
+    // Check if the sender belongs to the same room
+    if (socket.rooms.has(roomId)) {
+      // Broadcast the code change only to sockets in the same room
+      io.to(roomId).emit('languageChange', newLanguage);
+    }
+  });
+
 });
 
 function startMatch(user1, user2, selectedDifficulty) {
-  const roomId = uuidv4(); // Generate a unique room ID (you need to import uuid or use any other method)
+  const roomId = uuidv4();
 
-  // Fetch the question based on the selected difficulty
   generateQuestion(selectedDifficulty)
     .then((question) => {
       if (question) {
-        // Store the room information including the question ID
         rooms.set(roomId, { questionId: question._id });
 
-        // Emit the room ID to both matched users
         user1.emit('match found', roomId, 'You are matched with another user!');
         user2.emit('match found', roomId, 'You are matched with another user!');
 
-        // Have both users join the same room
         user1.join(roomId);
         user2.join(roomId);
 
-        // Send the question ID to both users in this room
         user1.emit('question', question._id);
         user2.emit('question', question._id);
       } else {
-        // Handle the case where the question could not be fetched
         console.error('Failed to fetch question.');
-        // You may want to handle this situation appropriately.
       }
     })
     .catch((error) => {
@@ -127,7 +143,6 @@ function startMatch(user1, user2, selectedDifficulty) {
 async function generateQuestion(difficulty) {
   try {
     const response = await fetch(`http://localhost:3000/api/questions/matched?difficulty=${difficulty}`);
-    console.log(`http://localhost:3000/api/questions/matched?difficulty=${difficulty}`)
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }
@@ -137,4 +152,10 @@ async function generateQuestion(difficulty) {
     console.error("Error fetching data:", error);
     return null;
   }
+}
+
+
+function getRoomId(socket) {
+  const rooms = Object.keys(socket.rooms);
+  return rooms.length > 1 ? rooms[1] : null;
 }
