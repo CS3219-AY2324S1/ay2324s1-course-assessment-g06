@@ -26,21 +26,21 @@ interface QuestionInt {
 }
 
 const QuestionWrapper = styled(Container)(({ theme }) => ({
-  backgroundColor: 'rgb(231, 231, 231)',
+  backgroundColor: "#d8d8d8",
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  fontWeight: 'bold',
-  textAlign: 'center',
-  borderRadius: '50px',
+  fontWeight: "bold",
+  textAlign: "center",
+  borderRadius: "50px",
 }));
 
 const CategoryWrapper = styled(Container)(({ theme }) => ({
-  backgroundColor: 'rgb(255, 192, 203)',
+  backgroundColor: "rgb(255, 192, 203)",
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  fontWeight: 'bold',
-  textAlign: 'center',
-  borderRadius: '50px',
+  fontWeight: "bold",
+  textAlign: "center",
+  borderRadius: "50px",
 }));
 
 export default function Question() {
@@ -52,10 +52,10 @@ export default function Question() {
   useEffect(() => {
     const fetchDataWithDelay = () => {
       console.log("Fetching data for id:", id);
-  
+
       // Add a delay of, for example, 1000 milliseconds (1 second)
       const delay = 200;
-  
+
       setTimeout(() => {
         fetch(`http://localhost:3000/api/questions/${id}`)
           .then((response) => response.json())
@@ -68,13 +68,11 @@ export default function Question() {
           });
       }, delay);
     };
-  
+
     fetchDataWithDelay(); // Call the function immediately
-  
   }, [id]);
 
-
-  function wrapPreTags(content : string) {
+  function wrapPreTags(content: string) {
     // Use regular expressions to add a class to <pre> tags
     const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
     return wrappedContent;
@@ -103,11 +101,11 @@ export default function Question() {
 
   const handleUpdate = () => {
     navigate(`/questions/${id}/update`);
-  }
+  };
 
   const handleBack = () => {
     navigate("/questions");
-  }
+  };
 
   if (question === null) {
     return <div>Loading...</div>;
@@ -116,18 +114,36 @@ export default function Question() {
   // Check if question is defined before accessing its properties
   if (question !== undefined) {
     return (
-      <Container maxWidth="lg" style={{ margin: "0 auto" }}> 
-      {/* <div className="box"> */}
+      <Container
+        maxWidth="lg"
+        style={{
+          margin: "40px auto 0 auto",
+          backgroundColor: "#E6E6E6",
+          borderRadius: "20px",
+          width: "80%", // Adjust the width as needed (percentage or pixels)
+          height: "80vh", // Adjust the height as needed (pixels)
+        }}
+      >
+        {/* <div className="box"> */}
 
-      <Grid item xs={12}>
-          <Button variant="contained" onClick={handleBack}>
-            Back </Button>
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            style={{
+              left: "-100px",
+              fontSize: "25px",
+              borderRadius: "80px",
+              backgroundColor: "#D9D9D9",
+            }}
+            onClick={handleBack}
+          >
+            &lt;
+          </Button>
         </Grid>
-        
-        <Grid sx={{ flexGrow: 1 }} container spacing={1}>
 
+        <Grid sx={{ flexGrow: 1 }} container spacing={1}>
           <Grid item xs={12}>
-              <h1>{question.title}</h1>
+            <h1 style={{ fontSize: "30px" }}>{question.title}</h1>
           </Grid>
 
           <Grid item xs={6}>
@@ -140,27 +156,56 @@ export default function Question() {
 
           <Container maxWidth="lg">
             <Paper
-            style={{
-              padding: "20px",
-              margin: "10px",
-            }}>
-            <Grid item xs={12}>
-              <div className="content-wrapper">
-                <div dangerouslySetInnerHTML={{ __html: wrapPreTags(question.content) }} />
-              </div>
-            </Grid>
+              style={{
+                padding: "20px",
+                margin: "10px",
+              }}
+            >
+              <Grid item xs={12}>
+                <div
+                  className="content-wrapper"
+                  style={{ overflow: "auto", maxHeight: "400px" }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: wrapPreTags(question.content),
+                    }}
+                  />
+                </div>
+              </Grid>
             </Paper>
           </Container>
 
           <Grid item xs={6}>
-              <DeleteButton variant="contained" onClick={handleDelete}>
-                Delete
-              </DeleteButton>
+            <DeleteButton
+              variant="contained"
+              style={{
+                backgroundColor: "#FF6A6A",
+                left: "213%",
+                bottom: "1500%",
+                borderRadius: "20px",
+              }}
+              onClick={handleDelete}
+            >
+              Delete
+            </DeleteButton>
           </Grid>
           <Grid item xs={6}>
-              <Button variant="contained" onClick={handleUpdate}>
-                Update
-              </Button>
+            <Button
+              variant="contained"
+              style={{
+                position: "relative",
+                backgroundColor: "#6C63FF",
+                left: "80%",
+                bottom: "1490%",
+                borderRadius: "50px",
+                fontWeight: "bold",
+                fontSize: "15px",
+              }}
+              onClick={handleUpdate}
+            >
+              Update
+            </Button>
           </Grid>
         </Grid>
       </Container>
