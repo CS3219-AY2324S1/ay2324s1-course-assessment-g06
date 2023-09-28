@@ -11,6 +11,24 @@ module.exports = {
       .catch((error) => {
         res.status(500).json({ error: "Error fetching questions" });
       });
+    // try {
+    //   const { page, pageSize } = req.query;
+    //   const skip = (page - 1) * pageSize;
+
+    //   // Fetch questions based on pagination parameters
+    //   const questions = await Question.find()
+    //     .skip(skip)
+    //     .limit(Number(pageSize))
+    //     .exec();
+
+    //   // Get the total count of questions
+    //   const totalCount = await Question.countDocuments();
+
+    //   res.json({ data: questions, totalQuestions: totalCount });
+    // } catch (error) {
+    //   console.error("Error fetching questions:", error);
+    //   res.status(500).json({ error: "Internal server error" });
+    // }
   },
   // Controller function to get a question by its _id
   // Usage: Get request to http://localhost:3000/api/questions/:id
@@ -36,14 +54,16 @@ module.exports = {
     );
     const { title, frontendQuestionId, difficulty, content, category, topics } =
       req.body;
-  
+
     // Check if a question with the same title already exists
     Question.findOne({ title })
       .then((existingQuestion) => {
         if (existingQuestion) {
-          return res.status(400).json({ error: "Question with this title already exists" });
+          return res
+            .status(400)
+            .json({ error: "Question with this title already exists" });
         }
-  
+
         const newQuestion = new Question({
           title,
           frontendQuestionId,
@@ -52,7 +72,7 @@ module.exports = {
           category,
           topics,
         });
-  
+
         newQuestion
           .save()
           .then((question) => {
@@ -65,7 +85,7 @@ module.exports = {
       .catch((error) => {
         res.status(500).json({ error: "Error checking for existing question" });
       });
-  },  
+  },
   // Controller function to update an existing question by ID
   // Usage: Put request to http://localhost:3000/api/questions/{id}
   updateQuestion: (req, res) => {
@@ -80,31 +100,32 @@ module.exports = {
 
     // Check if a question with the same title other than itself already exists
     Question.findOne({ title })
-    .then((existingQuestion) => {
-      if (existingQuestion  && (existingQuestion.id != id)) {
-        return res.status(400).json({ error: "Question with this title already exists" });
-      }
-
-      // Update the question
-      Question.findByIdAndUpdate(
-        id,
-        {
-          title,
-          frontendQuestionId,
-          difficulty,
-          content,
-          category,
-          topics,
-        },
-        { new: true } // Return the updated document
-        )
-      .then((question) => {
-        if (!question) {
-          return res.status(404).json({ error: "Question not found" });
+      .then((existingQuestion) => {
+        if (existingQuestion && existingQuestion.id != id) {
+          return res
+            .status(400)
+            .json({ error: "Question with this title already exists" });
         }
-        res.json(question);
+
+        // Update the question
+        Question.findByIdAndUpdate(
+          id,
+          {
+            title,
+            frontendQuestionId,
+            difficulty,
+            content,
+            category,
+            topics,
+          },
+          { new: true } // Return the updated document
+        ).then((question) => {
+          if (!question) {
+            return res.status(404).json({ error: "Question not found" });
+          }
+          res.json(question);
+        });
       })
-    })
       .catch((error) => {
         res.status(500).json({ error: "Error updating question" });
       });
@@ -138,7 +159,7 @@ module.exports = {
     }
 
     if (topics) {
-      filter.topics = { $regex: `.*${topics}.*`, $options: 'i' }; // Match topics containing <topics> (case-insensitive)
+      filter.topics = { $regex: `.*${topics}.*`, $options: "i" }; // Match topics containing <topics> (case-insensitive)
     }
 
     // Use the aggregate function to select a random question based on the filter
@@ -148,12 +169,14 @@ module.exports = {
     ])
       .then((questions) => {
         if (questions.length === 0) {
-          return res.status(404).json({ error: "No questions found for the given filter" });
+          return res
+            .status(404)
+            .json({ error: "No questions found for the given filter" });
         }
         res.json(questions[0]); // Return the random question
       })
       .catch((error) => {
         res.status(500).json({ error: "Error fetching random question" });
       });
-  },  
+  },
 };
