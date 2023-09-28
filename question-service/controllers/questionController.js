@@ -11,24 +11,6 @@ module.exports = {
       .catch((error) => {
         res.status(500).json({ error: "Error fetching questions" });
       });
-    // try {
-    //   const { page, pageSize } = req.query;
-    //   const skip = (page - 1) * pageSize;
-
-    //   // Fetch questions based on pagination parameters
-    //   const questions = await Question.find()
-    //     .skip(skip)
-    //     .limit(Number(pageSize))
-    //     .exec();
-
-    //   // Get the total count of questions
-    //   const totalCount = await Question.countDocuments();
-
-    //   res.json({ data: questions, totalQuestions: totalCount });
-    // } catch (error) {
-    //   console.error("Error fetching questions:", error);
-    //   res.status(500).json({ error: "Internal server error" });
-    // }
   },
   // Controller function to get a question by its _id
   // Usage: Get request to http://localhost:3000/api/questions/:id
