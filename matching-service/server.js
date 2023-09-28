@@ -125,6 +125,11 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('userTyping', (roomId, isTyping) => {
+    socket.to(roomId).emit('userTyping', isTyping);
+  });
+
+
 
 });
 

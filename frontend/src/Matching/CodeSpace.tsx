@@ -42,9 +42,33 @@ const CodeSpace = () => {
   // Initialize the state with an empty array of ChatMessage objects
   const [messageList, setMessageList] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+
+
+  // Debounce timer to control when to emit "user typing" event
+  let typingTimer: NodeJS.Timeout;
+  ;
 
   const handleNewMessageChange = (e: any) => {
     setNewMessage(e.target.value);
+
+    // Clear the previous typing timer
+    clearTimeout(typingTimer);
+
+    // Set a new timer to indicate typing after a delay
+    typingTimer = setTimeout(() => {
+      // Emit "user typing" event to the server
+      if (socket) {
+        socket.emit('userTyping', roomId, false);
+      }
+    }, 1000); // Adjust the delay as needed
+  };
+
+  const handleStartTyping = () => {
+    // Emit "user typing" event to the server
+    if (socket) {
+      socket.emit('userTyping', roomId, true);
+    }
   };
 
   const handleSendMessage = () => {
@@ -122,6 +146,12 @@ const CodeSpace = () => {
       console.log('receiveMessage from server');
       setMessageList((list) => [...list, data]); // Update the selected language
     }); 
+
+    // Listen for 'userTyping' events from the server
+    matchedSocket.on('userTyping', (isTyping) => {
+      setIsTyping(isTyping);
+    });
+
 
     setSocket(matchedSocket);
     fetchData();
@@ -231,8 +261,15 @@ const CodeSpace = () => {
                   placeholder="Type your message..."
                   value={newMessage}
                   onChange={handleNewMessageChange}
-                  onKeyPress={(event) => event.key === "Enter" && handleSendMessage()}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      handleSendMessage();
+                    } else {
+                      handleStartTyping(); 
+                    }
+                  }}
                 />
+                {isTyping && <div className="typing-indicator">Typing...</div>}
                 <button onClick={handleSendMessage}>Send</button>
               </div>
             </div>
