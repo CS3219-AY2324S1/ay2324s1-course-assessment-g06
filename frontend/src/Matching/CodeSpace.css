@@ -103,3 +103,15 @@
     color: #999;
     margin-top: 5px;
   }
+
+  /* CSS for System Messages */
+  #system {
+    font-weight: bold;
+    text-align: center; /* Center-align the system message */
+    margin: 0 auto; /* Center horizontally */
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+    max-width: 80%; /* Adjust the maximum width as needed */
+    clear: both;
+  }

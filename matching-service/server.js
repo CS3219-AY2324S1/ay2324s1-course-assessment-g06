@@ -83,6 +83,7 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (roomId) => {
     // Use Socket.IO's join method to add the socket to the room
     socket.join(roomId);
+    socket.to(roomId).emit("userConnected");
   });
 
   socket.on('disconnect', () => {

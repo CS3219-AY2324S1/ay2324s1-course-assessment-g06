@@ -31,7 +31,7 @@ interface ChatMessage {
 const CodeSpace = () => {
   const { roomId } = useParams();
   const location = useLocation();
-  const { socketId, difficulty } = location.state || {};
+  const { socketId, difficulty, topic } = location.state || {};
   const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [value, setValue] = React.useState(() => {
@@ -39,11 +39,18 @@ const CodeSpace = () => {
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
   const [selectedLanguage, setSelectedLanguage] = useState('c'); // Default language is C
+
+  const messageData: ChatMessage = {
+    roomId: roomId !== undefined ? roomId : "0", 
+    author: 'System', 
+    message: 'You have connected',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+
   // Initialize the state with an empty array of ChatMessage objects
-  const [messageList, setMessageList] = useState<ChatMessage[]>([]);
+  const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-
 
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
@@ -124,10 +131,18 @@ const CodeSpace = () => {
 
     matchedSocket.on('connect', () => {
       console.log('Connected to matched socket');
-      console.log(matchedSocket);
 
+      // Emit the "userConnected" event when the socket connects
+      matchedSocket.emit('userConnected', socketId, roomId);
       // Emit the "joinRoom" event when the socket connects
       matchedSocket.emit('joinRoom', roomId);
+    });
+
+    // Handle disconnection event
+    matchedSocket.on('userDisconnected', () => {
+      console.log('user disconnected from client')
+      // Emit a custom event to inform the server or other clients
+      matchedSocket.emit('userDisconnected', roomId);
     });
 
     // Listen for 'codeChange' events from the server
@@ -151,6 +166,39 @@ const CodeSpace = () => {
     matchedSocket.on('userTyping', (isTyping) => {
       setIsTyping(isTyping);
     });
+
+    // Listen for 'userConnected' and 'userDisconnected' events from the server
+    matchedSocket.on('userConnected', (connectedSocket) => {
+      console.log('receive userConnected from server');
+      console.log("current" + socketId)
+      console.log("connected" + connectedSocket)
+
+      if (connectedSocket !== socketId) {
+      // Send a message to the chat when another user connects
+      const messageData: ChatMessage = {
+        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+        author: 'System', 
+        // message: `A user (${connectedSocket}) has connected`,
+        message: `A user has connected`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessageList((list) => [...list, messageData]);
+      }
+    });
+
+    // Might not be able to work due to current implementation and window closes terminates socket abruptly
+    matchedSocket.on('userDisconnected', () => {
+      // Send a message to the chat when a user disconnects
+      const messageData: ChatMessage = {
+        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+        author: 'System', 
+        message: `A user has disconnected`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setMessageList((list) => [...list, messageData]);
+    });
+
 
 
     setSocket(matchedSocket);
@@ -185,7 +233,7 @@ const CodeSpace = () => {
     <div>
       <h2>Welcome, {socketId || 'Loading...'}</h2>
       <p>
-        You are matched with another user using difficulty: {difficulty || 'Not selected'}
+        You are matched with another user using difficulty: {difficulty || 'Not selected'} and topic: {topic || 'Not selected'}
       </p>
 
       <br />
@@ -239,12 +287,12 @@ const CodeSpace = () => {
 
 
             {/* Chat UI */}
-            <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> {/* Added inline style */}
+            <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
               <h2>Chat</h2>
               <div className="chat-messages">
                 <ScrollToBottom className='message-container'>
                 {messageList.map((messageContent, index) => (
-                  <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "other"}>
+                  <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
                     <div className='message-content'>
                       {messageContent.message}
                     </div>
