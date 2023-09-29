@@ -170,8 +170,9 @@ const Profile: React.FC = () => {
           toggleUpdatePasswordModal();
         })
         .catch((err) => {
-          console.log(err);
-          setUserErrorMessage(err.message);
+          // console.log(err);
+          // console.log(err.response.data)
+          setPasswordErrorMessage(err.response.data.message);
         });
     },
     enableReinitialize: true,
