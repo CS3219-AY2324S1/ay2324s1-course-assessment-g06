@@ -25,11 +25,11 @@ module.exports = function (app) {
 
   app.patch(
     '/api/auth/updateprofile/:id',
-    [verifySignUp.checkDuplicateUsernameOrEmail],
+    [verifySignUp.checkUpdateUsernameOrEmail],
     controller.updateProfile
   );
 
   app.patch('/api/auth/updatepassword/:id', controller.updatePassword);
-  
+
   app.get('/api/auth/getuser/:id', controller.getProfile);
 };
