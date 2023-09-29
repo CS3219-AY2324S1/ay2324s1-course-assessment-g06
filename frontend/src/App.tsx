@@ -81,6 +81,14 @@ const App: React.FC = () => {
             </li>
           )}
 
+          {showAdminBoard && (
+            <li className="nav-item">
+              <Link to={"/questions"} className="nav-link">
+                Questions
+              </Link>
+            </li>
+          )}
+
           {currentUser && (
             <li className="nav-item">
               <Link to={"/user"} className="nav-link">
@@ -125,10 +133,13 @@ const App: React.FC = () => {
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/" element={<><p><Link to="/questions">Go to Questions</Link></p></>} />
           {/* <Route path="/home" element={<Home />} /> */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={
+
+          <Login />
+          } />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={
-            <Protected isLoggedIn={currentUser}>
+            <Protected isLoggedIn={currentUser} redirectPath="/login">
               <Profile />
             </Protected>} />
           {/* <Route path="/user" element={<BoardUser />} />
@@ -136,7 +147,7 @@ const App: React.FC = () => {
           <Route path="/admin" element={<BoardAdmin />} /> */}
           {/* Can only access questions if there is logged in user */}
           <Route path="/questions" element={
-            <Protected isLoggedIn={currentUser}>
+            <Protected isLoggedIn={showAdminBoard} redirectPath="/">
               <BasicTable />
             </Protected>
           } />
