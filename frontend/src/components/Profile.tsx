@@ -9,6 +9,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { NavigateFunction, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { TextField } from '@mui/material';
+import { Formik, Field, Form, ErrorMessage, useFormik } from 'formik';
+import * as Yup from 'yup';
 
 interface User {
   username: string;
@@ -20,11 +22,8 @@ interface User {
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
   const [profile, setProfile] = useState<User | null>(null);
-
+  const [errorMessage, setErrorMessage] = useState('');
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
-  const toggleUpdateUserModal = () => {
-    setOpenUpdateUserModal(!openUpdateUserModel);
-  };
 
   useEffect(() => {
     const id = getCurrentUser().id;
@@ -35,7 +34,7 @@ const Profile: React.FC = () => {
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
   }, []);
   // const location = useLocation();
   // const setCurrentUser = location.state;
@@ -45,7 +44,6 @@ const Profile: React.FC = () => {
   const toggleDeleteModal = () => {
     setOpenDeleteModal(!openDeleteModel);
   };
-  
 
   const deleteUserAccount = async () => {
     try {
@@ -61,15 +59,57 @@ const Profile: React.FC = () => {
     }
   };
   // update user
-  const updateUserAccount = async () => {
-    try {
+  const toggleUpdateUserModal = () => {
+    setOpenUpdateUserModal(!openUpdateUserModel);
+  };
 
-    } catch (err) {
-      console.log(err);
-    } finally {
-      
-    }
-  }
+  const updateProfileSchema = Yup.object().shape({
+    username: Yup.string()
+      .test(
+        'len',
+        'The username must be between 3 and 20 characters.',
+        (val: any) =>
+          val && val.toString().length >= 3 && val.toString().length <= 20
+      )
+      .required('This field is required!'),
+    email: Yup.string()
+      .email('This is not a valid email.')
+      .required('This field is required!'),
+  });
+
+  const updateFormik = useFormik({
+    initialValues: {
+      username: profile?.username,
+      email: profile?.email,
+    },
+    validationSchema: updateProfileSchema,
+    onSubmit: (values, { resetForm }) => {
+      axios
+        .patch(
+          `http://localhost:3001/api/auth/updateprofile/${currentUser.id}`,
+          values
+        )
+        .then((response) => {
+          // console.log(response);
+          // console.log(values);
+          setProfile((prevProfile) => {
+            if (!prevProfile) {
+              return null;
+            } 
+            return {
+              ...prevProfile,
+              username: values.username || prevProfile.username,
+              email: values.email || prevProfile.email
+            }
+          });
+          resetForm();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    enableReinitialize: true,
+  });
   // update password
 
   return (
@@ -100,62 +140,79 @@ const Profile: React.FC = () => {
       <button onClick={toggleUpdateUserModal}>update profile</button>
       <button>change password</button>
       <div>
-      <Dialog
-        open={openDeleteModel}
-        onClose={toggleDeleteModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {`Delete your account? ${profile?.username}`}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            "Are you sure you want to delete your account?"
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={toggleDeleteModal}>Disagree</Button>
-          <Button onClick={deleteUserAccount} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog
+          open={openDeleteModel}
+          onClose={toggleDeleteModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {`Delete your account? ${profile?.username}`}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              "Are you sure you want to delete your account?"
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={toggleDeleteModal}>Disagree</Button>
+            <Button onClick={deleteUserAccount} autoFocus>
+              Agree
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
       <div>
-      <Dialog open={openUpdateUserModel} onClose={toggleUpdateUserModal}>
-        <DialogTitle>Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We
-            will send updates occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-            defaultValue={profile?.email}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-            defaultValue={profile?.email}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={toggleUpdateUserModal}>Cancel</Button>
-          <Button onClick={() => {console.log('e')}}>Subscribe</Button>
-        </DialogActions>
-      </Dialog> 
+        <Dialog open={openUpdateUserModel} onClose={toggleUpdateUserModal}>
+          <DialogTitle>Update Profile</DialogTitle>
+          <DialogContent>
+            <form onSubmit={updateFormik.handleSubmit}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="email"
+                name="email"
+                label="Email Address"
+                type="email"
+                fullWidth
+                onChange={updateFormik.handleChange}
+                value={updateFormik.values.email}
+                onBlur={updateFormik.handleBlur}
+                error={
+                  updateFormik.touched.email &&
+                  Boolean(updateFormik.errors.email)
+                }
+                helperText={
+                  updateFormik.touched.email && updateFormik.errors.email
+                }
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="username"
+                name="username"
+                label="UserName"
+                type="text"
+                fullWidth
+                variant="standard"
+                onChange={updateFormik.handleChange}
+                value={updateFormik.values.username}
+                onBlur={updateFormik.handleBlur}
+                error={
+                  updateFormik.touched.username &&
+                  Boolean(updateFormik.errors.username)
+                }
+                helperText={
+                  updateFormik.touched.username && updateFormik.errors.username
+                }
+              />
+              <DialogActions>
+                <Button onClick={toggleUpdateUserModal}>Cancel</Button>
+                <Button type="submit">Submit</Button>
+              </DialogActions>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
