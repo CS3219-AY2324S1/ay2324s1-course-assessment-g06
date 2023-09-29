@@ -26,6 +26,7 @@ const Profile: React.FC = () => {
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [openUpdatePasswordModel, setOpenUpdatePasswordModal] = useState(false);
+  const [openDeleteModel, setOpenDeleteModal] = useState(false);
 
   useEffect(() => {
     const id = getCurrentUser().id;
@@ -42,7 +43,6 @@ const Profile: React.FC = () => {
   // const setCurrentUser = location.state;
   let navigate: NavigateFunction = useNavigate();
   // delete code
-  const [openDeleteModel, setOpenDeleteModal] = useState(false);
   const toggleDeleteModal = () => {
     setOpenDeleteModal(!openDeleteModel);
   };
