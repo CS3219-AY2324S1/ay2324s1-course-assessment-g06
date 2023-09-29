@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { NavigateFunction, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { TextField } from '@mui/material';
+import { Alert, TextField } from '@mui/material';
 import { Formik, Field, Form, ErrorMessage, useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -22,8 +22,10 @@ interface User {
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
   const [profile, setProfile] = useState<User | null>(null);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [userErrorMessage, setUserErrorMessage] = useState('');
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [openUpdatePasswordModel, setOpenUpdatePasswordModal] = useState(false);
 
   useEffect(() => {
     const id = getCurrentUser().id;
@@ -90,7 +92,7 @@ const Profile: React.FC = () => {
           values
         )
         .then((response) => {
-          // console.log(response);
+          console.log(response);
           // console.log(values);
           setProfile((prevProfile) => {
             if (!prevProfile) {
@@ -102,10 +104,13 @@ const Profile: React.FC = () => {
               email: values.email || prevProfile.email
             }
           });
+          setUserErrorMessage('');
           resetForm();
+          toggleUpdateUserModal();
         })
         .catch((err) => {
           console.log(err);
+          setUserErrorMessage(err.message);
         });
     },
     enableReinitialize: true,
@@ -139,6 +144,7 @@ const Profile: React.FC = () => {
       <button onClick={toggleDeleteModal}>Delete</button>
       <button onClick={toggleUpdateUserModal}>update profile</button>
       <button>change password</button>
+      {/* delete user */}
       <div>
         <Dialog
           open={openDeleteModel}
@@ -162,6 +168,7 @@ const Profile: React.FC = () => {
           </DialogActions>
         </Dialog>
       </div>
+      {/* update profile */}
       <div>
         <Dialog open={openUpdateUserModel} onClose={toggleUpdateUserModal}>
           <DialogTitle>Update Profile</DialogTitle>
@@ -212,6 +219,10 @@ const Profile: React.FC = () => {
               </DialogActions>
             </form>
           </DialogContent>
+          {userErrorMessage && (
+          <div>
+            <Alert severity="error">{userErrorMessage}</Alert>
+          </div>)}
         </Dialog>
       </div>
     </div>
