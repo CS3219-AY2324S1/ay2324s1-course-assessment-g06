@@ -124,10 +124,10 @@ const Profile: React.FC = () => {
   };
 
   const updatePasswordSchema = Yup.object().shape({
-    initialPassword: Yup.string()
+    currentPassword: Yup.string()
     .test(
       "len",
-      "The password must be between 6 and 40 characters.",
+      "The password is be between 6 and 40 characters.",
       (val: any) =>
         val &&
         val.toString().length >= 6 &&
@@ -151,20 +151,20 @@ const Profile: React.FC = () => {
 
   const passwordFormik = useFormik({
     initialValues: {
-      initialPassword: "",
+      currentPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
     validationSchema: updatePasswordSchema,
     onSubmit: (values, { resetForm }) => {
+      const { currentPassword, newPassword } = values;
       axios
         .patch(
           `http://localhost:3001/api/auth/updatepassword/${currentUser.id}`,
-          values
+          { currentPassword, newPassword }
         )
         .then((response) => {
           console.log(response);
-          // console.log(values);
           setUserErrorMessage('');
           resetForm();
           toggleUpdatePasswordModal();
@@ -318,20 +318,20 @@ const Profile: React.FC = () => {
               <TextField
                 autoFocus
                 margin="dense"
-                id="initialPassword"
-                name="initialPassword"
-                label="initialPassword"
+                id="currentPassword"
+                name="currentPassword"
+                label="currentPassword"
                 type="password"
                 fullWidth
-                value={passwordFormik.values.initialPassword}
+                value={passwordFormik.values.currentPassword}
                 onChange={passwordFormik.handleChange}
                 onBlur={passwordFormik.handleBlur}
                 error={
-                  passwordFormik.touched.initialPassword &&
-                  Boolean(passwordFormik.errors.initialPassword)
+                  passwordFormik.touched.currentPassword &&
+                  Boolean(passwordFormik.errors.currentPassword)
                 }
                 helperText={
-                  passwordFormik.touched.initialPassword && passwordFormik.errors.initialPassword
+                  passwordFormik.touched.currentPassword && passwordFormik.errors.currentPassword
                 }
               />
               <TextField
@@ -378,9 +378,9 @@ const Profile: React.FC = () => {
               </DialogActions>
             </form>
           </DialogContent>
-          {userErrorMessage && (
+          {passwordErrorMessage && (
           <div>
-            <Alert severity="error">{userErrorMessage}</Alert>
+            <Alert severity="error">{passwordErrorMessage}</Alert>
           </div>)}
         </Dialog>
       </div>
