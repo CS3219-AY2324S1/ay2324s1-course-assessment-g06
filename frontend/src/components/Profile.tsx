@@ -60,6 +60,7 @@ const Profile: React.FC = () => {
       window.location.reload();
     }
   };
+
   // update user
   const toggleUpdateUserModal = () => {
     setOpenUpdateUserModal(!openUpdateUserModel);
@@ -115,7 +116,66 @@ const Profile: React.FC = () => {
     },
     enableReinitialize: true,
   });
-  // update password
+  
+
+  //Update Password
+  const toggleUpdatePasswordModal = () => {
+    setOpenUpdatePasswordModal(!openUpdatePasswordModel);
+  };
+
+  const updatePasswordSchema = Yup.object().shape({
+    initialPassword: Yup.string()
+    .test(
+      "len",
+      "The password must be between 6 and 40 characters.",
+      (val: any) =>
+        val &&
+        val.toString().length >= 6 &&
+        val.toString().length <= 40
+    )
+    .required("This field is required!"),
+    newPassword: Yup.string()
+    .test(
+      "len",
+      "The password must be between 6 and 40 characters.",
+      (val: any) =>
+        val &&
+        val.toString().length >= 6 &&
+        val.toString().length <= 40
+    )
+    .required("This field is required!"),
+    confirmPassword: Yup.string()
+    .oneOf([Yup.ref('newPassword'), ""], 'Passwords must match')
+    .required("This field is required!"),
+  });
+
+  const passwordFormik = useFormik({
+    initialValues: {
+      initialPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    validationSchema: updatePasswordSchema,
+    onSubmit: (values, { resetForm }) => {
+      axios
+        .patch(
+          `http://localhost:3001/api/auth/updatepassword/${currentUser.id}`,
+          values
+        )
+        .then((response) => {
+          console.log(response);
+          // console.log(values);
+          setUserErrorMessage('');
+          resetForm();
+          toggleUpdatePasswordModal();
+        })
+        .catch((err) => {
+          console.log(err);
+          setUserErrorMessage(err.message);
+        });
+    },
+    enableReinitialize: true,
+  });
 
   return (
     <div className="container">
@@ -143,7 +203,8 @@ const Profile: React.FC = () => {
       </ul>
       <button onClick={toggleDeleteModal}>Delete</button>
       <button onClick={toggleUpdateUserModal}>update profile</button>
-      <button>change password</button>
+      <button onClick={toggleUpdatePasswordModal}>change password</button>
+
       {/* delete user */}
       <div>
         <Dialog
@@ -168,6 +229,7 @@ const Profile: React.FC = () => {
           </DialogActions>
         </Dialog>
       </div>
+
       {/* update profile */}
       <div>
         <Dialog open={openUpdateUserModel} onClose={toggleUpdateUserModal}>
@@ -225,6 +287,104 @@ const Profile: React.FC = () => {
           </div>)}
         </Dialog>
       </div>
+
+    {/* Update Password */}
+      <div>
+        <Dialog open={openUpdatePasswordModel} onClose={toggleUpdatePasswordModal}>
+          <DialogTitle>Change Password</DialogTitle>
+          <DialogContent>
+            <form onSubmit={passwordFormik.handleSubmit}>
+              {/* <Field
+                type="password"
+                name="initialPassword"
+                value={passwordFormik.values.initialPassword}
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+              />
+              <Field 
+                type="password"
+                name="newPassword"
+                value={passwordFormik.values.newPassword}
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+              />
+              <Field 
+                type="password"
+                name="confirmPassword"
+                value={passwordFormik.values.confirmPassword}
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+              /> */}
+              <TextField
+                autoFocus
+                margin="dense"
+                id="initialPassword"
+                name="initialPassword"
+                label="initialPassword"
+                type="password"
+                fullWidth
+                value={passwordFormik.values.initialPassword}
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+                error={
+                  passwordFormik.touched.initialPassword &&
+                  Boolean(passwordFormik.errors.initialPassword)
+                }
+                helperText={
+                  passwordFormik.touched.initialPassword && passwordFormik.errors.initialPassword
+                }
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="newPassword"
+                name="newPassword"
+                label="newPassword"
+                type="password"
+                fullWidth
+                value={passwordFormik.values.newPassword}
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+                error={
+                  passwordFormik.touched.newPassword &&
+                  Boolean(passwordFormik.errors.newPassword)
+                }
+                helperText={
+                  passwordFormik.touched.newPassword && passwordFormik.errors.newPassword
+                }
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="confirmPassword"
+                name="confirmPassword"
+                label="confirmPassword"
+                type="password"
+                fullWidth
+                value={passwordFormik.values.confirmPassword}
+                onChange={passwordFormik.handleChange}
+                onBlur={passwordFormik.handleBlur}
+                error={
+                  passwordFormik.touched.confirmPassword &&
+                  Boolean(passwordFormik.errors.confirmPassword)
+                }
+                helperText={
+                  passwordFormik.touched.confirmPassword && passwordFormik.errors.confirmPassword
+                }
+              />
+              <DialogActions>
+                <Button onClick={toggleUpdatePasswordModal}>Cancel</Button>
+                <Button type="submit">Submit</Button>
+              </DialogActions>
+            </form>
+          </DialogContent>
+          {userErrorMessage && (
+          <div>
+            <Alert severity="error">{userErrorMessage}</Alert>
+          </div>)}
+        </Dialog>
+      </div>
+
     </div>
   );
 };
