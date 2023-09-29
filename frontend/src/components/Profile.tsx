@@ -111,7 +111,7 @@ const Profile: React.FC = () => {
         })
         .catch((err) => {
           console.log(err);
-          setUserErrorMessage(err.message);
+          setUserErrorMessage(err.response.data.message);
         });
     },
     enableReinitialize: true,
