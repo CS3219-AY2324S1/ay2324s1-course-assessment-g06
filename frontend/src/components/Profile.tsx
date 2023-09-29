@@ -321,7 +321,7 @@ const Profile: React.FC = () => {
                 margin="dense"
                 id="currentPassword"
                 name="currentPassword"
-                label="currentPassword"
+                label="Current Password"
                 type="password"
                 fullWidth
                 value={passwordFormik.values.currentPassword}
@@ -340,7 +340,7 @@ const Profile: React.FC = () => {
                 margin="dense"
                 id="newPassword"
                 name="newPassword"
-                label="newPassword"
+                label="New Password"
                 type="password"
                 fullWidth
                 value={passwordFormik.values.newPassword}
@@ -359,7 +359,7 @@ const Profile: React.FC = () => {
                 margin="dense"
                 id="confirmPassword"
                 name="confirmPassword"
-                label="confirmPassword"
+                label="Confirm Password"
                 type="password"
                 fullWidth
                 value={passwordFormik.values.confirmPassword}
