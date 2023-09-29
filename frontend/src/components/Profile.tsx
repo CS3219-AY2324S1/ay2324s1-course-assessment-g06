@@ -336,7 +336,6 @@ const Profile: React.FC = () => {
                 }
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="newPassword"
                 name="newPassword"
@@ -355,7 +354,6 @@ const Profile: React.FC = () => {
                 }
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="confirmPassword"
                 name="confirmPassword"
