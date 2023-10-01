@@ -4,6 +4,8 @@ import { io, Socket } from 'socket.io-client';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import './CodeSpace.css'; 
 
 console.log('langNames:', langNames); // To show the available language supported by codemirror
 
@@ -17,10 +19,19 @@ interface Question {
   topics: string;
 }
 
+// Define type for chat messages
+interface ChatMessage {
+  roomId: string;
+  author: string;
+  message: string;
+  time: string;
+}
+
+
 const CodeSpace = () => {
   const { roomId } = useParams();
   const location = useLocation();
-  const { socketId, difficulty } = location.state || {};
+  const { socketId, difficulty, topic } = location.state || {};
   const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [value, setValue] = React.useState(() => {
@@ -29,10 +40,68 @@ const CodeSpace = () => {
   });
   const [selectedLanguage, setSelectedLanguage] = useState('c'); // Default language is C
 
+  const messageData: ChatMessage = {
+    roomId: roomId !== undefined ? roomId : "0", 
+    author: 'System', 
+    message: 'You have connected',
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+
+  // Initialize the state with an empty array of ChatMessage objects
+  const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
+  const [newMessage, setNewMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+
+  // Debounce timer to control when to emit "user typing" event
+  let typingTimer: NodeJS.Timeout;
+  ;
+
+  const handleNewMessageChange = (e: any) => {
+    setNewMessage(e.target.value);
+
+    // Clear the previous typing timer
+    clearTimeout(typingTimer);
+
+    // Set a new timer to indicate typing after a delay
+    typingTimer = setTimeout(() => {
+      // Emit "user typing" event to the server
+      if (socket) {
+        socket.emit('userTyping', roomId, false);
+      }
+    }, 1000); // Adjust the delay as needed
+  };
+
+  const handleStartTyping = () => {
+    // Emit "user typing" event to the server
+    if (socket) {
+      socket.emit('userTyping', roomId, true);
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (newMessage !== '') {
+      const messageData = {
+        roomId: roomId,
+        author: socketId,
+        message: newMessage,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+  
+      if (socket) {
+        socket.emit('sendMessage', messageData);
+      }
+
+      // Clear the input field
+      setNewMessage('');
+
+    }
+
+  };
+
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
     console.log('val:', val);
     setValue(val);
-// Save the code value to localStorage
+    // Save the code value to localStorage
     localStorage.setItem('code', val);
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
@@ -62,10 +131,18 @@ const CodeSpace = () => {
 
     matchedSocket.on('connect', () => {
       console.log('Connected to matched socket');
-      console.log(matchedSocket);
 
+      // Emit the "userConnected" event when the socket connects
+      matchedSocket.emit('userConnected', socketId, roomId);
       // Emit the "joinRoom" event when the socket connects
       matchedSocket.emit('joinRoom', roomId);
+    });
+
+    // Handle disconnection event
+    matchedSocket.on('userDisconnected', () => {
+      console.log('user disconnected from client')
+      // Emit a custom event to inform the server or other clients
+      matchedSocket.emit('userDisconnected', roomId);
     });
 
     // Listen for 'codeChange' events from the server
@@ -78,6 +155,51 @@ const CodeSpace = () => {
       console.log('receive language from server');
       setSelectedLanguage(newLanguage); // Update the selected language
     });
+
+    // Listen for 'receive message' events from the server
+    matchedSocket.on('receiveMessage', (data) => {
+      console.log('receiveMessage from server');
+      setMessageList((list) => [...list, data]); // Update the selected language
+    }); 
+
+    // Listen for 'userTyping' events from the server
+    matchedSocket.on('userTyping', (isTyping) => {
+      setIsTyping(isTyping);
+    });
+
+    // Listen for 'userConnected' and 'userDisconnected' events from the server
+    matchedSocket.on('userConnected', (connectedSocket) => {
+      console.log('receive userConnected from server');
+      console.log("current" + socketId)
+      console.log("connected" + connectedSocket)
+
+      if (connectedSocket !== socketId) {
+      // Send a message to the chat when another user connects
+      const messageData: ChatMessage = {
+        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+        author: 'System', 
+        // message: `A user (${connectedSocket}) has connected`,
+        message: `A user has connected`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessageList((list) => [...list, messageData]);
+      }
+    });
+
+    // Might not be able to work due to current implementation and window closes terminates socket abruptly
+    matchedSocket.on('userDisconnected', () => {
+      // Send a message to the chat when a user disconnects
+      const messageData: ChatMessage = {
+        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+        author: 'System', 
+        message: `A user has disconnected`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setMessageList((list) => [...list, messageData]);
+    });
+
+
 
     setSocket(matchedSocket);
     fetchData();
@@ -111,7 +233,7 @@ const CodeSpace = () => {
     <div>
       <h2>Welcome, {socketId || 'Loading...'}</h2>
       <p>
-        You are matched with another user using difficulty: {difficulty || 'Not selected'}
+        You are matched with another user using difficulty: {difficulty || 'Not selected'} and topic: {topic || 'Not selected'}
       </p>
 
       <br />
@@ -158,6 +280,47 @@ const CodeSpace = () => {
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
         />
+
+            <br/>
+            <br/>
+            <br/>
+
+
+            {/* Chat UI */}
+            <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
+              <h2>Chat</h2>
+              <div className="chat-messages">
+                <ScrollToBottom className='message-container'>
+                {messageList.map((messageContent, index) => (
+                  <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
+                    <div className='message-content'>
+                      {messageContent.message}
+                    </div>
+                    <div className='message-meta'>
+                      {messageContent.time}
+                    </div>
+                  </div>
+                ))}
+                </ScrollToBottom>
+              </div>
+              <div className="chat-input">
+                <input
+                  type="text"
+                  placeholder="Type your message..."
+                  value={newMessage}
+                  onChange={handleNewMessageChange}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      handleSendMessage();
+                    } else {
+                      handleStartTyping(); 
+                    }
+                  }}
+                />
+                {isTyping && <div className="typing-indicator">Typing...</div>}
+                <button onClick={handleSendMessage}>Send</button>
+              </div>
+            </div>
       </div>
     </div>
   );

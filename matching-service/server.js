@@ -83,6 +83,7 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (roomId) => {
     // Use Socket.IO's join method to add the socket to the room
     socket.join(roomId);
+    socket.to(roomId).emit("userConnected");
   });
 
   socket.on('disconnect', () => {
@@ -114,6 +115,22 @@ io.on('connection', (socket) => {
       io.to(roomId).emit('languageChange', newLanguage);
     }
   });
+
+  // Listen for the 'sendMessage' event from the client
+  socket.on('sendMessage', (data) => {
+    console.log('emit receiveMessage from server');
+    // Check if the sender belongs to the same room
+    if (socket.rooms.has(data.roomId)) {
+      // Broadcast the code change only to sockets in the same room
+      io.to(data.roomId).emit('receiveMessage', data);
+    }
+  });
+
+  socket.on('userTyping', (roomId, isTyping) => {
+    socket.to(roomId).emit('userTyping', isTyping);
+  });
+
+
 
 });
 
@@ -154,10 +171,4 @@ async function generateQuestion(difficulty, topic) {
     console.error("Error fetching data:", error);
     return null;
   }
-}
-
-
-function getRoomId(socket) {
-  const rooms = Object.keys(socket.rooms);
-  return rooms.length > 1 ? rooms[1] : null;
 }
