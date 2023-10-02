@@ -11,7 +11,7 @@ import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as AuthService from "./services/auth.service";
-import IUser from './types/user.type';
+import IUser from "./types/user.type";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
@@ -22,16 +22,17 @@ import Protected from "./components/Protected";
 // import BoardAdmin from "./components/BoardAdmin";
 import EventBus from "./common/EventBus";
 
-
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
   const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
   // const [currentUser, setCurrentUser] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<boolean>(()=>localStorage.getItem("user")?true:false);
+  const [currentUser, setCurrentUser] = useState<boolean>(() =>
+    localStorage.getItem("user") ? true : false
+  );
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-    
+
     if (user) {
       // setCurrentUser(true);
       setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
@@ -123,27 +124,47 @@ const App: React.FC = () => {
       <div className="container mt-3">
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/" element={<><p><Link to="/questions">Go to Questions</Link></p></>} />
+          <Route
+            path="/"
+            element={
+              <>
+                <p>
+                  <Link to="/questions">Go to Questions</Link>
+                </p>
+              </>
+            }
+          />
           {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={
-            <Protected isLoggedIn={currentUser}>
-              <Profile />
-            </Protected>} />
+          <Route
+            path="/profile"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Profile />
+              </Protected>
+            }
+          />
           {/* <Route path="/user" element={<BoardUser />} />
           <Route path="/mod" element={<BoardModerator />} />
           <Route path="/admin" element={<BoardAdmin />} /> */}
           {/* Can only access questions if there is logged in user */}
-          <Route path="/questions" element={
-            <Protected isLoggedIn={currentUser}>
+          <Route
+            path="/questions"
+            element={
               <BasicTable />
-            </Protected>
-          } />
+              // <Protected isLoggedIn={currentUser}>
+              //   <BasicTable />
+              // </Protected>
+            }
+          />
           <Route path="/questions/:id" element={<Question />} />
           <Route path="/matching" element={<Matching />} />
           <Route path="/match/:roomId" element={<CodeSpace />} />
-          <Route path="/questions/:id/update" element={<UpdateQuestionForm />} />
+          <Route
+            path="/questions/:id/update"
+            element={<UpdateQuestionForm />}
+          />
           <Route path="/questions/add-question" element={<AddQuestionForm />} />
         </Routes>
       </div>
