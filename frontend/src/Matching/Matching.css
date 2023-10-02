@@ -1,0 +1,90 @@
+
+div.difficulty-buttons {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+  }
+  
+  .difficulty-buttons button {
+    width: 100%;
+    margin-bottom: 8px; /* spacing between buttons */
+    align-items: center;
+  }
+
+button.difficulty-easy {
+    background-color: #deeedb;
+    color: gray;
+    transition: background-color 0.3s;
+    border-radius: 15px;
+    padding: 12px 40px;
+    border: none;
+}
+
+    button.difficulty-easy:hover {
+        background-color: #7ec575;
+        color: black;
+    }
+
+    button.difficulty-easy.active {
+        background-color: #7ec575;
+        color: black;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+    }
+
+
+button.difficulty-medium {
+    background-color: #f6edd2;
+    color: gray;
+    transition: background-color 0.3s;
+    border-radius: 15px;
+    padding: 12px 28px;
+    border: none;
+}
+
+    button.difficulty-medium:hover {
+        background-color: rgb(236, 197, 89);
+        color: black;
+    }
+
+    button.difficulty-medium.active {
+        background-color: rgb(236, 197, 89);
+        color: black;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+    }
+
+button.difficulty-hard {
+    background-color: #f0caca;
+    color: gray;
+    transition: background-color 0.3s;
+    border-radius: 15px;
+    padding: 12px 40px;
+    border: none;
+}
+
+    button.difficulty-hard:hover {
+        background-color: #f14949;
+        color: black;
+        transition: background-color 0.3s;
+    }
+
+    button.difficulty-hard.active {
+        background-color: #f14949;
+        color: black;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+    }
+
+button.custom-match-button {
+    background-color: #6C63FF;
+    color: white;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 12px 24px;
+    transition: background-color 0.3s;
+  }
+
+button.custom-match-button:hover {
+    background-color: #9792f9;
+    color: white;
+}
