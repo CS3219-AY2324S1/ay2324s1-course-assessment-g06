@@ -195,8 +195,8 @@ const Matchmaking: React.FC = () => {
         </div>
       </div>
 
-      <div className="row mt-3">
-        <div className="col-md-4">
+    <div className="row mt-3">
+      <div className="col-md-12 text-right">
           <button
             id="matchButton"
             className="btn custom-match-button"
@@ -205,18 +205,18 @@ const Matchmaking: React.FC = () => {
           >
             {isMatching ? 'Cancel Match' : 'Match'}
           </button>
-          <div className="d-flex align-items-center mt-2">
-            <div
-              id="spinner"
-              className={`spinner-border spinner-border-sm text-primary mr-2 ${isMatching ? '' : 'd-none'}`}
-              role="status"
-            >
-              <span className="sr-only">Loading...</span>
-            </div>
-            <div id="matchStatus">{matchStatus}</div>
+          <div className="d-flex align-items-center justify-content-end">
+          <div
+            id="spinner"
+            className={`spinner-border spinner-border-sm text-primary ml-2 ${isMatching ? '' : 'd-none'}`}
+            role="status"
+          >
+            <span className="sr-only">Loading...</span>
           </div>
+          <div id="matchStatus" className="text-right">{  matchStatus}</div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
