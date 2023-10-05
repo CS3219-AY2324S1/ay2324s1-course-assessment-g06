@@ -110,7 +110,7 @@ exports.removeUser = (req, res) => {
 };
 
 exports.updateProfile = (req, res) => {
-  const id = req.params.id;
+  const id = req.userId;
   const { username, email } = req.body;
   // check if user exists
   User.findOne({

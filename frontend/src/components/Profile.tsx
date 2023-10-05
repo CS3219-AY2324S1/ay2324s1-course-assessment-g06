@@ -90,8 +90,13 @@ const Profile: React.FC = () => {
     onSubmit: (values, { resetForm }) => {
       axios
         .patch(
-          `http://localhost:3001/api/auth/updateprofile/${currentUser.id}`,
-          values
+          `http://localhost:3001/api/auth/updateprofile`,
+          values,
+          {
+            headers: {
+              'x-access-token': currentUser.accessToken
+            }
+          }
         )
         .then((response) => {
           console.log(response);

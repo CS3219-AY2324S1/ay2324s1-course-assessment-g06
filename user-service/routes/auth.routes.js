@@ -1,6 +1,7 @@
 const { authJwt } = require("../middleware");
 const { verifySignUp } = require('../middleware');
 const controller = require('../controllers/auth.controller');
+const verifyChange = require("../middleware/verifyChange");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -30,11 +31,18 @@ module.exports = function (app) {
   // The req object will be passed to controller.removeUser
   app.delete('/api/auth/removeuser', [authJwt.verifyToken], controller.removeUser);
 
+  // app.patch(
+  //   '/api/auth/updateprofile/:id',
+  //   [verifySignUp.checkUpdateUsernameOrEmail],
+  //   controller.updateProfile
+  // );
+
   app.patch(
-    '/api/auth/updateprofile/:id',
-    [verifySignUp.checkUpdateUsernameOrEmail],
+    '/api/auth/updateprofile',
+    [authJwt.verifyToken, verifyChange.checkDuplicate],
     controller.updateProfile
   );
+  
 
   // app.patch('/api/auth/updatepassword/:id', controller.updatePassword);
 
