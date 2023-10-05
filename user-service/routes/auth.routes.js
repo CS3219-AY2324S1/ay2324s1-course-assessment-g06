@@ -1,7 +1,7 @@
 const { authJwt } = require("../middleware");
 const { verifySignUp } = require('../middleware');
 const controller = require('../controllers/auth.controller');
-const verifyChange = require("../middleware/verifyChange");
+const verifyExisting = require("../middleware/verifyExisting");
 
 module.exports = function (app) {
 
@@ -22,7 +22,8 @@ module.exports = function (app) {
   app.post(
     '/api/auth/signup',
     [
-      verifySignUp.checkDuplicateUsernameOrEmail,
+      verifyExisting.checkEmail,
+      verifyExisting.checkUsername,
       verifySignUp.checkRolesExisted,
     ],
     controller.signup
@@ -35,7 +36,7 @@ module.exports = function (app) {
 
   app.patch(
     '/api/auth/updateprofile',
-    [authJwt.verifyToken, verifyChange.checkDuplicate],
+    [authJwt.verifyToken, verifyExisting.checkEmail, verifyExisting.checkUsername],
     controller.updateProfile
   );
 
