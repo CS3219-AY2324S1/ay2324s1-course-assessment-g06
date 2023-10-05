@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
     } finally {
       // need to figure out how to not force it without context
       navigate('/login');
-      // window.location.reload();
+      window.location.reload();
     }
   };
 
