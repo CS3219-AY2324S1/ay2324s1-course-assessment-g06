@@ -32,7 +32,11 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const id = getCurrentUser().id;
     axios
-      .get(`http://localhost:3001/api/auth/getuser/${id}`)
+    .get(`http://localhost:3001/api/auth/getuser`, {
+      headers: {
+        'x-access-token': currentUser.accessToken
+      }
+    })
       .then((response) => {
         setProfile(response.data);
       })

@@ -159,7 +159,9 @@ exports.updatePassword = (req, res) => {
 };
 
 exports.getProfile = (req, res) => {
-  const id = req.params.id;
+  // const id = req.params.id;
+  const id = req.userId;
+  
   User.findOne({
     where: {
       id: id,

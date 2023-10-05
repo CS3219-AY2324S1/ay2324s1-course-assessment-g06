@@ -48,5 +48,8 @@ module.exports = function (app) {
 
   app.patch('/api/auth/updatepassword', [authJwt.verifyToken], controller.updatePassword);
 
-  app.get('/api/auth/getuser/:id', controller.getProfile);
+  // app.get('/api/auth/getuser/:id', controller.getProfile);
+
+  app.get('/api/auth/getuser', [authJwt.verifyToken], controller.getProfile);
+
 };
