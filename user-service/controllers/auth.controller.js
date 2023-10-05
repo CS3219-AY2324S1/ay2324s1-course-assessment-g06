@@ -89,9 +89,12 @@ exports.signin = (req, res) => {
 };
 
 exports.removeUser = (req, res) => {
+  //This userId is decoded from JWT token, decoded by middleware
+  const id = req.userId;
+
   User.findOne({
     where: {
-      id: req.params.id,
+      id: id,
     },
   })
     .then((user) => {
@@ -131,7 +134,8 @@ exports.updateProfile = (req, res) => {
 };
 
 exports.updatePassword = (req, res) => {
-  const id = req.params.id;
+  // const id = req.params.id;
+  const id = req.userId;
   const { currentPassword, newPassword } = req.body;
   User.findOne({
     where: { id: id },

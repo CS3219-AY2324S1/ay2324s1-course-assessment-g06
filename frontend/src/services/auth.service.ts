@@ -36,7 +36,16 @@ export const getCurrentUser = () => {
   return null;
 };
 
-export const deleteUser = (id: string)=> {
-  return axios.delete(API_URL + `removeuser/${id}`)
-  .catch(err => {console.log(err)});
+export const deleteUser = () => {
+  const user = getCurrentUser(); // Get current user details
+  if (!user || !user.accessToken) {
+    throw new Error("No access token found");
+  }
+  
+  // Axios DELETE request with JWT token in the header
+  return axios.delete(API_URL + "removeuser", {
+    headers: {
+      'x-access-token': user.accessToken
+    }
+  }).catch(err => {console.log(err)});
 };

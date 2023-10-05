@@ -21,6 +21,7 @@ interface User {
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
+  const token = currentUser.accessToken;
   const [profile, setProfile] = useState<User | null>(null);
   const [userErrorMessage, setUserErrorMessage] = useState('');
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
@@ -49,7 +50,7 @@ const Profile: React.FC = () => {
 
   const deleteUserAccount = async () => {
     try {
-      await deleteUser(currentUser.id);
+      await deleteUser();
       logout();
     } catch (err) {
       // useState to log api error?

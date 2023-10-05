@@ -1,3 +1,4 @@
+const { authJwt } = require("../middleware");
 const { verifySignUp } = require('../middleware');
 const controller = require('../controllers/auth.controller');
 
@@ -10,6 +11,7 @@ module.exports = function (app) {
     next();
   });
 
+  // Used for signup, dont need to get JWT token
   app.post(
     '/api/auth/signup',
     [
@@ -19,9 +21,14 @@ module.exports = function (app) {
     controller.signup
   );
 
+  // Used for signin, no need to get JWT token
   app.post('/api/auth/signin', controller.signin);
 
-  app.delete('/api/auth/removeuser/:id', controller.removeUser);
+  // Used for getting removing user profile, need to get JWT token
+  // [authJwt.verifyToken] is the middleware to verify JWT token
+  // After authJwt.verifyToken, the req object will have userId decoded from JWT token
+  // The req object will be passed to controller.removeUser
+  app.delete('/api/auth/removeuser', [authJwt.verifyToken], controller.removeUser);
 
   app.patch(
     '/api/auth/updateprofile/:id',
