@@ -4,6 +4,7 @@ const controller = require('../controllers/auth.controller');
 const verifyChange = require("../middleware/verifyChange");
 
 module.exports = function (app) {
+
   app.use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Headers',
@@ -11,6 +12,11 @@ module.exports = function (app) {
     );
     next();
   });
+
+  // Format is, app.action('ROUTE', [Middleware, access, to, req], controller.action)
+  // [authJwt.verifyToken] is the middleware to verify JWT token
+  // e.g. After authJwt.verifyToken, the req object will have userId decoded from JWT token
+  // The req object will be passed to controller.action
 
   // Used for signup, no JWT present
   app.post(
