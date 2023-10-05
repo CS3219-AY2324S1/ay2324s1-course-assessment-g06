@@ -12,7 +12,7 @@ module.exports = function (app) {
     next();
   });
 
-  // Used for signup, dont need to get JWT token
+  // Used for signup, no JWT present
   app.post(
     '/api/auth/signup',
     [
@@ -22,7 +22,7 @@ module.exports = function (app) {
     controller.signup
   );
 
-  // Used for signin, no need to get JWT token
+  // Used for signin, no JWT present
   app.post('/api/auth/signin', controller.signin);
 
   // Used for getting removing user profile, need to get JWT token
@@ -31,25 +31,14 @@ module.exports = function (app) {
   // The req object will be passed to controller.removeUser
   app.delete('/api/auth/removeuser', [authJwt.verifyToken], controller.removeUser);
 
-  // app.patch(
-  //   '/api/auth/updateprofile/:id',
-  //   [verifySignUp.checkUpdateUsernameOrEmail],
-  //   controller.updateProfile
-  // );
-
   app.patch(
     '/api/auth/updateprofile',
     [authJwt.verifyToken, verifyChange.checkDuplicate],
     controller.updateProfile
   );
-  
-
-  // app.patch('/api/auth/updatepassword/:id', controller.updatePassword);
 
   app.patch('/api/auth/updatepassword', [authJwt.verifyToken], controller.updatePassword);
-
-  // app.get('/api/auth/getuser/:id', controller.getProfile);
-
+  
   app.get('/api/auth/getuser', [authJwt.verifyToken], controller.getProfile);
 
 };
