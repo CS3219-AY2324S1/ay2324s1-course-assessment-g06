@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
     } finally {
       // need to figure out how to not force it without context
       navigate('/login');
-      window.location.reload();
+      // window.location.reload();
     }
   };
 
@@ -161,8 +161,13 @@ const Profile: React.FC = () => {
       const { currentPassword, newPassword } = values;
       axios
         .patch(
-          `http://localhost:3001/api/auth/updatepassword/${currentUser.id}`,
-          { currentPassword, newPassword }
+          `http://localhost:3001/api/auth/updatepassword`,
+          { currentPassword, newPassword },
+          {
+            headers: {
+              'x-access-token': token
+            }
+          }
         )
         .then((response) => {
           console.log(response);

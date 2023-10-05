@@ -36,7 +36,9 @@ module.exports = function (app) {
     controller.updateProfile
   );
 
-  app.patch('/api/auth/updatepassword/:id', controller.updatePassword);
+  // app.patch('/api/auth/updatepassword/:id', controller.updatePassword);
+
+  app.patch('/api/auth/updatepassword', [authJwt.verifyToken], controller.updatePassword);
 
   app.get('/api/auth/getuser/:id', controller.getProfile);
 };
