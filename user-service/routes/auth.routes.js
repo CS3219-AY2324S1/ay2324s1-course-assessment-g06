@@ -25,10 +25,6 @@ module.exports = function (app) {
   // Used for signin, no JWT present
   app.post('/api/auth/signin', controller.signin);
 
-  // Used for getting removing user profile, need to get JWT token
-  // [authJwt.verifyToken] is the middleware to verify JWT token
-  // After authJwt.verifyToken, the req object will have userId decoded from JWT token
-  // The req object will be passed to controller.removeUser
   app.delete('/api/auth/removeuser', [authJwt.verifyToken], controller.removeUser);
 
   app.patch(
