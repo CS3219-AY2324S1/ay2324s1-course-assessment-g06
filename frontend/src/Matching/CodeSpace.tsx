@@ -7,6 +7,8 @@ import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import './CodeSpace.css'; 
 
+import {Grid, Container, Card } from '@mui/material';
+
 console.log('langNames:', langNames); // To show the available language supported by codemirror
 
 interface Question {

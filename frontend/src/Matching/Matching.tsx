@@ -4,6 +4,14 @@ import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import './Matching.css';
 
+// Import topic Button Images
+import stringIcon from './icons/string_icon.png';
+import algorithmIcon from './icons/algorithm_icon.png';
+import dataStructureIcon from './icons/data_structure_icon.png';
+import recursionIcon from './icons/recursion_icon.png';
+import arrayIcon from './icons/array_icon.png';
+import brainTeaserIcon from './icons/brainteaser_icon.png';
+
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
 
@@ -17,7 +25,7 @@ const Matchmaking: React.FC = () => {
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy'); // Set the default value to "Easy"
-  const [selectedTopic, setSelectedTopic] = useState<string>('Array'); // Track the selected topic
+  const [selectedTopic, setSelectedTopic] = useState<string>('Strings'); // Track the selected topic
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
   const [isMatchFound, setIsMatchFound] = useState<boolean>(false); // Track if a match is found
   const navigate = useNavigate();
@@ -119,7 +127,7 @@ const Matchmaking: React.FC = () => {
     } else {
       startTimer();
       setMatchStatus('Matching...');
-      console.log(selectedDifficulty, selectedTopic); // Include selectedTopic in the console log
+      console.log("matching with", selectedDifficulty, selectedTopic)
       socket.emit('match me', selectedDifficulty, selectedTopic);
 
       // Automatically cancel the match after 20 seconds
@@ -137,17 +145,23 @@ const Matchmaking: React.FC = () => {
     setSelectedDifficulty(difficulty);
   };
 
-  // Handle topic change
-  const handleTopicChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    setSelectedTopic(value);
+  // Topic button click handler
+  const handleTopicClick = (topic: string) => {
+    setSelectedTopic(topic);
   };
 
-  // Define difficulty level buttons with corresponding CSS class names
   const difficultyLevels = [
     { label: 'Easy', className: 'difficulty-easy' },
     { label: 'Medium', className: 'difficulty-medium' },
     { label: 'Hard', className: 'difficulty-hard' },
+  ];
+
+  const categories = [
+    { label: 'Strings', iconFilePath: stringIcon },
+    { label: 'Algorithms', iconFilePath: algorithmIcon },
+    { label: 'Data Structures', iconFilePath: dataStructureIcon },
+    { label: 'Recursion', iconFilePath: recursionIcon },
+    { label: 'Array', iconFilePath: arrayIcon },
   ];
 
   return (
@@ -155,23 +169,23 @@ const Matchmaking: React.FC = () => {
       <div className="row">
         <div className="col-md-8">
           <div className="form-group">
-            <label htmlFor="topics">Choose a category to work on a peer with:</label>
-            <select
-              id="topics"
-              className="form-control"
-              value={selectedTopic}
-              onChange={handleTopicChange}
-              disabled={isMatching}
-            >
-              <option value="Array">Array</option>
-              <option value="Binary Search">Binary Search</option>
-              <option value="Hash Table">Hash Table</option>
-              <option value="Stack">Stack</option>
-              <option value="String">String</option>
-              <option value="Tree">Tree</option>
-              <option value="Math">Math</option>
-              <option value="Matrix">Matrix</option>
-            </select>
+            <label htmlFor="topics">Choose a topic to work on with a peer:</label>
+            <div className="col-md-12">
+              <div className="topic-img">
+                {categories.map((topic) => (
+                  <div key={topic.label} className="mb-2">
+                    <button
+                      className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''}`}
+                      onClick={() => handleTopicClick(topic.label)}
+                      disabled={isMatching}
+                    >
+                      <img src={topic.iconFilePath} alt={topic.label} />
+                    </button>
+                    {topic.label}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -179,24 +193,24 @@ const Matchmaking: React.FC = () => {
           <div className="form-group">
             <label>Choose your difficulty level:</label>
             <div className="difficulty-buttons">
-            {difficultyLevels.map((level) => (
-              <div key={level.label} className="mb-2">
-                <button
-                  className={`btn ${level.className} ${selectedDifficulty === level.label ? 'active' : ''}`}
-                  onClick={() => handleDifficultyClick(level.label)}
-                  disabled={isMatching}
-                >
-                  {level.label}
-                </button>
-              </div>
-            ))}
+              {difficultyLevels.map((level) => (
+                <div key={level.label} className="mb-2">
+                  <button
+                    className={`btn ${level.className} ${selectedDifficulty === level.label ? 'active' : ''}`}
+                    onClick={() => handleDifficultyClick(level.label)}
+                    disabled={isMatching}
+                  >
+                    {level.label}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-    <div className="row mt-3">
-      <div className="col-md-12 text-right">
+      <div className="row mt-3">
+        <div className="col-md-12 text-right">
           <button
             id="matchButton"
             className="btn custom-match-button"
@@ -206,17 +220,17 @@ const Matchmaking: React.FC = () => {
             {isMatching ? 'Cancel Match' : 'Match'}
           </button>
           <div className="d-flex align-items-center justify-content-end">
-          <div
-            id="spinner"
-            className={`spinner-border spinner-border-sm text-primary ml-2 ${isMatching ? '' : 'd-none'}`}
-            role="status"
-          >
-            <span className="sr-only">Loading...</span>
+            <div
+              id="spinner"
+              className={`spinner-border spinner-border-sm text-primary ml-2 ${isMatching ? '' : 'd-none'}`}
+              role="status"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+            <div id="matchStatus" className="text-right">{matchStatus}</div>
           </div>
-          <div id="matchStatus" className="text-right">{  matchStatus}</div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

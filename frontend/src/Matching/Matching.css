@@ -1,4 +1,5 @@
 
+/* Grouping of difficulty buttons (Easy, Medium, Hard) */
 div.difficulty-buttons {
     display: flex;
     flex-direction: column; /* Stack buttons vertically */
@@ -10,6 +11,7 @@ div.difficulty-buttons {
     align-items: center;
   }
 
+/* Easy Button */
 button.difficulty-easy {
     background-color: #deeedb;
     color: gray;
@@ -31,7 +33,7 @@ button.difficulty-easy {
         font-weight: bold;
     }
 
-
+/* Medium Button */
 button.difficulty-medium {
     background-color: #f6edd2;
     color: gray;
@@ -53,6 +55,7 @@ button.difficulty-medium {
         font-weight: bold;
     }
 
+/* Hard Button */
 button.difficulty-hard {
     background-color: #f0caca;
     color: gray;
@@ -75,6 +78,58 @@ button.difficulty-hard {
         font-weight: bold;
     }
 
+/* Grouping of difficulty buttons (Easy, Medium, Hard) */
+div.topic-img {
+    display: flex;
+    flex-direction: row;
+    white-space: wrap;
+  }
+  
+  .topic-img button {
+    width: 100%;
+    height: 80px; /* Set a fixed height for the buttons */
+    margin-bottom: 8px;
+    align-items: center;
+    display: flex; /* Align content vertically */
+    justify-content: center; /* Center content horizontally */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+
+/* CSS classes for topic buttons */
+.topic-button {
+    width: 200px; /* Set a fixed width for the buttons */
+    height: 100px; /* Set a fixed height for the buttons */
+    display: flex;
+    flex-direction: column; /* Align text and image vertically */
+    justify-content: center;
+    align-items: center;
+    background-color: #E6E6E6;
+    color: black;
+    transition: background-color 0.3s;
+    border-radius: 15px;
+    border: none;
+    overflow: hidden; /* Hide overflow of the images */
+  }
+  
+  .topic-button img {
+    width: 100%; /* Set the width of the image to 100% of the button */
+    height: auto; /* Allow the image to maintain its aspect ratio */
+  }
+
+    button.topic-button:hover {
+        background-color: #9f9bfb;
+        color: white;
+        transition: background-color 0.3s;
+    }
+
+    button.topic-button.active {
+        background-color: #6C63FF;
+        color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+    }
+
+/* Match Button */
 button.custom-match-button {
     background-color: #6C63FF;
     color: white;
