@@ -10,10 +10,21 @@ import algorithmIcon from './icons/algorithm_icon.png';
 import dataStructureIcon from './icons/data_structure_icon.png';
 import recursionIcon from './icons/recursion_icon.png';
 import arrayIcon from './icons/array_icon.png';
-import brainTeaserIcon from './icons/brainteaser_icon.png';
+
+import stringActiveIcon from './icons/string_icon_active.png';
+import algorithmActiveIcon from './icons/algorithm_icon_active.png';
+import dataStructureActiveIcon from './icons/data_structure_icon_active.png';
+import recursionActiveIcon from './icons/recursion_icon_active.png';
+import arrayActiveIcon from './icons/array_icon_active.png';
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
+
+const scrollableContainerStyle = {
+  overflowX: 'scroll', // Enable horizontal scrolling
+  display: 'flex',     // Make the content flex
+  flexWrap: 'wrap',    // Wrap items to the next line when they exceed the container width
+};
 
 // Define a custom interface that extends the Socket interface
 interface CustomSocket extends Socket {
@@ -157,33 +168,39 @@ const Matchmaking: React.FC = () => {
   ];
 
   const categories = [
-    { label: 'Strings', iconFilePath: stringIcon },
-    { label: 'Algorithms', iconFilePath: algorithmIcon },
-    { label: 'Data Structures', iconFilePath: dataStructureIcon },
-    { label: 'Recursion', iconFilePath: recursionIcon },
-    { label: 'Array', iconFilePath: arrayIcon },
+    { label: 'Strings', iconFilePath: stringIcon, activeIconFilePath: stringActiveIcon },
+    { label: 'Algorithms', iconFilePath: algorithmIcon, activeIconFilePath: algorithmActiveIcon },
+    { label: 'Data Structures', iconFilePath: dataStructureIcon, activeIconFilePath : dataStructureActiveIcon },
+    { label: 'Recursion', iconFilePath: recursionIcon, activeIconFilePath : recursionActiveIcon },
+    { label: 'Array', iconFilePath: arrayIcon, activeIconFilePath: arrayActiveIcon },
   ];
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" >
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-8 justify-content-between">
           <div className="form-group">
             <label htmlFor="topics">Choose a topic to work on with a peer:</label>
             <div className="col-md-12">
-              <div className="topic-img">
-                {categories.map((topic) => (
-                  <div key={topic.label} className="mb-2">
+              <div className="scrollable-container">
+                {/* Create a wrapper div for each row of buttons */}
+                {categories.map((topic, index) => (
+                  <div key={topic.label} className={`mb-2 ${index % 3 === 0 ? 'new-row' : ''}`}>
                     <button
                       className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''}`}
                       onClick={() => handleTopicClick(topic.label)}
                       disabled={isMatching}
+                      style={{ height: '100px', padding: '10px 30px', margin: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
                     >
-                      <img src={topic.iconFilePath} alt={topic.label} />
+                     <img
+                        src={selectedTopic === topic.label ? topic.activeIconFilePath : topic.iconFilePath}
+                        alt={topic.label}
+                        style={{ width: '100%', height: 'auto', maxWidth: '100%', maxHeight: '60px' }}
+                      />
                     </button>
-                    {topic.label}
+                    <span style={{ marginTop: '10px' }}>{topic.label}</span> 
                   </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>
