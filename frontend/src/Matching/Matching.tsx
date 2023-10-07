@@ -24,7 +24,7 @@ const Matchmaking: React.FC = () => {
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy'); // Set the default value to "Easy"
-  const [selectedTopic, setSelectedTopic] = useState<string>('Strings'); // Track the selected topic
+  const [selectedTopic, setSelectedTopic] = useState<string>('Array'); // Track the selected topic
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
   const [isMatchFound, setIsMatchFound] = useState<boolean>(false); // Track if a match is found
   const navigate = useNavigate();
