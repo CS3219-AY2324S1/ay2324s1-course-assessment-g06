@@ -3,19 +3,7 @@ import { socket } from './socket';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import './Matching.css';
-
-// Import topic Button Images
-import stringIcon from './icons/string_icon.png';
-import algorithmIcon from './icons/algorithm_icon.png';
-import dataStructureIcon from './icons/data_structure_icon.png';
-import recursionIcon from './icons/recursion_icon.png';
-import arrayIcon from './icons/array_icon.png';
-
-import stringActiveIcon from './icons/string_icon_active.png';
-import algorithmActiveIcon from './icons/algorithm_icon_active.png';
-import dataStructureActiveIcon from './icons/data_structure_icon_active.png';
-import recursionActiveIcon from './icons/recursion_icon_active.png';
-import arrayActiveIcon from './icons/array_icon_active.png';
+import { iconCategories } from './IconMatching'; 
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
@@ -167,16 +155,8 @@ const Matchmaking: React.FC = () => {
     { label: 'Hard', className: 'difficulty-hard' },
   ];
 
-  const categories = [
-    { label: 'Strings', iconFilePath: stringIcon, activeIconFilePath: stringActiveIcon },
-    { label: 'Algorithms', iconFilePath: algorithmIcon, activeIconFilePath: algorithmActiveIcon },
-    { label: 'Data Structures', iconFilePath: dataStructureIcon, activeIconFilePath : dataStructureActiveIcon },
-    { label: 'Recursion', iconFilePath: recursionIcon, activeIconFilePath : recursionActiveIcon },
-    { label: 'Array', iconFilePath: arrayIcon, activeIconFilePath: arrayActiveIcon },
-  ];
-
   return (
-    <div className="container mt-5" >
+    <div className="container mt-5 justify-content-between" >
       <div className="row">
         <div className="col-md-8 justify-content-between">
           <div className="form-group">
@@ -184,13 +164,13 @@ const Matchmaking: React.FC = () => {
             <div className="col-md-12">
               <div className="scrollable-container">
                 {/* Create a wrapper div for each row of buttons */}
-                {categories.map((topic, index) => (
-                  <div key={topic.label} className={`mb-2 ${index % 3 === 0 ? 'new-row' : ''}`}>
+                {iconCategories.map((topic, index) => (
+                  <div key={topic.label} className={`mb-2 ${index % 3 === 0 ? 'new-row' : ''} `}>
                     <button
                       className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''}`}
                       onClick={() => handleTopicClick(topic.label)}
                       disabled={isMatching}
-                      style={{ height: '100px', padding: '10px 30px', margin: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+                      style={{ height: '110px', padding: '10px 30px', margin: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
                     >
                      <img
                         src={selectedTopic === topic.label ? topic.activeIconFilePath : topic.iconFilePath}

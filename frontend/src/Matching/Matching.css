@@ -149,7 +149,7 @@ button.custom-match-button:hover {
     overflow-y: scroll; /* Always show vertical scrollbar */
     display: flex;
     flex-wrap: wrap;
-    max-height: 300px; /* Set a maximum height for the container */
+    max-height: 500px; /* Set a maximum height for the container */
     scrollbar-width: thin; /* For Firefox */
     scrollbar-color: #888 #f0f0f0; /* For Firefox */
   }
