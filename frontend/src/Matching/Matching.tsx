@@ -170,7 +170,6 @@ const Matchmaking: React.FC = () => {
                       className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''} btn-sm` }
                       onClick={() => handleTopicClick(topic.label)}
                       disabled={isMatching}
-                      // style={{ height: '110px', padding: '10px 30px', margin: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
                     >
                      <img
                         src={selectedTopic === topic.label ? topic.activeIconFilePath : topic.iconFilePath}

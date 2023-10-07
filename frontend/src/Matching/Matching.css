@@ -29,9 +29,13 @@ button.difficulty-easy {
 
     button.difficulty-easy.active {
         background-color: #7ec575;
-        color: black;
+        color: white;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         font-weight: bold;
+    }
+    
+    button.difficulty-easy:disabled {
+        color: white;
     }
 
 /* Medium Button */
@@ -51,9 +55,13 @@ button.difficulty-medium {
 
     button.difficulty-medium.active {
         background-color: rgb(236, 197, 89);
-        color: black;
+        color: white;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         font-weight: bold;
+    }
+
+    button.difficulty-medium:disabled {
+        color: white;
     }
 
 /* Hard Button */
@@ -74,9 +82,13 @@ button.difficulty-hard {
 
     button.difficulty-hard.active {
         background-color: #f14949;
-        color: black;
+        color: white;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
         font-weight: bold;
+    }
+
+    button.difficulty-hard:disabled {
+        color: white;
     }
 
 /* Grouping of difficulty buttons (Easy, Medium, Hard) */
@@ -112,6 +124,11 @@ div.topic-img {
     border-radius: 15px;
     border: none;
     overflow: hidden;
+  }
+
+  .topic-button:disabled {
+    opacity: 0.5;
+    background-color: #E6E6E6;
   }
   
   .topic-button img {
@@ -164,6 +181,7 @@ button.custom-match-button:hover {
     }
   }
   
+  /* For Webkit browsers (such as Chrome, Safari) */
   .scrollable-container::-webkit-scrollbar {
     width: 8px; /* Set the width of the scrollbar */
   }
