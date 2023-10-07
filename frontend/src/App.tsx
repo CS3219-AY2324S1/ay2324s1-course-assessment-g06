@@ -136,7 +136,9 @@ const App: React.FC = () => {
           <Route path="/admin" element={<BoardAdmin />} /> */}
           {/* Can only access questions if there is logged in user */}
           <Route path="/questions" element={
+            <Protected isLoggedIn={currentUser}>
               <BasicTable />
+            </Protected>
           } />
           <Route path="/questions/:id" element={<Question />} />
           <Route path="/matching" element={<Matching />} />
