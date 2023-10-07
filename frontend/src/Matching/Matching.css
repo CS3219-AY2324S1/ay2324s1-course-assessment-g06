@@ -3,6 +3,7 @@
 div.difficulty-buttons {
     display: flex;
     flex-direction: column; /* Stack buttons vertically */
+    padding: 50px 40px;
   }
   
   .difficulty-buttons button {
@@ -17,7 +18,7 @@ button.difficulty-easy {
     color: gray;
     transition: background-color 0.3s;
     border-radius: 15px;
-    padding: 12px 40px;
+    padding: 20px 40px;
     border: none;
 }
 
@@ -39,7 +40,7 @@ button.difficulty-medium {
     color: gray;
     transition: background-color 0.3s;
     border-radius: 15px;
-    padding: 12px 28px;
+    padding: 20px 40px;
     border: none;
 }
 
@@ -61,7 +62,7 @@ button.difficulty-hard {
     color: gray;
     transition: background-color 0.3s;
     border-radius: 15px;
-    padding: 12px 40px;
+    padding: 20px 100px;
     border: none;
 }
 
@@ -99,6 +100,8 @@ div.topic-img {
 .topic-button {
     width: 200px; /* Set a fixed width for the buttons */
     height: 100px; /* Set a fixed height for the buttons */
+    padding: 10px 30px;
+    margin: 10px;
     display: flex;
     flex-direction: column; /* Align text and image vertically */
     justify-content: center;
@@ -108,12 +111,12 @@ div.topic-img {
     transition: background-color 0.3s;
     border-radius: 15px;
     border: none;
-    overflow: hidden; /* Hide overflow of the images */
+    overflow: hidden;
   }
   
   .topic-button img {
     width: 100%; /* Set the width of the image to 100% of the button */
-    height: auto; /* Allow the image to maintain its aspect ratio */
+    height: auto; /* Allow the image to maintain aspect ratio */
   }
 
     button.topic-button:hover {
@@ -149,12 +152,18 @@ button.custom-match-button:hover {
     overflow-y: scroll; /* Always show vertical scrollbar */
     display: flex;
     flex-wrap: wrap;
-    max-height: 500px; /* Set a maximum height for the container */
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: #888 #f0f0f0; /* For Firefox */
+    max-height: 500px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f0f0f0; 
   }
   
-  /* For Webkit browsers (such as Chrome, Safari) */
+  @media (max-width: 768px) {
+    .scrollable-container {
+      flex-wrap: wrap; /* Allow items to wrap to the next row */
+      justify-content: center; /* Center items horizontally when wrapping */
+    }
+  }
+  
   .scrollable-container::-webkit-scrollbar {
     width: 8px; /* Set the width of the scrollbar */
   }
@@ -173,3 +182,4 @@ button.custom-match-button:hover {
     clear: both;
     margin-top: 0px; /* Adjust the margin as needed */
 }
+

@@ -156,29 +156,33 @@ const Matchmaking: React.FC = () => {
   ];
 
   return (
-    <div className="container mt-5 justify-content-between" >
+    <div className="container mt-5" >
       <div className="row">
-        <div className="col-md-8 justify-content-between">
+        <div className="col-md-8">
           <div className="form-group">
             <label htmlFor="topics">Choose a topic to work on with a peer:</label>
-            <div className="col-md-12">
+            <div className="col-md-12 ">
               <div className="scrollable-container">
                 {/* Create a wrapper div for each row of buttons */}
                 {iconCategories.map((topic, index) => (
-                  <div key={topic.label} className={`mb-2 ${index % 3 === 0 ? 'new-row' : ''} `}>
+                  <div key={topic.label} className={`mb-2`}>
                     <button
-                      className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''}`}
+                      className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''} btn-sm` }
                       onClick={() => handleTopicClick(topic.label)}
                       disabled={isMatching}
-                      style={{ height: '110px', padding: '10px 30px', margin: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+                      // style={{ height: '110px', padding: '10px 30px', margin: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
                     >
                      <img
                         src={selectedTopic === topic.label ? topic.activeIconFilePath : topic.iconFilePath}
                         alt={topic.label}
                         style={{ width: '100%', height: 'auto', maxWidth: '100%', maxHeight: '60px' }}
                       />
+                    
+
                     </button>
-                    <span style={{ marginTop: '10px' }}>{topic.label}</span> 
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ marginTop: '10px', textAlign: 'center' }}>{topic.label}</span>
+                    </div>
                   </div>
                   ))}
               </div>
@@ -186,21 +190,23 @@ const Matchmaking: React.FC = () => {
           </div>
         </div>
 
-        <div className="col-md-4">
+        <div className="col-md-4 ">
           <div className="form-group">
             <label>Choose your difficulty level:</label>
-            <div className="difficulty-buttons">
-              {difficultyLevels.map((level) => (
-                <div key={level.label} className="mb-2">
-                  <button
-                    className={`btn ${level.className} ${selectedDifficulty === level.label ? 'active' : ''}`}
-                    onClick={() => handleDifficultyClick(level.label)}
-                    disabled={isMatching}
-                  >
-                    {level.label}
-                  </button>
-                </div>
-              ))}
+            <div className="col-md-12 d-flex align-items-center justify-content-center">
+              <div className="difficulty-buttons">
+                {difficultyLevels.map((level) => (
+                  <div key={level.label} className="mb-2">
+                    <button
+                      className={`btn ${level.className} ${selectedDifficulty === level.label ? 'active' : ''}`}
+                      onClick={() => handleDifficultyClick(level.label)}
+                      disabled={isMatching}
+                    >
+                      {level.label}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
