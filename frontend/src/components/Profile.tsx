@@ -32,7 +32,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const id = getCurrentUser().id;
     axios
-    .get(`http://localhost:3001/api/auth/getuser`, {
+    .get(`http://localhost:3003/api/auth/getuser`, {
       headers: {
         'x-access-token': currentUser.accessToken
       }
@@ -94,7 +94,7 @@ const Profile: React.FC = () => {
     onSubmit: (values, { resetForm }) => {
       axios
         .patch(
-          `http://localhost:3001/api/auth/updateprofile`,
+          `http://localhost:3003/api/auth/updateprofile`,
           values,
           {
             headers: {
@@ -170,7 +170,7 @@ const Profile: React.FC = () => {
       const { currentPassword, newPassword } = values;
       axios
         .patch(
-          `http://localhost:3001/api/auth/updatepassword`,
+          `http://localhost:3003/api/auth/updatepassword`,
           { currentPassword, newPassword },
           {
             headers: {
