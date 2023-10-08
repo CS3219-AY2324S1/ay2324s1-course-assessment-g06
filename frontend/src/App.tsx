@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
@@ -9,7 +10,6 @@ import CodeSpace from "./Matching/CodeSpace";
 import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
 import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import * as AuthService from "./services/auth.service";
 import IUser from "./types/user.type";
 import Login from "./components/Login";

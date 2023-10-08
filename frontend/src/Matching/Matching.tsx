@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { socket } from './socket';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-
+import './Matching.css';
+import { iconCategories } from './IconMatching'; 
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
+
+const scrollableContainerStyle = {
+  overflowX: 'scroll', // Enable horizontal scrolling
+  display: 'flex',     // Make the content flex
+  flexWrap: 'wrap',    // Wrap items to the next line when they exceed the container width
+};
 
 // Define a custom interface that extends the Socket interface
 interface CustomSocket extends Socket {
@@ -16,7 +23,7 @@ const Matchmaking: React.FC = () => {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy'); // Set the default value to "Easy"
   const [selectedTopic, setSelectedTopic] = useState<string>('Array'); // Track the selected topic
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
   const [isMatchFound, setIsMatchFound] = useState<boolean>(false); // Track if a match is found
@@ -32,7 +39,7 @@ const Matchmaking: React.FC = () => {
 
     function onDisconnect() {
       if (isMatching) {
-        setIsMatching(false); 
+        setIsMatching(false);
       }
       setIsConnected(false);
     }
@@ -48,13 +55,15 @@ const Matchmaking: React.FC = () => {
 
       setTimeout(() => {
         setIsMatching(false);
-        navigate(`/match/${roomId}`, { state: { socketId: socket.id, difficulty: selectedDifficulty } });
+        navigate(`/match/${roomId}`, {
+          state: { socketId: socket.id, difficulty: selectedDifficulty },
+        });
       }, 2000); // 2 seconds delay
-    };
-  
+    }
+
     // Handle match canceled event
     function matchCanceled() {
-      setIsMatching(false);      
+      setIsMatching(false);
       // Clear the timer stored on the socket object
       if (customSocket.timerId) {
         clearInterval(customSocket.timerId);
@@ -77,7 +86,7 @@ const Matchmaking: React.FC = () => {
 
   const startTimer = () => {
     if (timerInterval === null) {
-      console.log("start timer");
+      console.log('start timer');
       let seconds = 0;
       const intervalId = setInterval(() => {
         seconds++;
@@ -96,7 +105,7 @@ const Matchmaking: React.FC = () => {
 
   const stopTimer = () => {
     if (timerInterval !== null) {
-      console.log("stop timer");
+      console.log('stop timer');
       clearInterval(timerInterval);
       setTimerInterval(null);
       setMatchStatus('');
@@ -112,13 +121,13 @@ const Matchmaking: React.FC = () => {
   const handleMatchClick = () => {
     if (isMatching) {
       stopTimer();
-      setMatchStatus("Matching canceled.");
+      setMatchStatus('Matching canceled.');
       socket.emit('cancel match'); // Emit a cancel signal to the server
     } else {
       startTimer();
       setMatchStatus('Matching...');
-      console.log(selectedDifficulty, selectedTopic); // Include selectedTopic in the console log
-      socket.emit('match me', selectedDifficulty , selectedTopic);
+      console.log("matching with", selectedDifficulty, selectedTopic)
+      socket.emit('match me', selectedDifficulty, selectedTopic);
 
       // Automatically cancel the match after 20 seconds
       setTimeout(() => {
@@ -127,75 +136,100 @@ const Matchmaking: React.FC = () => {
         socket.emit('cancel match'); // Emit a cancel signal to the server
         setIsMatching(false);
       }, 30000); // 30 seconds
-
     }
     setIsMatching(!isMatching);
   };
 
-  const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    setSelectedDifficulty(value);
+  const handleDifficultyClick = (difficulty: string) => {
+    setSelectedDifficulty(difficulty);
   };
 
-  // Handle topic change
-  const handleTopicChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
-    setSelectedTopic(value);
+  // Topic button click handler
+  const handleTopicClick = (topic: string) => {
+    setSelectedTopic(topic);
   };
+
+  const difficultyLevels = [
+    { label: 'Easy', className: 'difficulty-easy' },
+    { label: 'Medium', className: 'difficulty-medium' },
+    { label: 'Hard', className: 'difficulty-hard' },
+  ];
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" >
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-8">
           <div className="form-group">
-            <label htmlFor="difficulty">Select difficulty:</label>
-            <select
-              id="difficulty"
-              className="form-control"
-              value={selectedDifficulty}
-              onChange={handleDifficultyChange}
-              disabled={isMatching}
-            >
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
-            </select>
+            <label htmlFor="topics">Choose a topic to work on with a peer:</label>
+            <div className="col-md-12 ">
+              <div className="scrollable-container">
+                {/* Create a wrapper div for each row of buttons */}
+                {iconCategories.map((topic, index) => (
+                  <div key={topic.label} className={`mb-2`}>
+                    <button
+                      className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''} btn-sm` }
+                      onClick={() => handleTopicClick(topic.label)}
+                      disabled={isMatching}
+                    >
+                     <img
+                        src={selectedTopic === topic.label ? topic.activeIconFilePath : topic.iconFilePath}
+                        alt={topic.label}
+                        style={{ width: '100%', height: 'auto', maxWidth: '100%', maxHeight: '60px' }}
+                      />
+                    
+
+                    </button>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ marginTop: '10px', textAlign: 'center' }}>{topic.label}</span>
+                    </div>
+                  </div>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="col-md-4">
+        <div className="col-md-4 ">
           <div className="form-group">
-            <label htmlFor="topics">Select topics:</label>
-            <select
-              id="topics"
-              className="form-control"
-              value={selectedTopic}
-              onChange={handleTopicChange}
-              disabled={isMatching}
-            >
-              <option value="Array">Array</option>
-              <option value="Binary Search">Binary Search</option>
-              <option value="Hash Table">Hash Table</option>
-              <option value="Stack">Stack</option>
-              <option value="String">String</option>
-              <option value="Tree">Tree</option>
-              <option value="Math">Math</option>
-              <option value="Matrix">Matrix</option>
-            </select>
+            <label>Choose your difficulty level:</label>
+            <div className="col-md-12 d-flex align-items-center justify-content-center">
+              <div className="difficulty-buttons">
+                {difficultyLevels.map((level) => (
+                  <div key={level.label} className="mb-2">
+                    <button
+                      className={`btn ${level.className} ${selectedDifficulty === level.label ? 'active' : ''}`}
+                      onClick={() => handleDifficultyClick(level.label)}
+                      disabled={isMatching}
+                    >
+                      {level.label}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="row mt-3">
-        <div className="col-md-4">
-          <button id="matchButton" className="btn btn-primary" onClick={handleMatchClick} disabled={isMatchFound}>
+        <div className="col-md-12 text-right">
+          <button
+            id="matchButton"
+            className="btn custom-match-button"
+            onClick={handleMatchClick}
+            disabled={isMatchFound}
+          >
             {isMatching ? 'Cancel Match' : 'Match'}
           </button>
-          <div className="d-flex align-items-center mt-2">
-            <div id="spinner" className={`spinner-border spinner-border-sm text-primary mr-2 ${isMatching ? '' : 'd-none'}`} role="status">
+          <div className="d-flex align-items-center justify-content-end">
+            <div
+              id="spinner"
+              className={`spinner-border spinner-border-sm text-primary ml-2 ${isMatching ? '' : 'd-none'}`}
+              role="status"
+            >
               <span className="sr-only">Loading...</span>
             </div>
-            <div id="matchStatus">{matchStatus}</div>
+            <div id="matchStatus" className="text-right">{matchStatus}</div>
           </div>
         </div>
       </div>

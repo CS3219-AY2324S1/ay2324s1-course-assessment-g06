@@ -1,3 +1,21 @@
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(/public/Inter-Regular.ttf);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
 label {
   display: block;
   margin-top: 10px;
@@ -22,6 +40,10 @@ label {
 }
 
 body {
-  background-color: #f1f6f9;
+  background-color: #ffffff;
   min-height: 100vh; /* Ensures the background color covers the entire viewport height */
+  font-family: "Inter-Regular", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
+
