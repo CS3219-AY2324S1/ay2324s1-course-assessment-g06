@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import mascot from '../images/mascot.png';
 
 import { login } from "../services/auth.service";
 
@@ -52,60 +53,103 @@ const Login: React.FC<Props> = () => {
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleLogin}
-        >
-          <Form>
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <Field name="username" type="text" className="form-control" />
-              <ErrorMessage
-                name="username"
-                component="div"
-                className="alert alert-danger"
-              />
-            </div>
+    <div className="container">
+      <div className="row align-items-center justify-content-center">
+      <div className="col-md-5">
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <Field name="password" type="password" className="form-control" />
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="alert alert-danger"
-              />
-            </div>
-
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"></span>
-                )}
-                <span>Login</span>
-              </button>
-            </div>
-
-            {message && (
-              <div className="form-group">
-                <div className="alert alert-danger" role="alert">
-                  {message}
+        <div className="col-md-10 mx-auto">
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleLogin}
+          >
+            {({ handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <div className="form-floating mb-3">
+                  <Field
+                    name="username"
+                    type="text"
+                    className="form-control input-lg"
+                    id="floatingUsername"
+                    placeholder=" "
+                    style={{ borderRadius: "15px" }}
+                  />
+                  <label
+                    htmlFor="floatingUsername"
+                    style={{
+                      paddingLeft: '10px',
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                      paddingRight: 0,
+                      lineHeight: '3rem',
+                      margin: 0,
+                    }}
+                  >
+                    Username
+                  </label>
                 </div>
-              </div>
+
+                <div className="form-floating">
+                  <Field
+                    name="password"
+                    type="password"
+                    className="form-control input-lg"
+                    id="floatingPassword"
+                    placeholder=" "
+                    style={{ borderRadius: "15px" }}
+                  />
+                  <label
+                    htmlFor="floatingPassword"
+                    style={{
+                      paddingLeft: '10px',
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                      paddingRight: 0,
+                      margin: 0,
+                      lineHeight: '3rem',
+                      background: 'none', // Remove background
+                    }}
+                  >
+                    Password
+                  </label>
+                </div>
+                
+
+                <div className="form-group mt-3 d-flex align-items-center">
+                <div className="col-md-5" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)'  }}>
+                  No Account?
+                  <br/>
+                  <span style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>Sign up</span>
+                </div>
+                  <div className="col-md-2" />
+                  <div className="col-md-5 text-center">
+                    <button
+                      type="submit"
+                      className="btn btn-block rounded-pill"
+                      style={{
+                        backgroundColor: '#6C63FF',
+                        color: 'white',
+                        fontFamily: 'Inter, sans-serif',
+                        fontWeight: 'bold',
+                        height: '50px', // Increase button height
+                      }}
+                    >
+                      Login
+                    </button>
+                  </div>
+                </div>
+              </Form>
             )}
-          </Form>
-        </Formik>
+          </Formik>
+        </div>
+      </div>
+        <div className="col-md-7 d-flex align-items-center justify-content-center">
+          <img src={mascot} alt="mascot" height="500" width="700" />
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
+
