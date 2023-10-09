@@ -1,35 +1,68 @@
-import React, { useState, useEffect } from "react";
-
-import { getPublicContent } from "../services/user.service";
+import React from "react";
+import mascot from '../images/mascot.png';
 
 const Home: React.FC = () => {
-  const [content, setContent] = useState<string>("");
-
-  useEffect(() => {
-    getPublicContent().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        const _content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-
-        setContent(_content);
-      }
-    );
-  }, []);
+  const buttonStyles = {
+    backgroundColor: '#6C63FF',
+    color: 'white',
+    fontFamily: 'Inter, sans-serif',
+    fontWeight: 'bold',
+    height: '50px',
+    borderRadius: '15px',
+    border: 'none',
+    cursor: 'pointer',
+    margin: '0.5rem',
+    padding: '0 2.5rem',
+  };
 
   return (
     <div className="container">
-      <header className="jumbotron">
-        <div>
-          Link to questions: <a href="/questions">Questions</a>
+      <div className="row align-items-center justify-content-center">
+        <div className="col-md-5 m-0">
+          <h1 style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '4rem',
+          }}>
+            Coding 
+            <br/>
+            Together
+          </h1>
+          <p style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '2.2rem',
+          }}>
+            has never been easier
+          </p>
+          <div className="col-md-8 text-center">
+            <div className="d-flex justify-content-between"> {/* Wrap buttons in a flex container */}
+              <button
+                style={buttonStyles}
+                onClick={() => alert("Login clicked")}
+              >
+                Login
+              </button>
+              <button
+                style={buttonStyles}
+                onClick={() => alert("Sign Up clicked")}
+              >
+                Sign Up
+              </button>
+            </div>
+          </div>
+          <div className="col-md-" />
         </div>
-        <div>This is a test.</div>
-        <div>{content}</div>
-      </header>
+        <div className="col-md-7 d-flex align-items-center justify-content-center">
+          <img
+            src={mascot}
+            alt="mascot"
+            style={{
+              height: 'auto',
+              maxWidth: '100%',
+              width: 'auto',
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 };
