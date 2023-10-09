@@ -51,51 +51,9 @@ checkRolesExisted = (req, res, next) => {
   next();
 };
 
-checkUpdateUsernameOrEmail = (req, res, next) => {
-  const userId = req.params.id;
-  console.log(userId);
-  const { username, email } = req.body;
-  // Username
-  User.count({
-    where: {
-      username: username,
-      id: {
-        [Op.not]: userId,
-      },
-    },
-  }).then((count) => {
-    if (count > 0) {
-      res.status(400).send({
-        message: 'Failed! Username is already in use!',
-      });
-      return;
-    }
-
-    // Email
-    User.findOne({
-      where: {
-        email: email,
-        id: {
-          [Op.not]: userId,
-        },
-      },
-    }).then((count) => {
-      if (count) {
-        res.status(400).send({
-          message: 'Failed! Email is already in use!',
-        });
-        return;
-      }
-
-      next();
-    });
-  });
-};
-
 const verifySignUp = {
   checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
   checkRolesExisted: checkRolesExisted,
-  checkUpdateUsernameOrEmail: checkUpdateUsernameOrEmail,
 };
 
 module.exports = verifySignUp;

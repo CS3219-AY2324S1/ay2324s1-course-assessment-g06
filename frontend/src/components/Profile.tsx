@@ -21,6 +21,7 @@ interface User {
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
+  const token = currentUser.accessToken;
   const [profile, setProfile] = useState<User | null>(null);
   const [userErrorMessage, setUserErrorMessage] = useState('');
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
@@ -31,7 +32,11 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const id = getCurrentUser().id;
     axios
-      .get(`http://localhost:3001/api/auth/getuser/${id}`)
+    .get(`http://localhost:3003/api/auth/getuser`, {
+      headers: {
+        'x-access-token': currentUser.accessToken
+      }
+    })
       .then((response) => {
         setProfile(response.data);
       })
@@ -49,7 +54,7 @@ const Profile: React.FC = () => {
 
   const deleteUserAccount = async () => {
     try {
-      await deleteUser(currentUser.id);
+      await deleteUser();
       logout();
     } catch (err) {
       // useState to log api error?
@@ -89,8 +94,13 @@ const Profile: React.FC = () => {
     onSubmit: (values, { resetForm }) => {
       axios
         .patch(
-          `http://localhost:3001/api/auth/updateprofile/${currentUser.id}`,
-          values
+          `http://localhost:3003/api/auth/updateprofile`,
+          values,
+          {
+            headers: {
+              'x-access-token': currentUser.accessToken
+            }
+          }
         )
         .then((response) => {
           console.log(response);
@@ -160,8 +170,13 @@ const Profile: React.FC = () => {
       const { currentPassword, newPassword } = values;
       axios
         .patch(
-          `http://localhost:3001/api/auth/updatepassword/${currentUser.id}`,
-          { currentPassword, newPassword }
+          `http://localhost:3003/api/auth/updatepassword`,
+          { currentPassword, newPassword },
+          {
+            headers: {
+              'x-access-token': token
+            }
+          }
         )
         .then((response) => {
           console.log(response);
