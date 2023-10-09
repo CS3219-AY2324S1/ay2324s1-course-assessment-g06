@@ -24,7 +24,7 @@ const Home: React.FC = () => {
       <div className="row align-items-center justify-content-center">
         <div className="col-md-5 m-0">
           <h1 style={{
-            fontFamily: 'Inter, sans-serif',
+            fontFamily: 'Cascadia Code, Inter, sans-serif',
             letterSpacing: '1px',
             fontSize: '4rem',
           }}>
