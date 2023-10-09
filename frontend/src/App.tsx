@@ -59,7 +59,7 @@ const App: React.FC = () => {
     <div>
   <nav className="navbar navbar-expand navbar-light bg-white p-3"> 
         <Link to={"/"} className="navbar-brand">
-          <img src={logo} alt="Logo" height="50" width="160" />;
+          <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
         </Link>
         <div className="navbar-nav mr-auto">
           {/* <li className="nav-item">

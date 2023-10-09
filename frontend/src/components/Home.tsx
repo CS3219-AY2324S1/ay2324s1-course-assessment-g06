@@ -1,6 +1,6 @@
 import React from "react";
 import mascot from '../images/mascot.png';
-import { Link } from "react-router-dom"; // Import the Link component
+import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
   const buttonStyles = {
@@ -14,9 +14,9 @@ const Home: React.FC = () => {
     cursor: 'pointer',
     margin: '0.5rem',
     padding: '0 2.5rem',
-    textDecoration: 'none', // Add this style to remove underlines
-    display: 'flex', // Add this to enable flexbox
-    alignItems: 'center', // Vertically align content in the middle
+    textDecoration: 'none', 
+    display: 'flex', 
+    alignItems: 'center',
   };
 
   return (
@@ -25,6 +25,7 @@ const Home: React.FC = () => {
         <div className="col-md-5 m-0">
           <h1 style={{
             fontFamily: 'Inter, sans-serif',
+            letterSpacing: '1px',
             fontSize: '4rem',
           }}>
             Coding 

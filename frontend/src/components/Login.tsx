@@ -4,6 +4,8 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import mascot from '../images/mascot.png';
+import { Link } from "react-router-dom";
+
 
 import { login } from "../services/auth.service";
 
@@ -113,7 +115,6 @@ const Login: React.FC<Props> = () => {
                     paddingRight: 0,
                     margin: 0,
                     lineHeight: '3rem',
-                    background: 'none', // Remove background
                   }}
                 >
                   Password
@@ -125,7 +126,9 @@ const Login: React.FC<Props> = () => {
               <div className="col-md-5" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)'  }}>
                 No Account?
                 <br/>
-                <span style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>Sign up</span>
+                <Link to="/register" style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>
+                  Sign up
+                </Link>
               </div>
                 <div className="col-md-2" />
                 <div className="col-md-5 text-center">
@@ -137,7 +140,7 @@ const Login: React.FC<Props> = () => {
                       color: 'white',
                       fontFamily: 'Inter, sans-serif',
                       fontWeight: 'bold',
-                      height: '50px', // Increase button height
+                      height: '50px',
                     }}
                   >
                     Login
