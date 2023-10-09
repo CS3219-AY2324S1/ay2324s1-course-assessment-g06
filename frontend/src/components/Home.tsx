@@ -1,5 +1,6 @@
 import React from "react";
 import mascot from '../images/mascot.png';
+import { Link } from "react-router-dom"; // Import the Link component
 
 const Home: React.FC = () => {
   const buttonStyles = {
@@ -13,6 +14,9 @@ const Home: React.FC = () => {
     cursor: 'pointer',
     margin: '0.5rem',
     padding: '0 2.5rem',
+    textDecoration: 'none', // Add this style to remove underlines
+    display: 'flex', // Add this to enable flexbox
+    alignItems: 'center', // Vertically align content in the middle
   };
 
   return (
@@ -34,19 +38,13 @@ const Home: React.FC = () => {
             has never been easier
           </p>
           <div className="col-md-8 text-center">
-            <div className="d-flex justify-content-between"> {/* Wrap buttons in a flex container */}
-              <button
-                style={buttonStyles}
-                onClick={() => alert("Login clicked")}
-              >
+            <div className="d-flex justify-content-between">
+              <Link to="/login" className="nav-link" style={buttonStyles}>
                 Login
-              </button>
-              <button
-                style={buttonStyles}
-                onClick={() => alert("Sign Up clicked")}
-              >
+              </Link>
+              <Link to="/register" className="nav-link" style={buttonStyles}>
                 Sign Up
-              </button>
+              </Link>
             </div>
           </div>
           <div className="col-md-" />

@@ -1,3 +1,4 @@
+// Login.tsx
 import React, { useState } from "react";
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -52,99 +53,104 @@ const Login: React.FC<Props> = () => {
     );
   };
 
+  const mascotStyles = {
+    height: 'auto',
+    maxWidth: '100%',
+    width: 'auto',
+  };
+
   return (
     <div className="container">
       <div className="row align-items-center justify-content-center">
-      <div className="col-md-5">
-
-        <div className="col-md-10 mx-auto">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleLogin}
-          >
-            {({ handleSubmit }) => (
+        <div className="col-md-5">
+          <div className="col-md-10 mx-auto">
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleLogin}
+            >
+              {({ handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
-                <div className="form-floating mb-3">
-                  <Field
-                    name="username"
-                    type="text"
-                    className="form-control input-lg"
-                    id="floatingUsername"
-                    placeholder=" "
-                    style={{ borderRadius: "15px" }}
-                  />
-                  <label
-                    htmlFor="floatingUsername"
+              <div className="form-floating mb-3">
+                <Field
+                  name="username"
+                  type="text"
+                  className="form-control input-lg"
+                  id="floatingUsername"
+                  placeholder=" "
+                  style={{ borderRadius: "15px" }}
+                />
+                <label
+                  htmlFor="floatingUsername"
+                  style={{
+                    paddingLeft: '10px',
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingRight: 0,
+                    lineHeight: '3rem',
+                    margin: 0,
+                  }}
+                >
+                  Username
+                </label>
+              </div>
+
+              <div className="form-floating">
+                <Field
+                  name="password"
+                  type="password"
+                  className="form-control input-lg"
+                  id="floatingPassword"
+                  placeholder=" "
+                  style={{ borderRadius: "15px" }}
+                />
+                <label
+                  htmlFor="floatingPassword"
+                  style={{
+                    paddingLeft: '10px',
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingRight: 0,
+                    margin: 0,
+                    lineHeight: '3rem',
+                    background: 'none', // Remove background
+                  }}
+                >
+                  Password
+                </label>
+              </div>
+              
+
+              <div className="form-group mt-3 d-flex align-items-center">
+              <div className="col-md-5" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)'  }}>
+                No Account?
+                <br/>
+                <span style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>Sign up</span>
+              </div>
+                <div className="col-md-2" />
+                <div className="col-md-5 text-center">
+                  <button
+                    type="submit"
+                    className="btn btn-block rounded-pill"
                     style={{
-                      paddingLeft: '10px',
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                      paddingRight: 0,
-                      lineHeight: '3rem',
-                      margin: 0,
+                      backgroundColor: '#6C63FF',
+                      color: 'white',
+                      fontFamily: 'Inter, sans-serif',
+                      fontWeight: 'bold',
+                      height: '50px', // Increase button height
                     }}
                   >
-                    Username
-                  </label>
+                    Login
+                  </button>
                 </div>
-
-                <div className="form-floating">
-                  <Field
-                    name="password"
-                    type="password"
-                    className="form-control input-lg"
-                    id="floatingPassword"
-                    placeholder=" "
-                    style={{ borderRadius: "15px" }}
-                  />
-                  <label
-                    htmlFor="floatingPassword"
-                    style={{
-                      paddingLeft: '10px',
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                      paddingRight: 0,
-                      margin: 0,
-                      lineHeight: '3rem',
-                      background: 'none', // Remove background
-                    }}
-                  >
-                    Password
-                  </label>
-                </div>
-                
-
-                <div className="form-group mt-3 d-flex align-items-center">
-                <div className="col-md-5" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)'  }}>
-                  No Account?
-                  <br/>
-                  <span style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>Sign up</span>
-                </div>
-                  <div className="col-md-2" />
-                  <div className="col-md-5 text-center">
-                    <button
-                      type="submit"
-                      className="btn btn-block rounded-pill"
-                      style={{
-                        backgroundColor: '#6C63FF',
-                        color: 'white',
-                        fontFamily: 'Inter, sans-serif',
-                        fontWeight: 'bold',
-                        height: '50px', // Increase button height
-                      }}
-                    >
-                      Login
-                    </button>
-                  </div>
-                </div>
-              </Form>
-            )}
-          </Formik>
+              </div>
+            </Form>
+              )}
+            </Formik>
+          </div>
         </div>
-      </div>
         <div className="col-md-7 d-flex align-items-center justify-content-center">
-          <img src={mascot} alt="mascot" height="500" width="700" />
+          <img src={mascot} alt="mascot" style={mascotStyles} />
         </div>
       </div>
     </div>
@@ -152,4 +158,3 @@ const Login: React.FC<Props> = () => {
 };
 
 export default Login;
-
