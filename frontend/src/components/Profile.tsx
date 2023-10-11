@@ -7,9 +7,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { NavigateFunction, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { Alert, TextField } from '@mui/material';
-import { Formik, Field, Form, ErrorMessage, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { getUserProfile, updateUserPassword, updateUserProfile } from '../services/user.service';
 
@@ -22,7 +21,6 @@ interface User {
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
-  const token = currentUser.accessToken;
   const [profile, setProfile] = useState<User | null>(null);
   const [userErrorMessage, setUserErrorMessage] = useState('');
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
