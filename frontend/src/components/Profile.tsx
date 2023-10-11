@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
-import { getCurrentUser, deleteUser, logout } from '../services/auth.service';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { NavigateFunction, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { Alert, TextField } from '@mui/material';
-import { Formik, Field, Form, ErrorMessage, useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useEffect, useState } from "react";
+import { getCurrentUser, deleteUser, logout } from "../services/auth.service";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { NavigateFunction, useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import { Alert, TextField, Typography } from "@mui/material";
+import { Formik, Field, Form, ErrorMessage, useFormik } from "formik";
+import * as Yup from "yup";
+import profilepic from "../images/profilepicture.png";
 
 interface User {
   username: string;
@@ -23,20 +24,25 @@ const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
   const token = currentUser.accessToken;
   const [profile, setProfile] = useState<User | null>(null);
-  const [userErrorMessage, setUserErrorMessage] = useState('');
+  const [userErrorMessage, setUserErrorMessage] = useState("");
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [openUpdatePasswordModel, setOpenUpdatePasswordModal] = useState(false);
   const [openDeleteModel, setOpenDeleteModal] = useState(false);
+  const [showPasswordTextFields, setShowPasswordTextFields] = useState(false);
+
+  const toggleTextFields = () => {
+    setShowPasswordTextFields(!showPasswordTextFields);
+  };
 
   useEffect(() => {
     const id = getCurrentUser().id;
     axios
-    .get(`http://localhost:3003/api/auth/getuser`, {
-      headers: {
-        'x-access-token': currentUser.accessToken
-      }
-    })
+      .get(`http://localhost:3003/api/auth/getuser`, {
+        headers: {
+          "x-access-token": currentUser.accessToken,
+        },
+      })
       .then((response) => {
         setProfile(response.data);
       })
@@ -61,7 +67,7 @@ const Profile: React.FC = () => {
       console.log(err);
     } finally {
       // need to figure out how to not force it without context
-      navigate('/login');
+      navigate("/login");
       window.location.reload();
     }
   };
@@ -74,15 +80,15 @@ const Profile: React.FC = () => {
   const updateProfileSchema = Yup.object().shape({
     username: Yup.string()
       .test(
-        'len',
-        'The username must be between 3 and 20 characters.',
+        "len",
+        "The username must be between 3 and 20 characters.",
         (val: any) =>
           val && val.toString().length >= 3 && val.toString().length <= 20
       )
-      .required('This field is required!'),
+      .required("This field is required!"),
     email: Yup.string()
-      .email('This is not a valid email.')
-      .required('This field is required!'),
+      .email("This is not a valid email.")
+      .required("This field is required!"),
   });
 
   const updateFormik = useFormik({
@@ -93,29 +99,25 @@ const Profile: React.FC = () => {
     validationSchema: updateProfileSchema,
     onSubmit: (values, { resetForm }) => {
       axios
-        .patch(
-          `http://localhost:3003/api/auth/updateprofile`,
-          values,
-          {
-            headers: {
-              'x-access-token': currentUser.accessToken
-            }
-          }
-        )
+        .patch(`http://localhost:3003/api/auth/updateprofile`, values, {
+          headers: {
+            "x-access-token": currentUser.accessToken,
+          },
+        })
         .then((response) => {
           console.log(response);
           // console.log(values);
           setProfile((prevProfile) => {
             if (!prevProfile) {
               return null;
-            } 
+            }
             return {
               ...prevProfile,
               username: values.username || prevProfile.username,
-              email: values.email || prevProfile.email
-            }
+              email: values.email || prevProfile.email,
+            };
           });
-          setUserErrorMessage('');
+          setUserErrorMessage("");
           resetForm();
           toggleUpdateUserModal();
         })
@@ -126,7 +128,6 @@ const Profile: React.FC = () => {
     },
     enableReinitialize: true,
   });
-  
 
   //Update Password
   const toggleUpdatePasswordModal = () => {
@@ -135,28 +136,24 @@ const Profile: React.FC = () => {
 
   const updatePasswordSchema = Yup.object().shape({
     currentPassword: Yup.string()
-    .test(
-      "len",
-      "The password is be between 6 and 40 characters.",
-      (val: any) =>
-        val &&
-        val.toString().length >= 6 &&
-        val.toString().length <= 40
-    )
-    .required("This field is required!"),
+      .test(
+        "len",
+        "The password is be between 6 and 40 characters.",
+        (val: any) =>
+          val && val.toString().length >= 6 && val.toString().length <= 40
+      )
+      .required("This field is required!"),
     newPassword: Yup.string()
-    .test(
-      "len",
-      "The password must be between 6 and 40 characters.",
-      (val: any) =>
-        val &&
-        val.toString().length >= 6 &&
-        val.toString().length <= 40
-    )
-    .required("This field is required!"),
+      .test(
+        "len",
+        "The password must be between 6 and 40 characters.",
+        (val: any) =>
+          val && val.toString().length >= 6 && val.toString().length <= 40
+      )
+      .required("This field is required!"),
     confirmPassword: Yup.string()
-    .oneOf([Yup.ref('newPassword'), ""], 'Passwords must match')
-    .required("This field is required!"),
+      .oneOf([Yup.ref("newPassword"), ""], "Passwords must match")
+      .required("This field is required!"),
   });
 
   const passwordFormik = useFormik({
@@ -174,13 +171,13 @@ const Profile: React.FC = () => {
           { currentPassword, newPassword },
           {
             headers: {
-              'x-access-token': token
-            }
+              "x-access-token": token,
+            },
           }
         )
         .then((response) => {
           console.log(response);
-          setUserErrorMessage('');
+          setUserErrorMessage("");
           resetForm();
           toggleUpdatePasswordModal();
         })
@@ -195,31 +192,352 @@ const Profile: React.FC = () => {
 
   return (
     <div className="container">
-      <header className="jumbotron">
-        <h3>
-          <strong>{profile?.username}</strong> Profile
-        </h3>
-      </header>
-      {/* <p>
-        <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{' '}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-      </p> */}
-      <p>
-        <strong>Id:</strong> {profile?.id}
-      </p>
-      <p>
-        <strong>Email:</strong> {profile?.email}
-      </p>
-      <strong>Authorities:</strong>
-      <ul>
-        {profile?.roles &&
-          profile?.roles.map((role: string, index: number) => (
-            <li key={index}>{role}</li>
-          ))}
-      </ul>
-      <button onClick={toggleDeleteModal}>Delete</button>
-      <button onClick={toggleUpdateUserModal}>update profile</button>
-      <button onClick={toggleUpdatePasswordModal}>change password</button>
+      <div
+        className="jumbotron"
+        style={{ borderRadius: "10px", backgroundColor: "#E6E6E6" }}
+      >
+        <form onSubmit={updateFormik.handleSubmit}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <label
+              htmlFor="username"
+              style={{ position: "relative", left: "40%" }}
+            >
+              Username
+            </label>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="username"
+              name="username"
+              type="text"
+              InputLabelProps={{ shrink: false }} // Allow the label to float
+              onChange={updateFormik.handleChange}
+              value={updateFormik.values.username}
+              onBlur={updateFormik.handleBlur}
+              error={
+                updateFormik.touched.username &&
+                Boolean(updateFormik.errors.username)
+              }
+              helperText={
+                updateFormik.touched.username && updateFormik.errors.username
+              }
+              InputProps={{
+                style: {
+                  borderRadius: "20px", // Set the border radius
+                  backgroundColor: "white",
+                },
+              }}
+              style={{
+                paddingLeft: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingRight: 0,
+                borderRadius: "20px",
+                lineHeight: "3rem",
+                margin: 0,
+                width: "30%",
+                left: "50%",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginTop: "20px",
+            }}
+          >
+            <label
+              htmlFor="email"
+              style={{
+                position: "relative",
+                left: "40%",
+                paddingRight: "35px",
+              }}
+            >
+              Email
+            </label>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="email"
+              name="email"
+              type="text"
+              InputLabelProps={{ shrink: false }} // Allow the label to float
+              onChange={updateFormik.handleChange}
+              value={updateFormik.values.email}
+              onBlur={updateFormik.handleBlur}
+              error={
+                updateFormik.touched.email && Boolean(updateFormik.errors.email)
+              }
+              helperText={
+                updateFormik.touched.email && updateFormik.errors.email
+              }
+              InputProps={{
+                style: {
+                  borderRadius: "20px", // Set the border radius
+                  backgroundColor: "white",
+                },
+              }}
+              style={{
+                paddingLeft: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingRight: 0,
+                borderRadius: "20px",
+                lineHeight: "3rem",
+                margin: 0,
+                width: "30%",
+                left: "50%",
+              }}
+            />
+          </div>
+
+          {showPasswordTextFields && (
+            <div className="form-group">
+              <div>
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <label
+                      htmlFor="currentPassword"
+                      style={{
+                        position: "relative",
+                        left: "40%",
+                        paddingRight: "35px",
+                      }}
+                    >
+                      Current Password
+                    </label>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="currentPassword"
+                      name="currentPassword"
+                      type="password"
+                      value={passwordFormik.values.currentPassword}
+                      onChange={passwordFormik.handleChange}
+                      onBlur={passwordFormik.handleBlur}
+                      error={
+                        passwordFormik.touched.currentPassword &&
+                        Boolean(passwordFormik.errors.currentPassword)
+                      }
+                      helperText={
+                        passwordFormik.touched.currentPassword &&
+                        passwordFormik.errors.currentPassword
+                      }
+                      InputProps={{
+                        style: {
+                          borderRadius: "20px",
+                          backgroundColor: "white",
+                        },
+                      }}
+                      style={{
+                        position: "relative",
+                        display: "flex",
+                        paddingLeft: 0,
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        paddingRight: 0,
+                        borderRadius: "20px",
+                        lineHeight: "3rem",
+                        margin: 0,
+                        width: "30%",
+                        left: "42.5%",
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <label
+                      htmlFor="newPassword"
+                      style={{
+                        position: "relative",
+                        left: "40%",
+                        paddingRight: "35px",
+                      }}
+                    >
+                      New Password
+                    </label>
+                    <TextField
+                      margin="dense"
+                      id="newPassword"
+                      name="newPassword"
+                      type="password"
+                      value={passwordFormik.values.newPassword}
+                      onChange={passwordFormik.handleChange}
+                      onBlur={passwordFormik.handleBlur}
+                      error={
+                        passwordFormik.touched.newPassword &&
+                        Boolean(passwordFormik.errors.newPassword)
+                      }
+                      helperText={
+                        passwordFormik.touched.newPassword &&
+                        passwordFormik.errors.newPassword
+                      }
+                      InputProps={{
+                        style: {
+                          borderRadius: "20px",
+                          backgroundColor: "white",
+                        },
+                      }}
+                      style={{
+                        paddingLeft: 0,
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        paddingRight: 0,
+                        borderRadius: "20px",
+                        lineHeight: "3rem",
+                        margin: 0,
+                        width: "30%",
+                        left: "44.3%",
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <label
+                      htmlFor="confirmPassword"
+                      style={{
+                        position: "relative",
+                        left: "40%",
+                        paddingRight: "35px",
+                      }}
+                    >
+                      Confirm Password
+                    </label>
+                    <TextField
+                      margin="dense"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      value={passwordFormik.values.confirmPassword}
+                      onChange={passwordFormik.handleChange}
+                      onBlur={passwordFormik.handleBlur}
+                      error={
+                        passwordFormik.touched.confirmPassword &&
+                        Boolean(passwordFormik.errors.confirmPassword)
+                      }
+                      helperText={
+                        passwordFormik.touched.confirmPassword &&
+                        passwordFormik.errors.confirmPassword
+                      }
+                      InputProps={{
+                        style: {
+                          borderRadius: "20px",
+                          backgroundColor: "white",
+                        },
+                      }}
+                      style={{
+                        paddingLeft: 0,
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        paddingRight: 0,
+                        borderRadius: "20px",
+                        lineHeight: "3rem",
+                        margin: 0,
+                        width: "30%",
+                        left: "42%",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {!showPasswordTextFields && (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <span
+                style={{
+                  position: "relative",
+                  left: "40%",
+                  paddingRight: "35px",
+                  paddingTop: "25px",
+                }}
+              >
+                Password
+              </span>
+              <Button
+                onClick={toggleTextFields}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  width: "30%",
+                  backgroundColor: "#D9D9D9",
+                  marginTop: "3%",
+                  marginLeft: "47.5%",
+                  color: "black",
+                  borderRadius: "20px",
+                  height: "60px",
+                }}
+              >
+                Change Password
+              </Button>
+            </div>
+          )}
+
+          {/* <Button onClick={toggleUpdateUserModal}>Cancel</Button> */}
+          <Button
+            onClick={(e) => {
+              e.preventDefault(); // Prevent form submission
+              updateFormik.handleSubmit(); // Call the Update Profile method
+              passwordFormik.handleSubmit(); // Call the Update Password method
+            }}
+            style={{
+              position: "relative",
+              display: "flex",
+              width: "46%",
+              backgroundColor: "#D9D9D9",
+              marginTop: "3%",
+              marginLeft: "40%",
+              color: "black",
+              borderRadius: "20px",
+              height: "60px",
+            }}
+          >
+            Save
+          </Button>
+        </form>
+        {/* <div className="col-md-6 d-flex flex-column align-items-center justify-content-center">
+          <img src={profilepic} alt="picture" className="align-self-start" />
+        </div> */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: "-40px",
+            marginLeft: "10%",
+          }}
+        >
+          <button
+            onClick={toggleDeleteModal}
+            style={{
+              position: "relative",
+              border: "none",
+              textDecoration: "underline",
+              color: "#9BA4B5",
+              background: "none",
+            }}
+          >
+            delete account
+          </button>
+        </div>
+      </div>
 
       {/* delete user */}
       <div>
@@ -245,160 +563,6 @@ const Profile: React.FC = () => {
           </DialogActions>
         </Dialog>
       </div>
-
-      {/* update profile */}
-      <div>
-        <Dialog open={openUpdateUserModel} onClose={toggleUpdateUserModal}>
-          <DialogTitle>Update Profile</DialogTitle>
-          <DialogContent>
-            <form onSubmit={updateFormik.handleSubmit}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="email"
-                name="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                onChange={updateFormik.handleChange}
-                value={updateFormik.values.email}
-                onBlur={updateFormik.handleBlur}
-                error={
-                  updateFormik.touched.email &&
-                  Boolean(updateFormik.errors.email)
-                }
-                helperText={
-                  updateFormik.touched.email && updateFormik.errors.email
-                }
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="username"
-                name="username"
-                label="UserName"
-                type="text"
-                fullWidth
-                variant="standard"
-                onChange={updateFormik.handleChange}
-                value={updateFormik.values.username}
-                onBlur={updateFormik.handleBlur}
-                error={
-                  updateFormik.touched.username &&
-                  Boolean(updateFormik.errors.username)
-                }
-                helperText={
-                  updateFormik.touched.username && updateFormik.errors.username
-                }
-              />
-              <DialogActions>
-                <Button onClick={toggleUpdateUserModal}>Cancel</Button>
-                <Button type="submit">Submit</Button>
-              </DialogActions>
-            </form>
-          </DialogContent>
-          {userErrorMessage && (
-          <div>
-            <Alert severity="error">{userErrorMessage}</Alert>
-          </div>)}
-        </Dialog>
-      </div>
-
-    {/* Update Password */}
-      <div>
-        <Dialog open={openUpdatePasswordModel} onClose={toggleUpdatePasswordModal}>
-          <DialogTitle>Change Password</DialogTitle>
-          <DialogContent>
-            <form onSubmit={passwordFormik.handleSubmit}>
-              {/* <Field
-                type="password"
-                name="initialPassword"
-                value={passwordFormik.values.initialPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              />
-              <Field 
-                type="password"
-                name="newPassword"
-                value={passwordFormik.values.newPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              />
-              <Field 
-                type="password"
-                name="confirmPassword"
-                value={passwordFormik.values.confirmPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              /> */}
-              <TextField
-                autoFocus
-                margin="dense"
-                id="currentPassword"
-                name="currentPassword"
-                label="Current Password"
-                type="password"
-                fullWidth
-                value={passwordFormik.values.currentPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-                error={
-                  passwordFormik.touched.currentPassword &&
-                  Boolean(passwordFormik.errors.currentPassword)
-                }
-                helperText={
-                  passwordFormik.touched.currentPassword && passwordFormik.errors.currentPassword
-                }
-              />
-              <TextField
-                margin="dense"
-                id="newPassword"
-                name="newPassword"
-                label="New Password"
-                type="password"
-                fullWidth
-                value={passwordFormik.values.newPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-                error={
-                  passwordFormik.touched.newPassword &&
-                  Boolean(passwordFormik.errors.newPassword)
-                }
-                helperText={
-                  passwordFormik.touched.newPassword && passwordFormik.errors.newPassword
-                }
-              />
-              <TextField
-                margin="dense"
-                id="confirmPassword"
-                name="confirmPassword"
-                label="Confirm Password"
-                type="password"
-                fullWidth
-                value={passwordFormik.values.confirmPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-                error={
-                  passwordFormik.touched.confirmPassword &&
-                  Boolean(passwordFormik.errors.confirmPassword)
-                }
-                helperText={
-                  passwordFormik.touched.confirmPassword && passwordFormik.errors.confirmPassword
-                }
-              />
-              <DialogActions>
-                <Button onClick={toggleUpdatePasswordModal}>Cancel</Button>
-                <Button type="submit">Submit</Button>
-              </DialogActions>
-            </form>
-          </DialogContent>
-          {passwordErrorMessage && (
-          <div>
-            <Alert severity="error">{passwordErrorMessage}</Alert>
-          </div>)}
-        </Dialog>
-      </div>
-
     </div>
   );
 };
