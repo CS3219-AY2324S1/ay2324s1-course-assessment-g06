@@ -4,6 +4,9 @@ import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import './Matching.css';
 import { iconCategories } from './IconMatching'; 
+import { langNames } from '@uiw/codemirror-extensions-langs';
+
+console.log(langNames); 
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
@@ -23,8 +26,9 @@ const Matchmaking: React.FC = () => {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy'); // Set the default value to "Easy"
-  const [selectedTopic, setSelectedTopic] = useState<string>('Array'); // Track the selected topic
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy');
+  const [selectedTopic, setSelectedTopic] = useState<string>('Array');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('python');
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
   const [isMatchFound, setIsMatchFound] = useState<boolean>(false); // Track if a match is found
   const navigate = useNavigate();
@@ -149,6 +153,13 @@ const Matchmaking: React.FC = () => {
     setSelectedTopic(topic);
   };
 
+  const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    setSelectedLanguage(value);
+  }
+
+
+
   const difficultyLevels = [
     { label: 'Easy', className: 'difficulty-easy' },
     { label: 'Medium', className: 'difficulty-medium' },
@@ -158,9 +169,11 @@ const Matchmaking: React.FC = () => {
   return (
     <div className="container mt-5" >
       <div className="row">
+        {/* Left section */}
         <div className="col-md-8">
+          {/* Topic divider */}
           <div className="form-group">
-            <label htmlFor="topics">Choose a topic to work on with a peer:</label>
+            <label htmlFor="topics">Choose a topic:</label>
             <div className="col-md-12 ">
               <div className="scrollable-container">
                 {/* Create a wrapper div for each row of buttons */}
@@ -188,30 +201,67 @@ const Matchmaking: React.FC = () => {
             </div>
           </div>
         </div>
+        {/* End of left section */}
 
+        {/* Right section */}
         <div className="col-md-4 ">
-          <div className="form-group">
-            <label>Choose your difficulty level:</label>
-            <div className="col-md-12 d-flex align-items-center justify-content-center">
-              <div className="difficulty-buttons">
-                {difficultyLevels.map((level) => (
-                  <div key={level.label} className="mb-2">
-                    <button
-                      className={`btn ${level.className} ${selectedDifficulty === level.label ? 'active' : ''}`}
-                      onClick={() => handleDifficultyClick(level.label)}
-                      disabled={isMatching}
-                    >
-                      {level.label}
-                    </button>
-                  </div>
-                ))}
+          {/* Difficulty buttons divider */}
+          <div className="row-md-6 ">
+            <div className="form-group">
+              <label>Choose your difficulty level:</label>
+              <div className="col-md-12 d-flex align-items-center justify-content-center">
+                <div className="difficulty-buttons">
+                  {difficultyLevels.map((level) => (
+                    <div key={level.label} className="mb-2">
+                      <button
+                        className={`btn ${level.className} ${selectedDifficulty === level.label ? 'active' : ''}`}
+                        onClick={() => handleDifficultyClick(level.label)}
+                        disabled={isMatching}
+                      >
+                        {level.label}
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
+          {/* Progamming language dropdown field divider */}
+          <div className="row-md-12 ">
+              <div className="form-group">
+                  <div className="col-md-12"> 
+                      <div className="form-group">
+                        <label htmlFor="language">Preferred Language:</label>
+                        <select
+                          id="language"
+                          className="form-control"
+                          value={selectedLanguage}
+                          onChange={handleLanguageChange}
+                          disabled={isMatching}
+                        >
+                          <option value="c">C</option>
+                          <option value="cpp">C++</option>
+                          <option value="csharp">C#</option>
+                          <option value="go">Go</option>
+                          <option value="java">Java</option>
+                          <option value="javascript">JavaScript</option>
+                          <option value="python">Python</option>
+                          <option value="ruby">Ruby</option>
+                          <option value="typescript">TypeScript</option>
+                        </select>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        {/* End of right section */}
+
+
+      {/* Bottom section */}
       <div className="row mt-3">
+        {/* Match button divider */}
         <div className="col-md-12 text-right">
           <button
             id="matchButton"
