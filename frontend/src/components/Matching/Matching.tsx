@@ -130,8 +130,8 @@ const Matchmaking: React.FC = () => {
     } else {
       startTimer();
       setMatchStatus('Matching...');
-      console.log("matching with", selectedDifficulty, selectedTopic)
-      socket.emit('match me', selectedDifficulty, selectedTopic);
+      console.log("matching with", selectedDifficulty, selectedTopic, selectedLanguage)
+      socket.emit('match me', selectedDifficulty, selectedTopic, selectedLanguage);
 
       // Automatically cancel the match after 20 seconds
       setTimeout(() => {

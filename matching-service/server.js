@@ -52,10 +52,10 @@ const waitingQueue = [];
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('match me', (selectedDifficulty, selectedTopic) => {
-    console.log(selectedDifficulty)
+  socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
+    console.log("language is", selectedLanguage)
     const matchingUserIndex = waitingQueue.findIndex(
-      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic
+      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic && user.selectedLanguage == selectedLanguage
     );
 
     if (matchingUserIndex !== -1) {
@@ -66,6 +66,7 @@ io.on('connection', (socket) => {
       console.log('No user found');
       socket.selectedDifficulty = selectedDifficulty;
       socket.selectedTopic = selectedTopic;
+      socket.selectedLanguage = selectedLanguage;
       waitingQueue.push(socket);
     }
   });
