@@ -13,7 +13,7 @@ type Props = {}
 
 const Login: React.FC<Props> = () => {
   let navigate: NavigateFunction = useNavigate();
-
+  const [loginError, setLoginError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
@@ -121,7 +121,6 @@ const Login: React.FC<Props> = () => {
                 </label>
               </div>
               
-
               <div className="form-group mt-3 d-flex align-items-center">
               <div className="col-md-5" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)'  }}>
                 No Account?
@@ -147,6 +146,20 @@ const Login: React.FC<Props> = () => {
                   </button>
                 </div>
               </div>
+              {message && (
+                  <div className="form-group">
+                    <div
+                      className={
+                        loginError
+                          ? "alert alert-success"
+                          : "alert alert-danger"
+                      }
+                      role="alert"
+                    >
+                      {message}
+                    </div>
+                  </div>
+                )}
             </Form>
               )}
             </Formik>
