@@ -200,10 +200,6 @@ const Profile: React.FC = () => {
           <strong>{profile?.username}</strong> Profile
         </h3>
       </header>
-      {/* <p>
-        <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{' '}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-      </p> */}
       <p>
         <strong>Id:</strong> {profile?.id}
       </p>
@@ -310,27 +306,6 @@ const Profile: React.FC = () => {
           <DialogTitle>Change Password</DialogTitle>
           <DialogContent>
             <form onSubmit={passwordFormik.handleSubmit}>
-              {/* <Field
-                type="password"
-                name="initialPassword"
-                value={passwordFormik.values.initialPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              />
-              <Field 
-                type="password"
-                name="newPassword"
-                value={passwordFormik.values.newPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              />
-              <Field 
-                type="password"
-                name="confirmPassword"
-                value={passwordFormik.values.confirmPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              /> */}
               <TextField
                 autoFocus
                 margin="dense"
