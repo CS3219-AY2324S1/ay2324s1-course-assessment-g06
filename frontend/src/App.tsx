@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
@@ -10,6 +9,7 @@ import CodeSpace from "./Matching/CodeSpace";
 import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
 import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import * as AuthService from "./services/auth.service";
 import IUser from "./types/user.type";
 import Login from "./components/Login";
@@ -21,6 +21,8 @@ import Protected from "./components/Protected";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
 import EventBus from "./common/EventBus";
+import logo from './images/peerPrepLogo.png';
+
 
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
@@ -55,9 +57,9 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
+  <nav className="navbar navbar-expand navbar-light bg-white p-3"> 
         <Link to={"/"} className="navbar-brand">
-          PeerPrep
+          <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
         </Link>
         <div className="navbar-nav mr-auto">
           {/* <li className="nav-item">
@@ -124,7 +126,7 @@ const App: React.FC = () => {
       <div className="container mt-3">
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
-          <Route
+          {/* <Route
             path="/"
             element={
               <>
@@ -133,8 +135,9 @@ const App: React.FC = () => {
                 </p>
               </>
             }
-          />
+          /> */}
           {/* <Route path="/home" element={<Home />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
@@ -173,3 +176,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
