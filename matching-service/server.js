@@ -39,8 +39,10 @@ app.get('/api/room/:roomId', (req, res) => {
         res.json(responseData);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
-        res.status(500).json({ error: 'Error fetching data from external API' });
+        console.error('Error fetching data:', error);
+        res
+          .status(500)
+          .json({ error: 'Error fetching data from external API' });
       });
   } else {
     res.status(404).json({ error: 'Room not found' });
@@ -53,9 +55,11 @@ io.on('connection', (socket) => {
   console.log('A user connected');
 
   socket.on('match me', (selectedDifficulty, selectedTopic) => {
-    console.log(selectedDifficulty)
+    console.log(selectedDifficulty);
     const matchingUserIndex = waitingQueue.findIndex(
-      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic
+      (user) =>
+        user.selectedDifficulty === selectedDifficulty &&
+        user.selectedTopic === selectedTopic
     );
 
     if (matchingUserIndex !== -1) {
@@ -83,7 +87,7 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (roomId) => {
     // Use Socket.IO's join method to add the socket to the room
     socket.join(roomId);
-    socket.to(roomId).emit("userConnected");
+    socket.to(roomId).emit('userConnected');
   });
 
   socket.on('disconnect', () => {
@@ -129,12 +133,9 @@ io.on('connection', (socket) => {
   socket.on('userTyping', (roomId, isTyping) => {
     socket.to(roomId).emit('userTyping', isTyping);
   });
-
-
-
 });
 
-function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
+async function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
   const roomId = uuidv4();
 
   generateQuestion(selectedDifficulty, selectedTopic)
@@ -161,14 +162,16 @@ function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
 
 async function generateQuestion(difficulty, topic) {
   try {
-    const response = await fetch(`http://localhost:3000/api/questions/matched?difficulty=${difficulty}&topics=${topic}`);
+    const response = await fetch(
+      `http://question-service:3000/api/questions/matched?difficulty=${difficulty}&topics=${topic}`
+    );
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }
     const responseData = await response.json();
     return responseData;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
     return null;
   }
 }

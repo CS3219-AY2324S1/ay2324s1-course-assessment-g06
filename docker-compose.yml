@@ -14,6 +14,8 @@ services:
       - secret_key=${secret_key}
     ports: 
       - 3003:3003
+    networks:
+      - service
   
   question-service:
     build:
@@ -28,6 +30,8 @@ services:
       - 3000:3000
     depends_on:
       - user-service
+    networks:
+      - service
 
   frontend:
     build:
@@ -41,9 +45,11 @@ services:
     depends_on:
       - user-service
       - question-service
+      - matching-service
+    networks:
+      - service
 
-
-  matching_backend:
+  matching-service:
     build:
       context: ./matching-service
     # environment:
@@ -52,7 +58,11 @@ services:
     ports:
       - 3002:3002
     depends_on:
-      - frontend
       - user-service
       - question-service
+    networks:
+      - service
+networks:
+  service:
+    driver: bridge
 

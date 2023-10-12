@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 EXPOSE 3002
 CMD [ "node", "server.js" ]
-# docker run -p 1010:3000 cs3219-matching-v1
+
 
 # docker run -d -p 127.0.0.1:3002:3002  --env-file ../.env cs3219-matching-v1
-# localhost:3001
+# localhost:3002
