@@ -70,11 +70,16 @@ const BasicTable: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchFirstPageData();
-    console.log("Running remaining data");
-    fetchRemainingData();
-    console.log("Complete running remaining data");
-
+    const fetchData = async () => {
+      try {
+        await fetchFirstPageData();
+        await fetchRemainingData();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
   }, []);
 
   const navigate = useNavigate();
