@@ -64,7 +64,7 @@ const CustomDialogTitle = styled(DialogTitle)`
 `;
 
 const CustomDialogContent = styled(DialogContent)`
-  padding: 16px;
+  padding: 20px;
 `;
 
 const CustomDialogActions = styled(DialogActions)`
@@ -246,14 +246,14 @@ export default function Question() {
         <CustomDialogActions sx={{ justifyContent: 'space-between' }}>
           <DialogButton
             onClick={closeDeleteDialog}
-            style={{ backgroundColor: 'white', borderRadius: '15px', color: 'black', textTransform: 'none',  margin: '0 auto'  }}
+            style={{ fontSize: "18px", backgroundColor: 'white', borderRadius: '15px', color: 'black', textTransform: 'none',  margin: '0 auto'  }}
           >
             Cancel
           </DialogButton>
           <DialogButton
             onClick={handleDelete}
             autoFocus
-            style={{ backgroundColor: '#6C63FF', borderRadius: '15px', color: 'white', textTransform: 'none', margin: '0 auto' }}
+            style={{ fontSize: "18px", backgroundColor: '#6C63FF', borderRadius: '15px', color: 'white', textTransform: 'none', margin: '0 auto' }}
           >
             Delete
           </DialogButton>
