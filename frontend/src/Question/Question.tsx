@@ -121,12 +121,12 @@ export default function Question() {
           backgroundColor: "#E6E6E6",
           borderRadius: "20px",
           width: "80%", // Adjust the width as needed (percentage or pixels)
-          height: "80vh", // Adjust the height as needed (pixels)
+          padding: "20px"
         }}
       >
         {/* <div className="box"> */}
 
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Button
             variant="contained"
             style={{
@@ -139,28 +139,33 @@ export default function Question() {
           >
             &lt;
           </Button>
-        </Grid>
-
+        </Grid> */}
+        <Paper
+          style={{
+            padding: "20px",
+            borderRadius: "15px"
+          }}
+        >
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
           <Grid item xs={12}>
-            <h1 style={{ fontSize: "30px" }}>{question.title}</h1>
+            <h1 style={{ fontSize: "32px", fontWeight: "bold" }}>{question.title}</h1>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <QuestionWrapper>{question.category}</QuestionWrapper>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <CategoryWrapper>{question.difficulty}</CategoryWrapper>
           </Grid>
 
-          <Container maxWidth="lg">
-            <Paper
+          <Container maxWidth="lg" style={{ marginTop: "30px" }}>
+            {/* <Paper
               style={{
                 padding: "20px",
                 margin: "10px",
               }}
-            >
+            > */}
               <Grid item xs={12}>
                 <div
                   className="content-wrapper"
@@ -173,9 +178,9 @@ export default function Question() {
                   />
                 </div>
               </Grid>
-            </Paper>
+            {/* </Paper> */}
           </Container>
-
+{/* 
           <Grid item xs={6}>
             <DeleteButton
               variant="contained"
@@ -206,9 +211,11 @@ export default function Question() {
             >
               Update
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
+        </Paper>
       </Container>
+      
     );
   } else {
     return <div>Question not found.</div>;
