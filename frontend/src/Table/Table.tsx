@@ -15,6 +15,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import "./Table.css";
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 const AddButton = styled(Button)`
   background-color: #d8d8d8;
@@ -41,15 +43,18 @@ const BasicTable: React.FC = () => {
   const [data, setData] = useState<Question[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchFirstPageData = () => {
     fetch(`http://localhost:3000/api/questions/pagination/first`)
       .then((response) => response.json())
       .then((responseData) => {
         setData(responseData);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+        setIsLoading(false);
       });
   };
 
@@ -91,6 +96,14 @@ const BasicTable: React.FC = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+        <CircularProgress color="inherit" />
+      </div>
+    );
+  }
 
   return (
     <Container maxWidth="lg" style={{ margin: "0 auto" }}>

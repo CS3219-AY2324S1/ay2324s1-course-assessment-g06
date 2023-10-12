@@ -6,7 +6,7 @@ import { Button, Container, Grid, Paper } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 const DeleteButton = styled(Button)`
@@ -60,12 +60,12 @@ export default function Question() {
         .then((response) => response.json())
         .then((responseData) => {
           setQuestion(responseData);
-          setIsLoading(false); // Set loading to false when data is loaded
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
           setQuestion(null);
-          setIsLoading(false); // Set loading to false on error
+          setIsLoading(false);
         });
     };
 
