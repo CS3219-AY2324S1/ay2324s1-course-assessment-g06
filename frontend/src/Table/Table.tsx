@@ -42,8 +42,8 @@ const BasicTable: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const fetchData = () => {
-    fetch(`http://localhost:3000/api/questions`)
+  const fetchFirstPageData = () => {
+    fetch(`http://localhost:3000/api/questions/pagination/first`)
       .then((response) => response.json())
       .then((responseData) => {
         setData(responseData);
@@ -53,8 +53,22 @@ const BasicTable: React.FC = () => {
       });
   };
 
+  const fetchRemainingData = () => {
+    fetch(`http://localhost:3000/api/questions/pagination/remaining`)
+    .then((response) => response.json())
+      .then((responseData) => {
+        setData((prevData) => [...prevData, ...responseData]);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+
+
   useEffect(() => {
-    fetchData();
+    fetchFirstPageData();
+    fetchRemainingData();
   }, []);
 
   const navigate = useNavigate();
