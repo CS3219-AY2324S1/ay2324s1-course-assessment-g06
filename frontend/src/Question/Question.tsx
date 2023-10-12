@@ -6,6 +6,8 @@ import { Button, Container, Grid, Paper } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress
+
 
 const DeleteButton = styled(Button)`
   background-color: #ff5733;
@@ -49,6 +51,7 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
 export default function Question() {
   const { id } = useParams<{ id: string }>();
   const [question, setQuestion] = useState<QuestionInt | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,10 +60,12 @@ export default function Question() {
         .then((response) => response.json())
         .then((responseData) => {
           setQuestion(responseData);
+          // setIsLoading(false); // Set loading to false when data is loaded
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
           setQuestion(null);
+          // setIsLoading(false); // Set loading to false on error
         });
     };
 
@@ -99,6 +104,14 @@ export default function Question() {
   const handleUpdate = () => {
     navigate(`/questions/${id}/update`);
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+        <CircularProgress color="inherit" />
+      </div>
+    );
+  }
 
   if (question === null) {
     return <div>Loading...</div>;
@@ -141,7 +154,7 @@ export default function Question() {
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
           <Grid item xs={12} container justifyContent="space-between">
             <div>
-              <h1 style={{ fontSize: "32px", fontWeight: "bold" }}>
+              <h1 style={{ fontSize: "30px", fontWeight: "bold" }}>
                 {question.title}
               </h1>
             </div>
@@ -176,7 +189,7 @@ export default function Question() {
           </Grid>
 
           {question.topics.split(', ').map((topic, index) => (
-            <Grid item xs={topic.length < 10 ? 1.5 : topic.length < 15 ? 2 : 3} key={index}>
+            <Grid item xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3} key={index}>
               <QuestionWrapper>{topic}</QuestionWrapper>
             </Grid>
           ))}
