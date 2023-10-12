@@ -6,8 +6,6 @@ import './Matching.css';
 import { iconCategories } from './IconMatching'; 
 import { langNames } from '@uiw/codemirror-extensions-langs';
 
-console.log(langNames); 
-
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
 
@@ -60,7 +58,10 @@ const Matchmaking: React.FC = () => {
       setTimeout(() => {
         setIsMatching(false);
         navigate(`/match/${roomId}`, {
-          state: { socketId: socket.id, difficulty: selectedDifficulty },
+          state: { socketId: socket.id, 
+            difficulty: selectedDifficulty, 
+            topic: selectedTopic, 
+            language: selectedLanguage },
         });
       }, 2000); // 2 seconds delay
     }
@@ -86,7 +87,7 @@ const Matchmaking: React.FC = () => {
       socket.off('match found', matchFound);
       socket.off('match canceled', matchCanceled); // Remove the event listener
     };
-  }, [selectedDifficulty]);
+  }, [selectedDifficulty, selectedTopic, selectedLanguage]);
 
   const startTimer = () => {
     if (timerInterval === null) {
@@ -157,8 +158,6 @@ const Matchmaking: React.FC = () => {
     const value = event.target.value;
     setSelectedLanguage(value);
   }
-
-
 
   const difficultyLevels = [
     { label: 'Easy', className: 'difficulty-easy' },
