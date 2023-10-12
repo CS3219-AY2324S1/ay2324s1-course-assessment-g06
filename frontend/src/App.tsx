@@ -9,6 +9,7 @@ import CodeSpace from "./Matching/CodeSpace";
 import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
 import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as AuthService from "./services/auth.service";
 import IUser from "./types/user.type";
@@ -31,6 +32,13 @@ const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
     localStorage.getItem("user") ? true : false
   );
+  const location = useLocation(); // Get the current location
+
+  function generateActiveStyle(path: string) {
+    return {
+      borderBottom: location.pathname === path ? "5px solid #6C63FF" : "none",
+    };
+  }
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
@@ -109,13 +117,13 @@ const App: React.FC = () => {
         ) : (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link to={"/login"} className="nav-link">
+            <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
                 Login
               </Link>
             </li>
 
             <li className="nav-item">
-              <Link to={"/register"} className="nav-link">
+              <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
                 Sign Up
               </Link>
             </li>
