@@ -60,12 +60,12 @@ export default function Question() {
         .then((response) => response.json())
         .then((responseData) => {
           setQuestion(responseData);
-          // setIsLoading(false); // Set loading to false when data is loaded
+          setIsLoading(false); // Set loading to false when data is loaded
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
           setQuestion(null);
-          // setIsLoading(false); // Set loading to false on error
+          setIsLoading(false); // Set loading to false on error
         });
     };
 
