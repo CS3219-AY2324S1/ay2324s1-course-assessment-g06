@@ -1,16 +1,16 @@
-
 /* Grouping of difficulty buttons (Easy, Medium, Hard) */
 div.difficulty-buttons {
-    display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    padding: 50px 40px;
-  }
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+}
   
-  .difficulty-buttons button {
-    width: 100%;
-    margin-bottom: 8px; /* spacing between buttons */
-    align-items: center;
-  }
+div.difficulty-buttons button {
+  width: 100%;
+  margin-bottom: 8px; /* spacing between buttons */
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
 
 /* Easy Button */
 button.difficulty-easy {
@@ -18,51 +18,43 @@ button.difficulty-easy {
     color: gray;
     transition: background-color 0.3s;
     border-radius: 15px;
-    padding: 20px 40px;
+    padding: 8% 18%;
     border: none;
 }
 
-    button.difficulty-easy:hover {
-        background-color: #7ec575;
-        color: black;
-    }
+button.difficulty-easy:hover {
+  background-color: #7ec575;
+  color: black;
+}
 
-    button.difficulty-easy.active {
-        background-color: #7ec575;
-        color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        font-weight: bold;
-    }
-    
-    button.difficulty-easy:disabled {
-        color: white;
-    }
+button.difficulty-easy.active {
+  background-color: #7ec575;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
 
 /* Medium Button */
 button.difficulty-medium {
-    background-color: #f6edd2;
-    color: gray;
-    transition: background-color 0.3s;
-    border-radius: 15px;
-    padding: 20px 40px;
-    border: none;
+  background-color: #f6edd2;
+  color: gray;
+  transition: background-color 0.3s;
+  border-radius: 15px;
+  padding: 8% 18%;
+  border: none;
 }
 
-    button.difficulty-medium:hover {
-        background-color: rgb(236, 197, 89);
-        color: black;
-    }
+button.difficulty-medium:hover {
+  background-color: rgb(236, 197, 89);
+  color: black;
+}
 
-    button.difficulty-medium.active {
-        background-color: rgb(236, 197, 89);
-        color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        font-weight: bold;
-    }
-
-    button.difficulty-medium:disabled {
-        color: white;
-    }
+button.difficulty-medium.active {
+  background-color: rgb(236, 197, 89);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
 
 /* Hard Button */
 button.difficulty-hard {
@@ -70,26 +62,22 @@ button.difficulty-hard {
     color: gray;
     transition: background-color 0.3s;
     border-radius: 15px;
-    padding: 20px 100px;
+    padding: 8% 18%;
     border: none;
 }
 
-    button.difficulty-hard:hover {
-        background-color: #f14949;
-        color: black;
-        transition: background-color 0.3s;
-    }
+button.difficulty-hard:hover {
+  background-color: #f14949;
+  color: black;
+  transition: background-color 0.3s;
+}
 
-    button.difficulty-hard.active {
-        background-color: #f14949;
-        color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        font-weight: bold;
-    }
-
-    button.difficulty-hard:disabled {
-        color: white;
-    }
+button.difficulty-hard.active {
+  background-color: #f14949;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
 
 /* Grouping of difficulty buttons (Easy, Medium, Hard) */
 div.topic-img {
@@ -97,34 +85,30 @@ div.topic-img {
     flex-direction: row;
     white-space: wrap;
   }
-  
-  .topic-img button {
-    width: 100%;
-    height: 80px; /* Set a fixed height for the buttons */
-    margin-bottom: 8px;
-    align-items: center;
-    display: flex; /* Align content vertically */
-    justify-content: center; /* Center content horizontally */
-    box-sizing: border-box; /* Include padding and border in the width */
-  }
 
 /* CSS classes for topic buttons */
 button.topic-button {
-    width: 200px; /* Set a fixed width for the buttons */
-    height: 100px; /* Set a fixed height for the buttons */
-    padding: 10px 30px;
-    margin: 10px;
-    display: flex;
-    flex-direction: column; /* Align text and image vertically */
-    justify-content: center;
-    align-items: center;
-    background-color: #E6E6E6;
-    color: black;
-    transition: background-color 0.3s;
-    border-radius: 15px;
-    border: none;
-    overflow: hidden;
-  }
+  height: 120px; /* Set a fixed height for the buttons */
+  width: 210px;
+  flex: 1; /* Make buttons grow and fill available space */
+  padding: 10px 30px;
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #E6E6E6;
+  color: black;
+  transition: background-color 0.3s;
+  border-radius: 15px;
+  border: none;
+  overflow: hidden;
+  margin-bottom: 8px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
 
 button.topic-button:disabled {
   opacity: 0.5;
@@ -134,6 +118,8 @@ button.topic-button:disabled {
 button.topic-button img {
   width: 100%; /* Set the width of the image to 100% of the button */
   height: auto; /* Allow the image to maintain aspect ratio */
+  max-width: 100%;
+  max-height: 60px;
 }
 
 button.topic-button:hover {
@@ -147,6 +133,11 @@ button.topic-button.active {
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     font-weight: bold;
+}
+
+label.topic-label {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 /* Match Button */
@@ -169,7 +160,8 @@ div.scrollable-container {
     overflow-y: scroll; /* Always show vertical scrollbar */
     display: flex;
     flex-wrap: wrap;
-    max-height: 500px;
+    justify-content: center;
+    max-height: 480px;
     scrollbar-width: thin;
     scrollbar-color: #888 #f0f0f0; 
   }
@@ -195,8 +187,30 @@ div.scrollable-container {
 }
 
 @media (max-width: 768px) {
-  .scrollable-container {
-    flex-wrap: wrap; /* Allow items to wrap to the next row */
-    justify-content: center; /* Center items horizontally when wrapping */
+  button.topic-button {
+    padding: 10px 30px;
+    margin: 5px;
+  }
+
+  button.difficulty-easy {
+    height: 5px;
+  }
+
+  button.difficulty-medium {
+    height: 5px;
+  }
+  
+  button.difficulty-hard {
+    height: 5px;
+  }
+}
+
+@media (max-width: 525px) {
+  button.topic-button {
+    width: 90%;
+  }
+
+  label.topic-label {
+    width: 90%;
   }
 }
