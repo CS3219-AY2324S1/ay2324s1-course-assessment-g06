@@ -110,70 +110,106 @@ export default function QuestionForm() {
 
   return (
     <form onSubmit={(e) => onSubmit(e)}>
-      <Paper
+      <Container
+        maxWidth="lg"
         style={{
-          display: "grid",
-          gridRowGap: "20px",
+          margin: "40px auto 0 auto",
+          backgroundColor: "#E6E6E6",
+          borderRadius: "20px",
+          maxWidth: "80%",
           padding: "20px",
-          margin: "10px 100px",
         }}
       >
-        {/* Show Title of Form */}
-        <Typography variant="h6">Add a new question</Typography>
+        <Paper
+          style={{
+            display: "grid",
+            gridRowGap: "20px",
+            padding: "20px",
+            borderRadius: "15px",
+          }}
+        >
+          {/* Show Title of Form */}
+          <Typography variant="h6" style={{ fontWeight: "bold" }}>
+            Add New Question
+          </Typography>
 
-        {/* Add input components */}
-        <FormInputText
-          name="title"
-          control={control}
-          label="Question Title"
-          options={[]}
-          formSubmitted={formSubmitted}
-        />
+          {/* Add input components */}
+          <FormInputText
+            name="title"
+            control={control}
+            label="Question Title"
+            options={[]}
+            formSubmitted={formSubmitted}
+          />
 
-        <FormInputDropdown
-          name="category"
-          control={control}
-          label="Category"
-          options={dropdownCategoryOptions}
-          formSubmitted={formSubmitted}
-        />
+          <FormInputDropdown
+            name="category"
+            control={control}
+            label="Category"
+            options={dropdownCategoryOptions}
+            formSubmitted={formSubmitted}
+          />
 
-        <FormInputDropdown
-          name="difficulty"
-          control={control}
-          label="Complexity"
-          options={dropdownComplexityOptions}
-          formSubmitted={formSubmitted}
-        />
+          <FormInputDropdown
+            name="difficulty"
+            control={control}
+            label="Complexity"
+            options={dropdownComplexityOptions}
+            formSubmitted={formSubmitted}
+          />
 
-        {/* Placed Container outside of text editor to keep the FormInputTextEditor flexible for other usage */}
-        <Container maxWidth="lg">
-          <h4>Description:</h4>
+          {/* Placed Container outside of text editor to keep the FormInputTextEditor flexible for other usage */}
           <FormInputTextEditor
             onChange={editorHandleChange}
             content={editorContent}
             formSubmitted={formSubmitted}
           />
-        </Container>
 
-        <Button type="submit" variant={"contained"}>
-          {" "}
-          Submit{" "}
-        </Button>
+          <div
+            style={{
+              justifyContent: "space-between",
+              margin: "0 auto",
+            }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              style={{
+                fontSize: "16px",
+                backgroundColor: "#6C63FF",
+                borderRadius: "15px",
+                color: "white",
+                textTransform: "none",
+                margin: "0 auto",
+                marginRight: "30px",
+              }}
+            >
+              Add
+            </Button>
+            <Button
+              onClick={handleBack}
+              variant="contained"
+              style={{
+                fontSize: "16px",
+                backgroundColor: "gray",
+                borderRadius: "15px",
+                color: "white",
+                textTransform: "none",
+                margin: "0 auto",
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
 
-        <Button onClick={handleBack} variant={"contained"}>
-          {" "}
-          Back{" "}
-        </Button>
-
-        {errorMessage && (
-          <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
-            {errorMessage}
-          </Alert>
-        )}
-
-      </Paper>
+          {errorMessage && (
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              {errorMessage}
+            </Alert>
+          )}
+        </Paper>
+      </Container>
     </form>
   );
 }
