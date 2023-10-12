@@ -40,7 +40,7 @@ interface Question {
 const BasicTable: React.FC = () => {
   const [data, setData] = useState<Question[]>([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const fetchFirstPageData = () => {
     fetch(`http://localhost:3000/api/questions/pagination/first`)
@@ -55,7 +55,7 @@ const BasicTable: React.FC = () => {
 
   const fetchRemainingData = () => {
     fetch(`http://localhost:3000/api/questions/pagination/remaining`)
-    .then((response) => response.json())
+      .then((response) => response.json())
       .then((responseData) => {
         setData((prevData) => [...prevData, ...responseData]);
       })
@@ -63,8 +63,6 @@ const BasicTable: React.FC = () => {
         console.error("Error fetching data:", error);
       });
   };
-
-
 
   useEffect(() => {
     fetchFirstPageData();
@@ -92,46 +90,31 @@ const BasicTable: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg" style={{ margin: "0 auto", paddingTop: "80px" }}>
-      <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+    <Container maxWidth="lg" style={{ margin: "0 auto" }}>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
-          <AddButton
-            sx={{
-              position: "relative",
-              top: "900%", // Adjust the top position as needed
-              left: "94%", // Adjust the left position as needed
-              height: "50px",
-              fontSize: "34px",
-              borderRadius: "50px",
-            }}
-            variant="contained"
-            onClick={handleAddButtonClick}
-          >
-            +
-          </AddButton>
-        </Grid>
-        <Grid item xs={12}>
-          <TableContainer component={Paper} sx={{ width: "100%" }}>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ fontWeight: "bold", fontSize: "18px", width: "27%" }}>
+                Question
+              </TableCell>
+              <TableCell
+                style={{ fontWeight: "bold", fontSize: "18px", width: "10%" }}
+                align="right"
+              >
+                Complexity
+              </TableCell>
+              <TableCell
+                style={{ fontWeight: "bold", fontSize: "18px", width: "10%" }}
+                align="right"
+              >
+                Category
+              </TableCell>
+
+            </TableRow>
+          </TableHead>
+          <TableContainer component={Paper} sx={{ width: "100%", borderRadius: "15px" }}>
             <Table sx={{ minWidth: 550 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontWeight: "bold", fontSize: "18px" }}>
-                    Question
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bold", fontSize: "18px" }}
-                    align="right"
-                  >
-                    Category
-                  </TableCell>
-                  <TableCell
-                    style={{ fontWeight: "bold", fontSize: "18px" }}
-                    align="right"
-                  >
-                    Complexity
-                  </TableCell>
-                </TableRow>
-              </TableHead>
               <TableBody>
                 {data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -149,8 +132,8 @@ const BasicTable: React.FC = () => {
                       <TableCell component="th" scope="row">
                         {row.title}
                       </TableCell>
+                      <TableCell align="center">{row.difficulty}</TableCell>
                       <TableCell align="right">{row.category}</TableCell>
-                      <TableCell align="right">{row.difficulty}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -165,6 +148,22 @@ const BasicTable: React.FC = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
+        </Grid>
+        <Grid item xs={12}>
+        <AddButton
+          sx={{
+            position: 'fixed',
+            bottom: '40px', // Adjust the distance from the bottom as needed
+            right: '40px',  // Adjust the distance from the right as needed
+            height: '50px',
+            fontSize: '34px',
+            borderRadius: '50px',
+          }}
+          variant="contained"
+          onClick={handleAddButtonClick}
+        >
+          +
+        </AddButton>
         </Grid>
       </Grid>
     </Container>
