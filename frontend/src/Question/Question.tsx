@@ -3,15 +3,18 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./Question.css";
 import { styled } from "@mui/material/styles";
 import { Button, Container, Grid, Paper } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const DeleteButton = styled(Button)`
-  background-color: #ff5733; /* Change the background color */
-  color: black; /* Change the text color */
-  border-radius: 5px; /* Add rounded corners */
-  font-size: 16px; /* Adjust the font size */
+  background-color: #ff5733;
+  color: black;
+  border-radius: 5px;
+  font-size: 16px;
   font-weight: bold;
   &:hover {
-    background-color: #fe6848; /* Change the background color on hover */
+    background-color: #fe6848;
   }
 `;
 
@@ -45,41 +48,35 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
 
 export default function Question() {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
   const [question, setQuestion] = useState<QuestionInt | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDataWithDelay = () => {
-      console.log("Fetching data for id:", id);
-
-      // Add a delay of, for example, 1000 milliseconds (1 second)
-      const delay = 200;
-
-      setTimeout(() => {
-        fetch(`http://localhost:3000/api/questions/${id}`)
-          .then((response) => response.json())
-          .then((responseData) => {
-            setQuestion(responseData);
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-            setQuestion(null);
-          });
-      }, delay);
+      fetch(`http://localhost:3000/api/questions/${id}`)
+        .then((response) => response.json())
+        .then((responseData) => {
+          setQuestion(responseData);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          setQuestion(null);
+        });
     };
 
-    fetchDataWithDelay(); // Call the function immediately
+    fetchDataWithDelay();
   }, [id]);
 
   function wrapPreTags(content: string) {
-    // Use regular expressions to add a class to <pre> tags
     const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
     return wrappedContent;
   }
 
+  const handleBack = () => {
+    navigate("/questions");
+  };
+
   const handleDelete = () => {
-    // Send a DELETE request to delete the question
     fetch(`http://localhost:3000/api/questions/${id}`, {
       method: "DELETE",
       headers: {
@@ -103,121 +100,103 @@ export default function Question() {
     navigate(`/questions/${id}/update`);
   };
 
-  const handleBack = () => {
-    navigate("/questions");
-  };
-
   if (question === null) {
     return <div>Loading...</div>;
   }
 
-  // Check if question is defined before accessing its properties
-  if (question !== undefined) {
-    return (
-      <Container
-        maxWidth="lg"
+  return (
+    <Container
+      maxWidth="lg"
+      style={{
+        margin: "40px auto 0 auto",
+        backgroundColor: "#E6E6E6",
+        borderRadius: "20px",
+        width: "80%",
+        padding: "20px",
+      }}
+    >
+
+      {/* <Grid item xs={12}>
+        <Button
+          variant="contained"
+          style={{
+            left: "-100px",
+            fontSize: "25px",
+            borderRadius: "80px",
+            backgroundColor: "#D9D9D9",
+          }}
+          onClick={handleBack}
+        >
+          <ArrowBackIcon />
+        </Button>
+      </Grid> */}
+
+
+      <Paper
         style={{
-          margin: "40px auto 0 auto",
-          backgroundColor: "#E6E6E6",
-          borderRadius: "20px",
-          width: "80%", // Adjust the width as needed (percentage or pixels)
-          padding: "20px"
+          padding: "20px",
+          borderRadius: "15px",
         }}
       >
-        {/* <div className="box"> */}
-
-        {/* <Grid item xs={12}>
-          <Button
-            variant="contained"
-            style={{
-              left: "-100px",
-              fontSize: "25px",
-              borderRadius: "80px",
-              backgroundColor: "#D9D9D9",
-            }}
-            onClick={handleBack}
-          >
-            &lt;
-          </Button>
-        </Grid> */}
-        <Paper
-          style={{
-            padding: "20px",
-            borderRadius: "15px"
-          }}
-        >
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-          <Grid item xs={12}>
-            <h1 style={{ fontSize: "32px", fontWeight: "bold" }}>{question.title}</h1>
+          <Grid item xs={12} container justifyContent="space-between">
+            <div>
+              <h1 style={{ fontSize: "32px", fontWeight: "bold" }}>
+                {question.title}
+              </h1>
+            </div>
+            <div>
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#6C63FF",
+                  borderRadius: "50px",
+                  fontSize: "15px",
+                  marginRight: "10px",
+                }}
+                onClick={handleUpdate}
+              >
+                <EditIcon />
+              </Button>
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#FF6A6A",
+                  borderRadius: "20px",
+                }}
+                onClick={handleDelete}
+              >
+                <DeleteIcon />
+              </Button>
+            </div>
           </Grid>
 
-          <Grid item xs={2}>
-            <QuestionWrapper>{question.category}</QuestionWrapper>
-          </Grid>
-
-          <Grid item xs={2}>
+          <Grid item xs={1.5}>
             <CategoryWrapper>{question.difficulty}</CategoryWrapper>
           </Grid>
 
+          {question.topics.split(', ').map((topic, index) => (
+            <Grid item xs={topic.length < 10 ? 1.5 : topic.length < 15 ? 2 : 3} key={index}>
+              <QuestionWrapper>{topic}</QuestionWrapper>
+            </Grid>
+          ))}
+
           <Container maxWidth="lg" style={{ marginTop: "30px" }}>
-            {/* <Paper
-              style={{
-                padding: "20px",
-                margin: "10px",
-              }}
-            > */}
-              <Grid item xs={12}>
+            <Grid item xs={12}>
+              <div
+                className="content-wrapper"
+                style={{ overflow: "auto", maxHeight: "400px" }}
+              >
                 <div
-                  className="content-wrapper"
-                  style={{ overflow: "auto", maxHeight: "400px" }}
-                >
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: wrapPreTags(question.content),
-                    }}
-                  />
-                </div>
-              </Grid>
-            {/* </Paper> */}
+                  dangerouslySetInnerHTML={{
+                    __html: wrapPreTags(question.content),
+                  }}
+                />
+              </div>
+            </Grid>
           </Container>
-{/* 
-          <Grid item xs={6}>
-            <DeleteButton
-              variant="contained"
-              style={{
-                backgroundColor: "#FF6A6A",
-                left: "213%",
-                bottom: "1500%",
-                borderRadius: "20px",
-              }}
-              onClick={handleDelete}
-            >
-              Delete
-            </DeleteButton>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              style={{
-                position: "relative",
-                backgroundColor: "#6C63FF",
-                left: "80%",
-                bottom: "1490%",
-                borderRadius: "50px",
-                fontWeight: "bold",
-                fontSize: "15px",
-              }}
-              onClick={handleUpdate}
-            >
-              Update
-            </Button>
-          </Grid> */}
         </Grid>
-        </Paper>
-      </Container>
-      
-    );
-  } else {
-    return <div>Question not found.</div>;
-  }
+      </Paper>
+    </Container>
+  );
 }

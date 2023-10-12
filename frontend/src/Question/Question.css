@@ -2,7 +2,7 @@
   display: flex;
   justify-content: left;
   align-items: center;
-  height: 130vh; /* Adjust the height as needed */
+  height: 140vh; /* Adjust the height as needed */
 }
 
 .box .question-wrapper {
