@@ -7,10 +7,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { NavigateFunction, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { Alert, TextField } from '@mui/material';
-import { Formik, Field, Form, ErrorMessage, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { getUserProfile, updateUserPassword, updateUserProfile } from '../services/user.service';
 
 interface User {
   username: string;
@@ -21,7 +21,6 @@ interface User {
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
-  const token = currentUser.accessToken;
   const [profile, setProfile] = useState<User | null>(null);
   const [userErrorMessage, setUserErrorMessage] = useState('');
   const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
@@ -31,12 +30,7 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     const id = getCurrentUser().id;
-    axios
-    .get(`http://localhost:3003/api/auth/getuser`, {
-      headers: {
-        'x-access-token': currentUser.accessToken
-      }
-    })
+    getUserProfile(currentUser.accessToken)
       .then((response) => {
         setProfile(response.data);
       })
@@ -92,16 +86,7 @@ const Profile: React.FC = () => {
     },
     validationSchema: updateProfileSchema,
     onSubmit: (values, { resetForm }) => {
-      axios
-        .patch(
-          `http://localhost:3003/api/auth/updateprofile`,
-          values,
-          {
-            headers: {
-              'x-access-token': currentUser.accessToken
-            }
-          }
-        )
+      updateUserProfile(values, currentUser.accessToken)
         .then((response) => {
           console.log(response);
           // console.log(values);
@@ -168,16 +153,7 @@ const Profile: React.FC = () => {
     validationSchema: updatePasswordSchema,
     onSubmit: (values, { resetForm }) => {
       const { currentPassword, newPassword } = values;
-      axios
-        .patch(
-          `http://localhost:3003/api/auth/updatepassword`,
-          { currentPassword, newPassword },
-          {
-            headers: {
-              'x-access-token': token
-            }
-          }
-        )
+      updateUserPassword({currentPassword, newPassword}, currentUser.accessToken)
         .then((response) => {
           console.log(response);
           setUserErrorMessage('');
@@ -200,10 +176,6 @@ const Profile: React.FC = () => {
           <strong>{profile?.username}</strong> Profile
         </h3>
       </header>
-      {/* <p>
-        <strong>Token:</strong> {currentUser.accessToken.substring(0, 20)} ...{' '}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-      </p> */}
       <p>
         <strong>Id:</strong> {profile?.id}
       </p>
@@ -310,27 +282,6 @@ const Profile: React.FC = () => {
           <DialogTitle>Change Password</DialogTitle>
           <DialogContent>
             <form onSubmit={passwordFormik.handleSubmit}>
-              {/* <Field
-                type="password"
-                name="initialPassword"
-                value={passwordFormik.values.initialPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              />
-              <Field 
-                type="password"
-                name="newPassword"
-                value={passwordFormik.values.newPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              />
-              <Field 
-                type="password"
-                name="confirmPassword"
-                value={passwordFormik.values.confirmPassword}
-                onChange={passwordFormik.handleChange}
-                onBlur={passwordFormik.handleBlur}
-              /> */}
               <TextField
                 autoFocus
                 margin="dense"

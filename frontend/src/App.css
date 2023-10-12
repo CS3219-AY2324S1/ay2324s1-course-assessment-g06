@@ -1,24 +1,29 @@
-@font-face {
-  font-family: "Inter-Regular";
-  src: url(/public/Inter-Regular.ttf);
-}
-
-body {
-  margin: 0;
-  font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-
 label {
   display: block;
   margin-top: 10px;
+}
+
+/* Apply Inter font and make the links bold */
+.navbar .nav-link {
+  font-family: 'Inter', sans-serif;
+  font-weight: bold; 
+  font-size: 20px;
+  margin: 20px;
+  padding-bottom: 5px;
+}
+
+.navbar .nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: blue;
+}
+
+.logo-img {
+  margin-left: 15px;
 }
 
 .card-container.card {
@@ -40,10 +45,7 @@ label {
 }
 
 body {
-  background-color: #ffffff;
+  background-color: #f1f6f9;
   min-height: 100vh; /* Ensures the background color covers the entire viewport height */
-  font-family: "Inter-Regular", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
 }
 
