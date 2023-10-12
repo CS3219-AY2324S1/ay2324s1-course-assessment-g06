@@ -28,7 +28,7 @@ export const FormInputDropdown: React.FC<FormInputProps> = ({
   };
 
   return (
-    <FormControl size={"small"} error={(formSubmitted && selected === null)}>
+    <FormControl error={(formSubmitted && selected === null)}>
       <InputLabel id="labelid">{label}</InputLabel>
       <Controller
         render={({ field: { onChange, value }, fieldState: { error } }) => (
