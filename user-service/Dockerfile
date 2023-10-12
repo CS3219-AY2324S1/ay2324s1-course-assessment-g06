@@ -1,15 +1,15 @@
-FROM arm64v8/node:latest as build
-WORKDIR /usr/src/app
+FROM node:latest as build
+WORKDIR /src/app
 # Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+
 COPY package*.json ./
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --omit=dev
+
 # Bundle app source
 COPY . .
-EXPOSE 3000
+EXPOSE 3003
 CMD [ "node", "server.js" ]
 # docker run -d -p 1011:3000 cs3219-user
-# http://localhost:1011/
+# newer
+# docker run -d -p 127.0.0.1:3003:3003  --env-file ../.env cs3219-user-v1
+# http://localhost:3003/

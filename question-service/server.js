@@ -16,8 +16,9 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.listen(3000, () => {
-  console.log("Server has started! Open http://localhost:3000");
+const PORT = process.env.QUESTION_PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server has started! Open http://localhost:${PORT}`);
 });
 
 // MongoDB Atlas credentials
