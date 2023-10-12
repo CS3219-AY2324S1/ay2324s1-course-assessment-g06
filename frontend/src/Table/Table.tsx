@@ -138,11 +138,11 @@ const BasicTable: React.FC = () => {
                       className="table-row"
                       onClick={() => navigate(`/questions/${row._id}`)}
                     >
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" style={{ width: "46%" }}>
                         {row.title}
                       </TableCell>
-                      <TableCell align="center">{row.difficulty}</TableCell>
-                      <TableCell align="right">{row.topics}</TableCell>
+                      <TableCell align="center" style={{ width: "15%" }}>{row.difficulty}</TableCell>
+                      <TableCell align="right" style={{ width: "45%" }}>{row.topics}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
