@@ -66,7 +66,10 @@ const BasicTable: React.FC = () => {
 
   useEffect(() => {
     fetchFirstPageData();
+    console.log("Running remaining data");
     fetchRemainingData();
+    console.log("Complete running remaining data");
+
   }, []);
 
   const navigate = useNavigate();
@@ -95,20 +98,26 @@ const BasicTable: React.FC = () => {
         <Grid item xs={12}>
           <TableHead>
             <TableRow>
-              <TableCell style={{ fontWeight: "bold", fontSize: "18px", width: "27%" }}>
+              <TableCell style={{ fontWeight: "bold", fontSize: "18px", width: "35%" }}>
                 Question
               </TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+
               <TableCell
-                style={{ fontWeight: "bold", fontSize: "18px", width: "10%" }}
-                align="right"
+                style={{ fontWeight: "bold", fontSize: "18px", width: "38%" }}
+                align="center"
               >
                 Complexity
               </TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+
               <TableCell
-                style={{ fontWeight: "bold", fontSize: "18px", width: "10%" }}
+                style={{ fontWeight: "bold", fontSize: "18px", width: "45%" }}
                 align="right"
               >
-                Category
+                Topics
               </TableCell>
 
             </TableRow>
@@ -133,7 +142,7 @@ const BasicTable: React.FC = () => {
                         {row.title}
                       </TableCell>
                       <TableCell align="center">{row.difficulty}</TableCell>
-                      <TableCell align="right">{row.category}</TableCell>
+                      <TableCell align="right">{row.topics}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
