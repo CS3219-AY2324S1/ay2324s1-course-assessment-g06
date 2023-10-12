@@ -8,6 +8,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from "@mui/material/CircularProgress";
 
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button as DialogButton,
+} from "@mui/material";
 
 const DeleteButton = styled(Button)`
   background-color: #ff5733;
@@ -48,11 +56,28 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
   borderRadius: "50px",
 }));
 
+const CustomDialog = styled(Dialog)`
+`;
+
+const CustomDialogTitle = styled(DialogTitle)`
+  font-weight: bold
+`;
+
+const CustomDialogContent = styled(DialogContent)`
+  padding: 16px;
+`;
+
+const CustomDialogActions = styled(DialogActions)`
+  justify-content: space-between;
+`;
+
 export default function Question() {
   const { id } = useParams<{ id: string }>();
   const [question, setQuestion] = useState<QuestionInt | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Confirmation dialog state
 
   useEffect(() => {
     const fetchDataWithDelay = () => {
@@ -81,7 +106,22 @@ export default function Question() {
     navigate("/questions");
   };
 
+  const openDeleteDialog = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleUpdate = () => {
+    navigate(`/questions/${id}/update`);
+  };
+
   const handleDelete = () => {
+    // Close the confirmation dialog
+    closeDeleteDialog();
+
     fetch(`http://localhost:3000/api/questions/${id}`, {
       method: "DELETE",
       headers: {
@@ -99,10 +139,6 @@ export default function Question() {
       .catch((error) => {
         console.error("Error deleting question:", error);
       });
-  };
-
-  const handleUpdate = () => {
-    navigate(`/questions/${id}/update`);
   };
 
   if (isLoading) {
@@ -128,23 +164,6 @@ export default function Question() {
         padding: "20px",
       }}
     >
-
-      {/* <Grid item xs={12}>
-        <Button
-          variant="contained"
-          style={{
-            left: "-100px",
-            fontSize: "25px",
-            borderRadius: "80px",
-            backgroundColor: "#D9D9D9",
-          }}
-          onClick={handleBack}
-        >
-          <ArrowBackIcon />
-        </Button>
-      </Grid> */}
-
-
       <Paper
         style={{
           padding: "20px",
@@ -177,7 +196,7 @@ export default function Question() {
                   backgroundColor: "#FF6A6A",
                   borderRadius: "20px",
                 }}
-                onClick={handleDelete}
+                onClick={openDeleteDialog}
               >
                 <DeleteIcon />
               </Button>
@@ -210,6 +229,37 @@ export default function Question() {
           </Container>
         </Grid>
       </Paper>
-    </Container>
+    
+      <CustomDialog
+        open={isDeleteDialogOpen}
+        onClose={closeDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{ sx: { bgcolor: "lightgray", borderRadius: "20px", padding: "5px" } }}
+      >
+        <CustomDialogTitle id="alert-dialog-title">Confirm Deletion</CustomDialogTitle>
+        <CustomDialogContent>  
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to delete this question?
+            </DialogContentText>
+        </CustomDialogContent>
+        <CustomDialogActions sx={{ justifyContent: 'space-between' }}>
+          <DialogButton
+            onClick={closeDeleteDialog}
+            style={{ backgroundColor: 'white', borderRadius: '15px', color: 'black', textTransform: 'none',  margin: '0 auto'  }}
+          >
+            Cancel
+          </DialogButton>
+          <DialogButton
+            onClick={handleDelete}
+            autoFocus
+            style={{ backgroundColor: '#6C63FF', borderRadius: '15px', color: 'white', textTransform: 'none', margin: '0 auto' }}
+          >
+            Delete
+          </DialogButton>
+        </CustomDialogActions>
+      </CustomDialog>
+
+  </Container>
   );
 }
