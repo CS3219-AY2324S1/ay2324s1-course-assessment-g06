@@ -197,106 +197,15 @@ const Profile: React.FC = () => {
         style={{ borderRadius: "10px", backgroundColor: "#E6E6E6" }}
       >
         <form onSubmit={updateFormik.handleSubmit}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <label
-              htmlFor="username"
-              style={{ position: "relative", left: "40%" }}
-            >
-              Username
-            </label>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="username"
-              name="username"
-              type="text"
-              InputLabelProps={{ shrink: false }} // Allow the label to float
-              onChange={updateFormik.handleChange}
-              value={updateFormik.values.username}
-              onBlur={updateFormik.handleBlur}
-              error={
-                updateFormik.touched.username &&
-                Boolean(updateFormik.errors.username)
-              }
-              helperText={
-                updateFormik.touched.username && updateFormik.errors.username
-              }
-              InputProps={{
-                style: {
-                  borderRadius: "20px", // Set the border radius
-                  backgroundColor: "white",
-                },
-              }}
-              style={{
-                paddingLeft: 0,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingRight: 0,
-                borderRadius: "20px",
-                lineHeight: "3rem",
-                margin: 0,
-                width: "30%",
-                left: "50%",
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginTop: "20px",
-            }}
-          >
-            <label
-              htmlFor="email"
-              style={{
-                position: "relative",
-                left: "40%",
-                paddingRight: "35px",
-              }}
-            >
-              Email
-            </label>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="email"
-              name="email"
-              type="text"
-              InputLabelProps={{ shrink: false }} // Allow the label to float
-              onChange={updateFormik.handleChange}
-              value={updateFormik.values.email}
-              onBlur={updateFormik.handleBlur}
-              error={
-                updateFormik.touched.email && Boolean(updateFormik.errors.email)
-              }
-              helperText={
-                updateFormik.touched.email && updateFormik.errors.email
-              }
-              InputProps={{
-                style: {
-                  borderRadius: "20px", // Set the border radius
-                  backgroundColor: "white",
-                },
-              }}
-              style={{
-                paddingLeft: 0,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingRight: 0,
-                borderRadius: "20px",
-                lineHeight: "3rem",
-                margin: 0,
-                width: "30%",
-                left: "50%",
-              }}
-            />
-          </div>
-
-          {showPasswordTextFields && (
-            <div className="form-group">
-              <div>
-                <div>
+          <div className="container">
+            <div className="row justify-content-center align-items-center">
+              <div className="col-12 col-sm-4">
+                <div className="d-flex align-items-center justify-content-center">
+                  <img src={profilepic} alt="picture" className="img-fluid" />
+                </div>
+              </div>
+              <div className="col-12 col-sm-7">
+                <div className="row justify-content-center align-items-center">
                   <div
                     style={{
                       display: "flex",
@@ -304,32 +213,26 @@ const Profile: React.FC = () => {
                       marginTop: "20px",
                     }}
                   >
-                    <label
-                      htmlFor="currentPassword"
-                      style={{
-                        position: "relative",
-                        left: "40%",
-                        paddingRight: "35px",
-                      }}
-                    >
-                      Current Password
+                    <label htmlFor="username" style={{ position: "relative" }}>
+                      Username
                     </label>
                     <TextField
                       autoFocus
                       margin="dense"
-                      id="currentPassword"
-                      name="currentPassword"
-                      type="password"
-                      value={passwordFormik.values.currentPassword}
-                      onChange={passwordFormik.handleChange}
-                      onBlur={passwordFormik.handleBlur}
+                      id="username"
+                      name="username"
+                      type="text"
+                      InputLabelProps={{ shrink: false }} // Allow the label to float
+                      onChange={updateFormik.handleChange}
+                      value={updateFormik.values.username}
+                      onBlur={updateFormik.handleBlur}
                       error={
-                        passwordFormik.touched.currentPassword &&
-                        Boolean(passwordFormik.errors.currentPassword)
+                        updateFormik.touched.username &&
+                        Boolean(updateFormik.errors.username)
                       }
                       helperText={
-                        passwordFormik.touched.currentPassword &&
-                        passwordFormik.errors.currentPassword
+                        updateFormik.touched.username &&
+                        updateFormik.errors.username
                       }
                       InputProps={{
                         style: {
@@ -338,205 +241,302 @@ const Profile: React.FC = () => {
                         },
                       }}
                       style={{
-                        position: "relative",
-                        display: "flex",
-                        paddingLeft: 0,
-                        paddingTop: 0,
-                        paddingBottom: 0,
-                        paddingRight: 0,
                         borderRadius: "20px",
                         lineHeight: "3rem",
                         margin: 0,
-                        width: "30%",
-                        left: "42.5%",
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <label
-                      htmlFor="newPassword"
-                      style={{
-                        position: "relative",
-                        left: "40%",
-                        paddingRight: "35px",
-                      }}
-                    >
-                      New Password
-                    </label>
-                    <TextField
-                      margin="dense"
-                      id="newPassword"
-                      name="newPassword"
-                      type="password"
-                      value={passwordFormik.values.newPassword}
-                      onChange={passwordFormik.handleChange}
-                      onBlur={passwordFormik.handleBlur}
-                      error={
-                        passwordFormik.touched.newPassword &&
-                        Boolean(passwordFormik.errors.newPassword)
-                      }
-                      helperText={
-                        passwordFormik.touched.newPassword &&
-                        passwordFormik.errors.newPassword
-                      }
-                      InputProps={{
-                        style: {
-                          borderRadius: "20px",
-                          backgroundColor: "white",
-                        },
-                      }}
-                      style={{
-                        paddingLeft: 0,
-                        paddingTop: 0,
-                        paddingBottom: 0,
-                        paddingRight: 0,
-                        borderRadius: "20px",
-                        lineHeight: "3rem",
-                        margin: 0,
-                        width: "30%",
-                        left: "44.3%",
-                      }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <label
-                      htmlFor="confirmPassword"
-                      style={{
-                        position: "relative",
-                        left: "40%",
-                        paddingRight: "35px",
-                      }}
-                    >
-                      Confirm Password
-                    </label>
-                    <TextField
-                      margin="dense"
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      value={passwordFormik.values.confirmPassword}
-                      onChange={passwordFormik.handleChange}
-                      onBlur={passwordFormik.handleBlur}
-                      error={
-                        passwordFormik.touched.confirmPassword &&
-                        Boolean(passwordFormik.errors.confirmPassword)
-                      }
-                      helperText={
-                        passwordFormik.touched.confirmPassword &&
-                        passwordFormik.errors.confirmPassword
-                      }
-                      InputProps={{
-                        style: {
-                          borderRadius: "20px",
-                          backgroundColor: "white",
-                        },
-                      }}
-                      style={{
-                        paddingLeft: 0,
-                        paddingTop: 0,
-                        paddingBottom: 0,
-                        paddingRight: 0,
-                        borderRadius: "20px",
-                        lineHeight: "3rem",
-                        margin: 0,
-                        width: "30%",
-                        left: "42%",
+                        width: "60%",
+                        left: "25%",
                       }}
                     />
                   </div>
                 </div>
+                <div className="row justify-content-center align-items-center">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <label
+                      htmlFor="email"
+                      style={{
+                        position: "relative",
+                        paddingRight: "35px",
+                      }}
+                    >
+                      Email
+                    </label>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="email"
+                      name="email"
+                      type="text"
+                      onChange={updateFormik.handleChange}
+                      value={updateFormik.values.email}
+                      onBlur={updateFormik.handleBlur}
+                      error={
+                        updateFormik.touched.email &&
+                        Boolean(updateFormik.errors.email)
+                      }
+                      helperText={
+                        updateFormik.touched.email && updateFormik.errors.email
+                      }
+                      InputProps={{
+                        style: {
+                          borderRadius: "20px", // Set the border radius
+                          backgroundColor: "white",
+                        },
+                      }}
+                      style={{
+                        borderRadius: "20px",
+                        lineHeight: "3rem",
+                        margin: 0,
+                        width: "60%",
+                        left: "25%",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {!showPasswordTextFields && (
+                  <div className="row justify-content-center align-items-center">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <label
+                        htmlFor="password"
+                        style={{ position: "relative", paddingRight: "5px" }}
+                      >
+                        Password
+                      </label>
+                      <Button
+                        onClick={toggleTextFields}
+                        style={{
+                          backgroundColor: "#D9D9D9",
+                          borderRadius: "20px",
+                          lineHeight: "2.5rem",
+                          margin: 0,
+                          width: "60%",
+                          left: "25%",
+                        }}
+                      >
+                        Change Password
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {showPasswordTextFields && (
+                  <>
+                    <div className="row justify-content-center align-items-center">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          marginTop: "20px",
+                        }}
+                      >
+                        <label
+                          htmlFor="currentPassword"
+                          style={{
+                            position: "relative",
+                            marginRight: "-54px",
+                          }}
+                        >
+                          Current Password
+                        </label>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="currentPassword"
+                          name="currentPassword"
+                          type="password"
+                          value={passwordFormik.values.currentPassword}
+                          onChange={passwordFormik.handleChange}
+                          onBlur={passwordFormik.handleBlur}
+                          error={
+                            passwordFormik.touched.currentPassword &&
+                            Boolean(passwordFormik.errors.currentPassword)
+                          }
+                          helperText={
+                            passwordFormik.touched.currentPassword &&
+                            passwordFormik.errors.currentPassword
+                          }
+                          InputProps={{
+                            style: {
+                              borderRadius: "20px",
+                              backgroundColor: "white",
+                            },
+                          }}
+                          style={{
+                            borderRadius: "20px",
+                            lineHeight: "3rem",
+                            margin: 0,
+                            width: "60%",
+                            left: "25%",
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <label
+                        htmlFor="newPassword"
+                        style={{
+                          position: "relative",
+                          marginRight: "-31px",
+                        }}
+                      >
+                        New Password
+                      </label>
+                      <TextField
+                        margin="dense"
+                        id="newPassword"
+                        name="newPassword"
+                        type="password"
+                        value={passwordFormik.values.newPassword}
+                        onChange={passwordFormik.handleChange}
+                        onBlur={passwordFormik.handleBlur}
+                        error={
+                          passwordFormik.touched.newPassword &&
+                          Boolean(passwordFormik.errors.newPassword)
+                        }
+                        helperText={
+                          passwordFormik.touched.newPassword &&
+                          passwordFormik.errors.newPassword
+                        }
+                        InputProps={{
+                          style: {
+                            borderRadius: "20px",
+                            backgroundColor: "white",
+                          },
+                        }}
+                        style={{
+                          borderRadius: "20px",
+                          lineHeight: "3rem",
+                          margin: 0,
+                          width: "60%",
+                          left: "25%",
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <label
+                        htmlFor="confirmPassword"
+                        style={{
+                          position: "relative",
+                          marginRight: "-55px",
+                        }}
+                      >
+                        Confirm Password
+                      </label>
+                      <TextField
+                        margin="dense"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        value={passwordFormik.values.confirmPassword}
+                        onChange={passwordFormik.handleChange}
+                        onBlur={passwordFormik.handleBlur}
+                        error={
+                          passwordFormik.touched.confirmPassword &&
+                          Boolean(passwordFormik.errors.confirmPassword)
+                        }
+                        helperText={
+                          passwordFormik.touched.confirmPassword &&
+                          passwordFormik.errors.confirmPassword
+                        }
+                        InputProps={{
+                          style: {
+                            borderRadius: "20px",
+                            backgroundColor: "white",
+                          },
+                        }}
+                        style={{
+                          borderRadius: "20px",
+                          lineHeight: "3rem",
+                          margin: 0,
+                          width: "60%",
+                          left: "25%",
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-          )}
-          {!showPasswordTextFields && (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span
-                style={{
-                  position: "relative",
-                  left: "40%",
-                  paddingRight: "35px",
-                  paddingTop: "25px",
-                }}
-              >
-                Password
-              </span>
-              <Button
-                onClick={toggleTextFields}
-                style={{
-                  position: "relative",
-                  display: "flex",
-                  width: "30%",
-                  backgroundColor: "#D9D9D9",
-                  marginTop: "3%",
-                  marginLeft: "47.5%",
-                  color: "black",
-                  borderRadius: "20px",
-                  height: "60px",
-                }}
-              >
-                Change Password
-              </Button>
-            </div>
-          )}
 
-          {/* <Button onClick={toggleUpdateUserModal}>Cancel</Button> */}
-          <Button
-            onClick={(e) => {
-              e.preventDefault(); // Prevent form submission
-              updateFormik.handleSubmit(); // Call the Update Profile method
-              passwordFormik.handleSubmit(); // Call the Update Password method
-            }}
-            style={{
-              position: "relative",
-              display: "flex",
-              width: "46%",
-              backgroundColor: "#D9D9D9",
-              marginTop: "3%",
-              marginLeft: "40%",
-              color: "black",
-              borderRadius: "20px",
-              height: "60px",
-            }}
-          >
-            Save
-          </Button>
+            {/* <Button onClick={toggleUpdateUserModal}>Cancel</Button> */}
+
+            <div className="row justify-content-center align-items-center">
+              <div className="col-12 col-sm-4 d-flex justify-content-center align-items-center">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  <button
+                    onClick={toggleDeleteModal}
+                    style={{
+                      position: "relative",
+                      border: "none",
+                      textDecoration: "underline",
+                      color: "#9BA4B5",
+                      background: "none",
+                    }}
+                  >
+                    delete account
+                  </button>
+                </div>
+              </div>
+              <div className="col-12 col-sm-7">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent form submission
+                      updateFormik.handleSubmit(); // Call the Update Profile method
+                      passwordFormik.handleSubmit(); // Call the Update Password method
+                    }}
+                    style={{
+                      backgroundColor: "#D9D9D9",
+                      borderRadius: "20px",
+                      lineHeight: "2.5rem",
+                      margin: 0,
+                      width: "97%",
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </form>
-        {/* <div className="col-md-6 d-flex flex-column align-items-center justify-content-center">
-          <img src={profilepic} alt="picture" className="align-self-start" />
-        </div> */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginTop: "-40px",
-            marginLeft: "10%",
-          }}
-        >
-          <button
-            onClick={toggleDeleteModal}
-            style={{
-              position: "relative",
-              border: "none",
-              textDecoration: "underline",
-              color: "#9BA4B5",
-              background: "none",
-            }}
-          >
-            delete account
-          </button>
-        </div>
       </div>
 
       {/* delete user */}
@@ -552,7 +552,7 @@ const Profile: React.FC = () => {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              "Are you sure you want to delete your account?"
+              Are you sure you want to delete your account?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
