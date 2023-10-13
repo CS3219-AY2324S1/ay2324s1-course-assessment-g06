@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button, Paper, Typography, Container } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { FormInputText } from "../form_components/FormInputText";
 import { FormInputDropdown } from "../form_components/FormInputDropdown";
@@ -158,7 +159,11 @@ export default function UpdateForm() {
   };
 
   if (question === null) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+        <CircularProgress color="inherit" />
+      </div>
+    );
   }
 
   // Showcases the FE visible components
