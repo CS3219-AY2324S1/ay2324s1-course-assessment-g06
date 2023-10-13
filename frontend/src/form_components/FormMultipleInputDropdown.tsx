@@ -34,29 +34,33 @@ export const FormMultipleInputDropdown: React.FC<FormInputProps> = ({
   };
 
   return (
-    <FormControl error={formSubmitted && selected.length === 0}>
+    <FormControl error={formSubmitted && !control.getValues(name)}>
       <InputLabel id="labelid">{label}</InputLabel>
       <Controller
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <Select
-            multiple
-            onChange={(e) => {
-              handleChange(e.target.value);
-              onChange(e.target.value);
+            multiple  // Allow multiple selections
+            onChange={(event) => {
+              // Convert selected values to a comma-separated string
+              onChange(event.target.value.join(', '));
             }}
-            value={value || []} // Ensure value is always an array
+            value={(value && value.split(', ')) || []} // Convert string to an array
             labelId="labelid"
             label={label}
             error={!!error}
           >
-            {generateSingleOptions()}
+            {options.map((option: any) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </Select>
         )}
         control={control}
         name={name}
         rules={{ required: true }}
       />
-      {formSubmitted && selected.length === 0 && (
+      {formSubmitted && !control.getValues(name) && (
         <FormHelperText>Required</FormHelperText>
       )}
     </FormControl>

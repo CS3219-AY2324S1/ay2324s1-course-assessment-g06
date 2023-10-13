@@ -15,21 +15,50 @@ import FormInputTextEditor from "../form_components/FormInputTextEditor";
 // To instantiate form components
 interface IFormInput {
   title: string;
-  category: string;
+  topics: string;
   difficulty: string;
   content: string;
 }
 
 const defaultValues = {
   title: "",
-  category: "",
+  topics: "",
   difficulty: "",
   content: "",
 };
 
-const dropdownCategoryOptions = [
+const dropdownTopicsOptions = [
+  { label: "Array", value: "Array" },
+  { label: "Backtracking", value: "Backtracking" },
+  { label: "Binary Search", value: "Binary Search" },
+  { label: "Binary Search Tree", value: "Binary Search Tree" },
+  { label: "Bit Manipulation", value: "Bit Manipulation" },
+  { label: "Breadth-First Search", value: "Breadth-First Search" },
+  { label: "Combinatorics", value: "Combinatorics" },
   { label: "Data Structures", value: "Data Structures" },
-  { label: "Algorithms", value: "Algorithms" },
+  { label: "Depth-First Search", value: "Depth-First Search" },
+  { label: "Design", value: "Design" },
+  { label: "Divide and Conquer", value: "Divide and Conquer" },
+  { label: "Dynamic Programming", value: "Dynamic Programming" },
+  { label: "Geometry", value: "Geometry" },
+  { label: "Greedy", value: "Greedy" },
+  { label: "Hash Table", value: "Hash Table" },
+  { label: "Linked List", value: "Linked List" },
+  { label: "Math", value: "Math" },
+  { label: "Matrix", value: "Matrix" },
+  { label: "Memoization", value: "Memoization" },
+  { label: "Merge Sort", value: "Merge Sort" },
+  { label: "Monotonic", value: "Monotonic" },
+  { label: "Stack", value: "Stack" },
+  { label: "Recursion", value: "Recursion" },
+  { label: "Rolling Hash", value: "Rolling Hash" },
+  { label: "Simulation", value: "Simulation" },
+  { label: "Sliding Window", value: "Sliding Window" },
+  { label: "Sorting", value: "Sorting" },
+  { label: "String", value: "String" },
+  { label: "Tree", value: "Tree" },
+  { label: "Trie", value: "Trie" },
+  { label: "Two Pointers", value: "Two Pointers" }
 ];
 
 const dropdownComplexityOptions = [
@@ -144,10 +173,10 @@ export default function QuestionForm() {
           />
 
           <FormMultipleInputDropdown
-            name="category"
+            name="topics"
             control={control}
-            label="Category"
-            options={dropdownCategoryOptions}
+            label="Topics"
+            options={dropdownTopicsOptions}
             formSubmitted={formSubmitted}
           />
 
