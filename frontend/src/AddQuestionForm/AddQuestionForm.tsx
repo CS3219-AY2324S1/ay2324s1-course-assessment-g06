@@ -160,7 +160,7 @@ export default function QuestionForm() {
         >
           {/* Show Title of Form */}
           <Typography variant="h6" style={{ fontWeight: "bold" }}>
-            Add New Question
+            Add Question
           </Typography>
 
           {/* Add input components */}
