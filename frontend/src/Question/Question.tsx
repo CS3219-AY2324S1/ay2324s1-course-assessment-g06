@@ -230,7 +230,7 @@ export default function Question() {
             <Grid item xs={12}>
               <div
                 className="content-wrapper"
-                style={{ overflow: "auto", maxHeight: "325px" }}
+                style={{ overflow: "auto", maxHeight: "350px" }}
               >
                 <div
                   dangerouslySetInnerHTML={{
