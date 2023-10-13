@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
@@ -31,29 +31,15 @@ interface ChatMessage {
 const CodeSpace = () => {
   const { roomId } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const { socketId, difficulty, topic , language} = location.state || {};
   const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
+  const [hasQuitRoom, setHasQuitRoom] = useState(false); // Track if the user has quit the room
   const [value, setValue] = React.useState(() => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
-
-  // Function to fetch the language from the server
-  const fetchLanguageFromServer = async () => {
-    try {
-      // Make an HTTP request to your server to get the language
-      const response = await fetch('/api/language'); // Adjust the URL as needed
-      if (!response.ok) {
-        throw new Error(`Failed to fetch language. Status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data.language; // Assuming the response contains the language
-    } catch (error) {
-      console.error('Error fetching language:', error);
-      return null;
-    }
-  };
 
   const messageData: ChatMessage = {
     roomId: roomId !== undefined ? roomId : "0", 
@@ -124,17 +110,23 @@ const CodeSpace = () => {
     }
   }, [socket, roomId]);
 
-  const fetchData = () => {
-    fetch(`http://localhost:3002/api/room/${roomId}`)
-      .then((response) => response.json())
-      .then((data) => {
+  const fetchData = async () => {
+    // Check if the room is active
+    try {
+      const response = await fetch(`http://localhost:3002/api/room/${roomId}`);
+      if (response.ok) {
+        const data = await response.json();
         setQuestion(data);
         console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        setQuestion(null);
-      });
+      } else {
+        console.error('Error fetching room data:', response.status);
+        navigate("/404"); // Redirect to the 404 error page
+      }
+    } catch (error) {
+      // Room is not active and the 404 page is shown
+      console.error('Error fetching room data:', error);
+      navigate("/404"); // Redirect to the 404 error page
+    }
   };
 
   useEffect(() => {
@@ -142,6 +134,11 @@ const CodeSpace = () => {
     const matchedSocket = io('http://localhost:3002', {
       query: { roomId },
     });
+
+    matchedSocket.on('sessionEnded', () => {
+      console.log("session has ended")
+      navigate("/404");
+    })
 
     matchedSocket.on('connect', () => {
       console.log('Connected to matched socket');
@@ -194,6 +191,17 @@ const CodeSpace = () => {
       }
     });
 
+    // // Listen for the 'sessionEnded' event from the server
+    matchedSocket.on('sessionEnded', () => {
+      // Handle the session ending, display a message, or redirect users
+      alert('The session has ended');
+      setHasQuitRoom(true);
+      
+      return () => {
+        matchedSocket.off("sessionEnded");
+      };
+    });
+
     // Might not be able to work due to current implementation and window closes terminates socket abruptly
     matchedSocket.on('userDisconnected', () => {
       // Send a message to the chat when a user disconnects
@@ -227,7 +235,12 @@ const CodeSpace = () => {
   };
 
   const handleQuitSession = () => {
+    if (socket) {
+      // Emit a "quitSession" event to the server
+      socket.emit('quitSession', roomId);
+    }
     console.log("quitting session");
+    navigate("/404");
   }
 
   return (

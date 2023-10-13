@@ -26,7 +26,10 @@ app.get('/', (req, res) => {
 app.get('/api/room/:roomId', (req, res) => {
   const roomId = req.params.roomId;
   const roomInfo = rooms.get(roomId);
-  if (roomInfo) {
+  console.log("rooms data: ", rooms);
+
+  // Check if the room is still active
+  if (rooms.has(roomId)) {
     const questionId = roomInfo.questionId;
     fetch(`http://localhost:3000/api/questions/${questionId}`)
       .then((response) => {
@@ -43,7 +46,8 @@ app.get('/api/room/:roomId', (req, res) => {
         res.status(500).json({ error: 'Error fetching data from external API' });
       });
   } else {
-    res.status(404).json({ error: 'Room not found' });
+    // Room not found, throw 404 error to api request
+    res.status(404).send('Room not found');
   }
 });
 
@@ -87,11 +91,29 @@ io.on('connection', (socket) => {
   });
 
   // Disconnect the user who has quit
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-    const index = waitingQueue.indexOf(socket);
-    if (index !== -1) {
-      waitingQueue.splice(index, 1);
+  // socket.on('disconnect', () => {
+  //   console.log('A user disconnected');
+  //   const index = waitingQueue.indexOf(socket);
+  //   if (index !== -1) {
+  //     waitingQueue.splice(index, 1);
+  //   }
+  // });
+
+  // Disconnect users in the session
+  socket.on('quitSession', (roomId) => {
+    // Check if the user is in the specified room
+    if (socket.rooms.has(roomId)) {
+      // Emit an event to inform the other user that the session is ending
+      socket.to(roomId).emit('sessionEnded');
+      // Leave the room
+      socket.leave(roomId);
+  
+      // Remove the room from the 'rooms' map
+      if (rooms.delete(roomId)) {
+        console.log("Removed room with ID", roomId, "from rooms map.");
+      } else {
+        console.log("Room with ID", roomId, "not found in rooms map.");
+      }
     }
   });
 
@@ -159,3 +181,4 @@ async function generateQuestion(difficulty, topic) {
     return null;
   }
 }
+
