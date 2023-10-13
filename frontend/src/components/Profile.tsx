@@ -33,9 +33,16 @@ const Profile: React.FC = () => {
   const [openUpdatePasswordModel, setOpenUpdatePasswordModal] = useState(false);
   const [openDeleteModel, setOpenDeleteModal] = useState(false);
   const [showPasswordTextFields, setShowPasswordTextFields] = useState(false);
+  const [textFieldsEnabled, setTextFieldsEnabled] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [errorType, setErrorType] = useState("");
+  const [passwordbuttonClicked, setPasswordButtonClicked] = useState(false);
 
   const toggleTextFields = () => {
     setShowPasswordTextFields(!showPasswordTextFields);
+    setTextFieldsEnabled(false);
+    setPasswordButtonClicked(true);
   };
 
   useEffect(() => {
@@ -113,10 +120,13 @@ const Profile: React.FC = () => {
           setUserErrorMessage("");
           resetForm();
           toggleUpdateUserModal();
+          setShowSuccessModal(true);
         })
         .catch((err) => {
           console.log(err);
           setUserErrorMessage(err.response.data.message);
+          setErrorType("user");
+          setShowErrorModal(true);
         });
     },
     enableReinitialize: true,
@@ -167,11 +177,14 @@ const Profile: React.FC = () => {
           setUserErrorMessage("");
           resetForm();
           toggleUpdatePasswordModal();
+          setShowSuccessModal(true);
         })
         .catch((err) => {
           // console.log(err);
           // console.log(err.response.data)
           setPasswordErrorMessage(err.response.data.message);
+          setErrorType("password");
+          setShowErrorModal(true);
         });
     },
     enableReinitialize: true,
@@ -209,7 +222,7 @@ const Profile: React.FC = () => {
                       id="username"
                       name="username"
                       type="text"
-                      InputLabelProps={{ shrink: false }} // Allow the label to float
+                      disabled={!textFieldsEnabled}
                       onChange={updateFormik.handleChange}
                       value={updateFormik.values.username}
                       onBlur={updateFormik.handleBlur}
@@ -260,6 +273,7 @@ const Profile: React.FC = () => {
                       id="email"
                       name="email"
                       type="text"
+                      disabled={!textFieldsEnabled}
                       onChange={updateFormik.handleChange}
                       value={updateFormik.values.email}
                       onBlur={updateFormik.handleBlur}
@@ -506,8 +520,15 @@ const Profile: React.FC = () => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault(); // Prevent form submission
-                      updateFormik.handleSubmit(); // Call the Update Profile method
-                      passwordFormik.handleSubmit(); // Call the Update Password method
+                      if (!textFieldsEnabled && !passwordbuttonClicked) {
+                        setTextFieldsEnabled(true);
+                      } else {
+                        if (!passwordbuttonClicked) {
+                          updateFormik.handleSubmit(); // Call the Update Profile method
+                        } else {
+                          passwordFormik.handleSubmit(); // Call the Update Password method
+                        }
+                      }
                     }}
                     style={{
                       backgroundColor: "#D9D9D9",
@@ -517,7 +538,9 @@ const Profile: React.FC = () => {
                       width: "97%",
                     }}
                   >
-                    Save
+                    {textFieldsEnabled || passwordbuttonClicked
+                      ? "Save"
+                      : "Edit Profile"}
                   </Button>
                 </div>
               </div>
@@ -547,6 +570,48 @@ const Profile: React.FC = () => {
             <Button onClick={deleteUserAccount} autoFocus>
               Agree
             </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
+      {/* Error */}
+      <div>
+        <Dialog
+          open={showErrorModal}
+          onClose={() => setShowErrorModal(false)}
+          aria-labelledby="error-dialog-title"
+          aria-describedby="error-dialog-description"
+        >
+          <DialogTitle id="error-dialog-title">Error</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="error-dialog-description">
+              {/* Current password is incorrect. */}
+              {errorType === "password" && passwordErrorMessage}
+              {errorType === "user" && userErrorMessage}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setShowErrorModal(false)}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+
+      {/* Success */}
+      <div>
+        <Dialog
+          open={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+          aria-labelledby="success-dialog-title"
+          aria-describedby="success-dialog-description"
+        >
+          <DialogTitle id="success-dialog-title">Success</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="success-dialog-description">
+              Successfully updated!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setShowSuccessModal(false)}>Close</Button>
           </DialogActions>
         </Dialog>
       </div>
