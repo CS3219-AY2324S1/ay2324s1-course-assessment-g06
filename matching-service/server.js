@@ -86,6 +86,7 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit("userConnected");
   });
 
+  // Disconnect the user who has quit
   socket.on('disconnect', () => {
     console.log('A user disconnected');
     const index = waitingQueue.indexOf(socket);

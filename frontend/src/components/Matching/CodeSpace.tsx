@@ -110,7 +110,6 @@ const CodeSpace = () => {
       setNewMessage('');
 
     }
-
   };
 
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
@@ -227,8 +226,12 @@ const CodeSpace = () => {
     }
   };
 
+  const handleQuitSession = () => {
+    console.log("quitting session");
+  }
+
   return (
-    <div>
+    <div className="container mt-5" >
       <h2>Welcome, {socketId || 'Loading...'}</h2>
       <p>
         You are matched with another user using difficulty: {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and language: {language || 'Not selected'}
@@ -261,46 +264,51 @@ const CodeSpace = () => {
           extensions={getCodeMirrorExtensions()}
         />
 
-            <br/>
-            <br/>
-            <br/>
+        <br/>
+        <br/>
+        <br/>
 
+        {/* Chat UI */}
+        <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
+          <h2>Chat</h2>
+          <div className="chat-messages">
+            <ScrollToBottom className='message-container'>
+            {messageList.map((messageContent, index) => (
+              <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
+                <div className='message-content'>
+                  {messageContent.message}
+                </div>
+                <div className='message-meta'>
+                  {messageContent.time}
+                </div>
+              </div>
+            ))}
+            </ScrollToBottom>
+          </div>
+          <div className="chat-input">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              value={newMessage}
+              onChange={handleNewMessageChange}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleSendMessage();
+                } else {
+                  handleStartTyping(); 
+                }
+              }}
+            />
+            {isTyping && <div className="typing-indicator">Typing...</div>}
+            <button onClick={handleSendMessage}>Send</button>
+          </div>
+        </div>
 
-            {/* Chat UI */}
-            <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
-              <h2>Chat</h2>
-              <div className="chat-messages">
-                <ScrollToBottom className='message-container'>
-                {messageList.map((messageContent, index) => (
-                  <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
-                    <div className='message-content'>
-                      {messageContent.message}
-                    </div>
-                    <div className='message-meta'>
-                      {messageContent.time}
-                    </div>
-                  </div>
-                ))}
-                </ScrollToBottom>
-              </div>
-              <div className="chat-input">
-                <input
-                  type="text"
-                  placeholder="Type your message..."
-                  value={newMessage}
-                  onChange={handleNewMessageChange}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      handleSendMessage();
-                    } else {
-                      handleStartTyping(); 
-                    }
-                  }}
-                />
-                {isTyping && <div className="typing-indicator">Typing...</div>}
-                <button onClick={handleSendMessage}>Send</button>
-              </div>
-            </div>
+        <div className = "col-md-5">
+          <button className="quit-button" onClick={handleQuitSession}>
+              Quit Session
+          </button>
+        </div>
       </div>
     </div>
   );
