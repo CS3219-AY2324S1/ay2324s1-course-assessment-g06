@@ -177,10 +177,7 @@ export default function UpdateForm() {
           <FormInputText name="title" control={control} label="Question Title" options={[]} formSubmitted={formSubmitted} />
           <FormMultipleInputDropdown name="topics" control={control} label="Topics" options={dropdownTopicsOptions} formSubmitted={formSubmitted} />
           <FormInputDropdown name="difficulty" control={control} label="Complexity" options={dropdownComplexityOptions} formSubmitted={formSubmitted} />
-          <Container maxWidth="md">
-            <h4>Description:</h4>
             <FormInputTextEditor onChange={editorHandleChange} content={question.content} formSubmitted={formSubmitted} />
-          </Container>
           <div style={{ justifyContent: "space-between", margin: "0 auto" }}>
             <Button type="submit" variant="contained" style={{ fontSize: "16px", backgroundColor: "#6C63FF", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto", marginRight: "30px" }}>
               Update
