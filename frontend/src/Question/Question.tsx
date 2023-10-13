@@ -71,6 +71,17 @@ const CustomDialogActions = styled(DialogActions)`
   justify-content: space-between;
 `;
 
+const BackButton = styled(Button)`
+  background-color: #d8d8d8;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  &:hover {
+    background-color: #a2a2a2;
+  }
+`;
+
 export default function Question() {
   const { id } = useParams<{ id: string }>();
   const [question, setQuestion] = useState<QuestionInt | null>(null);
@@ -259,6 +270,21 @@ export default function Question() {
           </DialogButton>
         </CustomDialogActions>
       </CustomDialog>
+
+      <BackButton
+          sx={{
+            position: 'fixed',
+            bottom: '40px', // Adjust the distance from the bottom as needed
+            left: '40px',  // Adjust the distance from the right as needed
+            height: '50px',
+            fontSize: '34px',
+            borderRadius: '50px',
+          }}
+          variant="contained"
+          onClick={handleBack}
+        >
+          <ArrowBackIcon />
+        </BackButton>
 
   </Container>
   );
