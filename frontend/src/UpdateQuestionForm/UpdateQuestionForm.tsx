@@ -172,7 +172,7 @@ export default function UpdateForm() {
       <Container maxWidth="lg" style={{ margin: "40px auto 0 auto", backgroundColor: "#E6E6E6", borderRadius: "20px", maxWidth: "80%", padding: "20px" }}>
         <Paper style={{ display: "grid", gridRowGap: "20px", padding: "20px", borderRadius: "15px" }}>
           <Typography variant="h6" style={{ fontWeight: "bold" }}>
-            Update a Question
+            Update Question
           </Typography>
           <FormInputText name="title" control={control} label="Question Title" options={[]} formSubmitted={formSubmitted} />
           <FormMultipleInputDropdown name="topics" control={control} label="Topics" options={dropdownTopicsOptions} formSubmitted={formSubmitted} />
