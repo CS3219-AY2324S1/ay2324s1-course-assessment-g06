@@ -45,6 +45,7 @@ const QuestionWrapper = styled(Container)(({ theme }) => ({
   fontWeight: "bold",
   textAlign: "center",
   borderRadius: "50px",
+  fontSize: "12px"
 }));
 
 const CategoryWrapper = styled(Container)(({ theme }) => ({
@@ -54,6 +55,7 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
   fontWeight: "bold",
   textAlign: "center",
   borderRadius: "50px",
+  fontSize: "12px"
 }));
 
 const CustomDialog = styled(Dialog)`
@@ -184,7 +186,7 @@ export default function Question() {
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
           <Grid item xs={12} container justifyContent="space-between">
             <div>
-              <h1 style={{ fontSize: "30px", fontWeight: "bold" }}>
+              <h1 style={{ fontSize: "25px", fontWeight: "bold" }}>
                 {question.title}
               </h1>
             </div>
@@ -224,11 +226,11 @@ export default function Question() {
             </Grid>
           ))}
 
-          <Container maxWidth="lg" style={{ marginTop: "30px" }}>
+          <Container maxWidth="lg" style={{ marginTop: "25px" }}>
             <Grid item xs={12}>
               <div
                 className="content-wrapper"
-                style={{ overflow: "auto", maxHeight: "400px" }}
+                style={{ overflow: "auto", maxHeight: "325px" }}
               >
                 <div
                   dangerouslySetInnerHTML={{
@@ -264,7 +266,7 @@ export default function Question() {
           <DialogButton
             onClick={handleDelete}
             autoFocus
-            style={{ fontSize: "18px", backgroundColor: '#6C63FF', borderRadius: '15px', color: 'white', textTransform: 'none', margin: '0 auto' }}
+            style={{ fontSize: "18px", backgroundColor: '#FF6A6A', borderRadius: '15px', color: 'white', textTransform: 'none', margin: '0 auto' }}
           >
             Delete
           </DialogButton>

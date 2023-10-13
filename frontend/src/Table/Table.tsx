@@ -142,27 +142,26 @@ const BasicTable: React.FC = () => {
           </TableHead>
           <TableContainer component={Paper} sx={{ width: "100%", borderRadius: "15px" }}>
             <Table sx={{ minWidth: 550 }} aria-label="simple table">
-              <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        backgroundColor:
-                          index % 2 === 0 ? "#E6E6E6" : "#D8D8D8",
-                      }}
-                      className="table-row"
-                      onClick={() => navigate(`/questions/${row._id}`)}
-                    >
-                      <TableCell component="th" scope="row" style={{ width: "46%" }}>
-                        {row.title}
-                      </TableCell>
-                      <TableCell align="center" style={{ width: "15%" }}>{row.difficulty}</TableCell>
-                      <TableCell align="right" style={{ width: "45%" }}>{row.topics}</TableCell>
-                    </TableRow>
-                  ))}
+            <TableBody>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      backgroundColor: index % 2 === 0 ? "#E6E6E6" : "#D8D8D8",
+                    }}
+                    className="table-row"
+                    onClick={() => navigate(`/questions/${row._id}`)}
+                  >
+                    <TableCell component="th" scope="row" style={{ width: "46%", padding: '12px' }}>
+                      {row.title}
+                    </TableCell>
+                    <TableCell align="center" style={{ width: "15%", padding: '12px' }}>{row.difficulty}</TableCell>
+                    <TableCell align="right" style={{ width: "45%", padding: '12px' }}>{row.topics}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
