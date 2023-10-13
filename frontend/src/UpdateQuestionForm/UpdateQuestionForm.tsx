@@ -174,9 +174,16 @@ export default function UpdateForm() {
           <Typography variant="h6" style={{ fontWeight: "bold" }}>
             Update Question
           </Typography>
+          {errorMessage && (
+            <Alert severity="error">
+              <AlertTitle>Error!</AlertTitle>
+              {/* {errorMessage} */}
+            </Alert>
+          )}
           <FormInputText name="title" control={control} label="Question Title" options={[]} formSubmitted={formSubmitted} />
           <FormMultipleInputDropdown name="topics" control={control} label="Topics" options={dropdownTopicsOptions} formSubmitted={formSubmitted} />
-          <FormInputDropdown name="difficulty" control={control} label="Complexity" options={dropdownComplexityOptions} formSubmitted={formSubmitted} />
+          <FormInputDropdown name="difficulty" control={control} label="Complexity" options={dropdownComplexityOptions} formSubmitted={formSubmitted}   defaultValue={question.difficulty} // Set the default value here
+/>
             <FormInputTextEditor onChange={editorHandleChange} content={question.content} formSubmitted={formSubmitted} />
           <div style={{ justifyContent: "space-between", margin: "0 auto" }}>
             <Button type="submit" variant="contained" style={{ fontSize: "16px", backgroundColor: "#6C63FF", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto", marginRight: "30px" }}>
@@ -186,12 +193,7 @@ export default function UpdateForm() {
               Back
             </Button>
           </div>
-          {errorMessage && (
-            <Alert severity="error">
-              <AlertTitle>Error</AlertTitle>
-              {errorMessage}
-            </Alert>
-          )}
+
         </Paper>
         </Container>
     </form>

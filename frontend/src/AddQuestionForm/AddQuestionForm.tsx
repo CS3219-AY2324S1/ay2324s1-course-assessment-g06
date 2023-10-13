@@ -75,6 +75,8 @@ export default function QuestionForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
+  // console.log(control._formValues.topics);
+
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Access form data using methods.getValues() if you are using react-hook-form
@@ -136,6 +138,8 @@ export default function QuestionForm() {
   // Update editor content when it changes
   const editorHandleChange = (newContent: string) => {
     setEditorContent(newContent);
+    // console.log(control._formValues);
+
   };
 
   return (
@@ -162,6 +166,13 @@ export default function QuestionForm() {
           <Typography variant="h6" style={{ fontWeight: "bold" }}>
             Add Question
           </Typography>
+
+          {errorMessage && (
+            <Alert severity="error">
+              <AlertTitle>Error!</AlertTitle>
+              {/* {errorMessage} */}
+            </Alert>
+          )}
 
           {/* Add input components */}
           <FormInputText
@@ -231,13 +242,6 @@ export default function QuestionForm() {
               Cancel
             </Button>
           </div>
-
-          {errorMessage && (
-            <Alert severity="error">
-              <AlertTitle>Error</AlertTitle>
-              {errorMessage}
-            </Alert>
-          )}
         </Paper>
       </Container>
     </form>
