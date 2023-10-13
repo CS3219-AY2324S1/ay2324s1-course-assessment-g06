@@ -9,6 +9,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 // Import customised components
 import { FormInputText } from "../form_components/FormInputText";
 import { FormInputDropdown } from "../form_components/FormInputDropdown";
+import { FormMultipleInputDropdown } from "../form_components/FormMultipleInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
 // To instantiate form components
@@ -142,7 +143,7 @@ export default function QuestionForm() {
             formSubmitted={formSubmitted}
           />
 
-          <FormInputDropdown
+          <FormMultipleInputDropdown
             name="category"
             control={control}
             label="Category"
