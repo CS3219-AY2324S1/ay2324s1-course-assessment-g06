@@ -7,6 +7,10 @@ const rooms = new Map();
 
 const app = express();
 const server = http.createServer(app);
+const QUESTION_HOST = process.env.QUESTION_HOST
+  ? process.env.QUESTION_HOST
+  : 'http://localhost:3000/api/questions';
+// JK need change
 const io = socketIo(server, {
   cors: {
     origin: ['http://localhost:3001', 'http://localhost:3002'],
@@ -28,7 +32,7 @@ app.get('/api/room/:roomId', (req, res) => {
   const roomInfo = rooms.get(roomId);
   if (roomInfo) {
     const questionId = roomInfo.questionId;
-    fetch(`http://localhost:3000/api/questions/${questionId}`)
+    fetch(QUESTION_HOST + `${questionId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
@@ -163,8 +167,9 @@ async function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
 async function generateQuestion(difficulty, topic) {
   try {
     const response = await fetch(
-      `http://question-service:3000/api/questions/matched?difficulty=${difficulty}&topics=${topic}`
+      QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`
     );
+    console.log(QUESTION_HOST);
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }
