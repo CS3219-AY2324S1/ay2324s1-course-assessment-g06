@@ -9,8 +9,6 @@ import './CodeSpace.css';
 
 import {Grid, Container, Card } from '@mui/material';
 
-console.log('langNames:', langNames); // To show the available language supported by codemirror
-
 interface Question {
   _id: string;
   title: string;
@@ -33,14 +31,29 @@ interface ChatMessage {
 const CodeSpace = () => {
   const { roomId } = useParams();
   const location = useLocation();
-  const { socketId, difficulty, topic } = location.state || {};
+  const { socketId, difficulty, topic , language} = location.state || {};
   const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [value, setValue] = React.useState(() => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
-  const [selectedLanguage, setSelectedLanguage] = useState('c'); // Default language is C
+
+  // Function to fetch the language from the server
+  const fetchLanguageFromServer = async () => {
+    try {
+      // Make an HTTP request to your server to get the language
+      const response = await fetch('/api/language'); // Adjust the URL as needed
+      if (!response.ok) {
+        throw new Error(`Failed to fetch language. Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.language; // Assuming the response contains the language
+    } catch (error) {
+      console.error('Error fetching language:', error);
+      return null;
+    }
+  };
 
   const messageData: ChatMessage = {
     roomId: roomId !== undefined ? roomId : "0", 
@@ -152,12 +165,6 @@ const CodeSpace = () => {
       setValue(newCode); // Update the value with the new code
     });
 
-    // Listen for 'languageChange' events from the server
-    matchedSocket.on('languageChange', (newLanguage: string) => {
-      console.log('receive language from server');
-      setSelectedLanguage(newLanguage); // Update the selected language
-    });
-
     // Listen for 'receive message' events from the server
     matchedSocket.on('receiveMessage', (data) => {
       console.log('receiveMessage from server');
@@ -201,8 +208,6 @@ const CodeSpace = () => {
       setMessageList((list) => [...list, messageData]);
     });
 
-
-
     setSocket(matchedSocket);
     fetchData();
 
@@ -211,17 +216,8 @@ const CodeSpace = () => {
     };
   }, [roomId]);
 
-  const handleLanguageChange = (selectedLanguage: string) => {
-    console.log(selectedLanguage)
-    setSelectedLanguage(selectedLanguage);
-    // Emit a 'languageChange' event to the server to inform other users
-    if (socket) {
-      socket.emit('languageChange', selectedLanguage, roomId);
-    }
-  };
-
   const getCodeMirrorExtensions = () => {
-    switch (selectedLanguage) {
+    switch (language) {
       case 'python':
         return [langs.python()];
       case 'java':
@@ -235,7 +231,7 @@ const CodeSpace = () => {
     <div>
       <h2>Welcome, {socketId || 'Loading...'}</h2>
       <p>
-        You are matched with another user using difficulty: {difficulty || 'Not selected'} and topic: {topic || 'Not selected'}
+        You are matched with another user using difficulty: {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and language: {language || 'Not selected'}
       </p>
 
       <br />
@@ -256,24 +252,6 @@ const CodeSpace = () => {
 
       <br />
       <br />
-
-      <div>
-        <label>Select Language:</label>
-        <select
-          value={selectedLanguage}
-          onChange={(e) => handleLanguageChange(e.target.value)}
-        >
-          <option value="c">C</option>
-          <option value="cpp">C++</option>
-          <option value="csharp">C#</option>
-          <option value="go">Go</option>
-          <option value="java">Java</option>
-          <option value="javascript">JavaScript</option>
-          <option value="python">Python</option>
-          <option value="ruby">Ruby</option>
-          <option value="typescript">TypeScript</option>
-        </select>
-      </div>
 
       <div>
         <CodeMirror
