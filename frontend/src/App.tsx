@@ -18,6 +18,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Protected from "./components/Protected";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -165,7 +166,12 @@ const App: React.FC = () => {
             element={<UpdateQuestionForm />}
           />
           <Route path="/questions/add-question" element={<AddQuestionForm />} />
+
+          {/* 404 Route */}
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
+
+        
       </div>
     </div>
   );
