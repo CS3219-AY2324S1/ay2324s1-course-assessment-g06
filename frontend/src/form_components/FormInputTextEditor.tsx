@@ -6,19 +6,17 @@ import draftToHtml from 'draftjs-to-html'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
 import { FormHelperText } from '@mui/material'
 
-// Represents the conversion of HTML from the draft editor
-let html = ""; // Variable to store the converted HTML
+let html = "";
 
 type Props = {
-  onChange: (val: string) => void; // A function to be called when the content changes
-  content: string; // Initial content in HTML format
+  onChange: (val: string) => void;
+  content: string;
   formSubmitted: boolean;
 }
 
 type State = {
-  editorState: EditorState; // The state for the WYSIWYG editor
+  editorState: EditorState;
 }
-
 
 class FormInputTextEditor extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -28,15 +26,12 @@ class FormInputTextEditor extends React.Component<Props, State> {
     };
   }
 
-  // Ensure component mounted on DOM
   componentDidMount() {
-    // When the component mounts, convert the provided HTML content to EditorState
     this.setState({
       editorState: this.convertHTMLtoEditorState(this.props.content),
     })
   }
 
-  // Convert HTML content to EditorState
   convertHTMLtoEditorState(html: string): EditorState {
     const contentBlock = htmlToDraft(html);
     if (contentBlock) {
@@ -46,28 +41,27 @@ class FormInputTextEditor extends React.Component<Props, State> {
     return EditorState.createEmpty();
   }
 
-  // Called when there is a change on the draft editor, mainly to edit the converted HTML contents
   onEditorStateChange = (editorState: EditorState) => {
     this.setState({
       editorState,
     });
 
-    // Convert the current EditorState content to HTML and pass it to the parent component
     html = draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()))
     this.props.onChange(html);
   };
 
   render() {
     const { editorState } = this.state;
-    
+    const contentIsEmpty = editorState.getCurrentContent().getPlainText().trim() === "";
+
     return (
-      <React.Fragment>
+      <div style={{ maxWidth: '956px' }}> 
         <div>
           <Editor
             editorState={editorState}
             onEditorStateChange={this.onEditorStateChange}
-            editorStyle= {{border: "1px solid rgb(237, 240, 245)",}}
-            stripPastedStyles= {true}
+            editorStyle={{ border: "1px solid rgb(237, 240, 245)", padding: "10px" }}
+            stripPastedStyles={true}
             placeholder='Enter description here'
             toolbar={{
               options: [
@@ -84,21 +78,14 @@ class FormInputTextEditor extends React.Component<Props, State> {
             }}
           />
         </div>
-
-        {/* Uncomment below to show HTML conversion while typing */}
-        {/* <div>
-          <h4>Description Converted to HTML</h4>
-          {html}
-        </div> */}
         <div>
-        {this.props.formSubmitted && this.props.content === "" && (
-          <FormHelperText style={{color: "red"}}>Required</FormHelperText>
-        )}
+          {this.props.formSubmitted && contentIsEmpty && (
+            <FormHelperText style={{ color: "#d32f2f", paddingLeft: "16px" }}>Required</FormHelperText>
+          )}
         </div>
-
         <br></br>
-      </React.Fragment>
-    )
+      </div>
+    );
   }
 }
 
