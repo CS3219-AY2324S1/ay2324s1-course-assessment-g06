@@ -52,7 +52,8 @@ class FormInputTextEditor extends React.Component<Props, State> {
 
   render() {
     const { editorState } = this.state;
-    
+    const contentIsEmpty = editorState.getCurrentContent().getPlainText().trim() === "";
+
     return (
       <div style={{ maxWidth: '956px' }}> 
         <div>
@@ -78,13 +79,13 @@ class FormInputTextEditor extends React.Component<Props, State> {
           />
         </div>
         <div>
-          {this.props.formSubmitted && this.props.content === "" && (
+          {this.props.formSubmitted && contentIsEmpty && (
             <FormHelperText style={{ color: "#d32f2f", paddingLeft: "16px" }}>Required</FormHelperText>
           )}
         </div>
         <br></br>
       </div>
-    )
+    );
   }
 }
 
