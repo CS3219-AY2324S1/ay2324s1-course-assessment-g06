@@ -79,7 +79,7 @@ class FormInputTextEditor extends React.Component<Props, State> {
         </div>
         <div>
           {this.props.formSubmitted && this.props.content === "" && (
-            <FormHelperText style={{ color: "red" }}>Required</FormHelperText>
+            <FormHelperText style={{ color: "#d32f2f", paddingLeft: "16px" }}>Required</FormHelperText>
           )}
         </div>
         <br></br>
