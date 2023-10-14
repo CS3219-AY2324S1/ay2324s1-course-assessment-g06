@@ -21,11 +21,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 const AddButton = styled(Button)`
   background-color: #d8d8d8;
   color: white;
-  border-radius: 5px;
-  font-size: 16px;
   font-weight: bold;
   &:hover {
-    background-color: #a2a2a2;
+    background-color: #6C63FF;
   }
 `;
 
@@ -179,17 +177,20 @@ const BasicTable: React.FC = () => {
         <AddButton
           sx={{
             position: 'fixed',
-            bottom: '40px', // Adjust the distance from the bottom as needed
-            right: '40px',  // Adjust the distance from the right as needed
-            height: '50px',
-            fontSize: '34px',
-            borderRadius: '50px',
+            bottom: '30px',
+            right: '30px',
+            height: '30px',
+            fontSize: '25px',
+            borderRadius: '40px',
+            minWidth: '40px', // Set the minimum width
+            maxWidth: '40px',  // Set the maximum width
           }}
           variant="contained"
           onClick={handleAddButtonClick}
         >
           +
         </AddButton>
+
         </Grid>
       </Grid>
     </Container>

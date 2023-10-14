@@ -76,11 +76,9 @@ const CustomDialogActions = styled(DialogActions)`
 const BackButton = styled(Button)`
   background-color: #d8d8d8;
   color: white;
-  border-radius: 5px;
-  font-size: 16px;
   font-weight: bold;
   &:hover {
-    background-color: #a2a2a2;
+    background-color: #6C63FF;
   }
 `;
 
@@ -272,21 +270,25 @@ export default function Question() {
           </DialogButton>
         </CustomDialogActions>
       </CustomDialog>
+      <Grid item xs={12}>
 
       <BackButton
           sx={{
             position: 'fixed',
-            bottom: '40px', // Adjust the distance from the bottom as needed
-            left: '40px',  // Adjust the distance from the right as needed
-            height: '50px',
-            fontSize: '34px',
-            borderRadius: '50px',
+            bottom: '30px',
+            left: '30px',
+            height: '32 px',
+            fontSize: '25px',
+            borderRadius: '40px',
+            minWidth: '40px', // Set the minimum width
+            maxWidth: '40px',  // Set the maximum width
           }}
           variant="contained"
           onClick={handleBack}
         >
           <ArrowBackIcon />
         </BackButton>
+        </Grid>
 
   </Container>
   );
