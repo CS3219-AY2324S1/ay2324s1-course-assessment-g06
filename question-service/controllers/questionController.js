@@ -1,4 +1,5 @@
 const Question = require("../models/question");
+const USER_HOST = process.env.USER_HOST || "http://localhost:3003/api/users";
 
 module.exports = {
   // Controller function to get all questions
@@ -161,4 +162,7 @@ module.exports = {
         res.status(500).json({ error: "Error fetching random question" });
       });
   },
+  // getUserQuestions: (req, res) => {
+    
+  // }
 };

@@ -21,22 +21,22 @@ import Protected from "./components/Protected";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
-import EventBus from "./common/EventBus";
+import EventBus from './common/EventBus';
 import logo from './images/peerPrepLogo.png';
-
+import Analytics from './components/Analytics';
 
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
   const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
   // const [currentUser, setCurrentUser] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
-    localStorage.getItem("user") ? true : false
+    localStorage.getItem('user') ? true : false
   );
   const location = useLocation(); // Get the current location
 
   function generateActiveStyle(path: string) {
     return {
-      borderBottom: location.pathname === path ? "5px solid #6C63FF" : "none",
+      borderBottom: location.pathname === path ? '5px solid #6C63FF' : 'none',
     };
   }
 
@@ -45,14 +45,14 @@ const App: React.FC = () => {
 
     if (user) {
       // setCurrentUser(true);
-      setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-      setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
+      setShowModeratorBoard(user.roles.includes('ROLE_MODERATOR'));
+      setShowAdminBoard(user.roles.includes('ROLE_ADMIN'));
     }
 
-    EventBus.on("logout", logOut);
+    EventBus.on('logout', logOut);
 
     return () => {
-      EventBus.remove("logout", logOut);
+      EventBus.remove('logout', logOut);
     };
   }, []);
 
@@ -65,9 +65,16 @@ const App: React.FC = () => {
 
   return (
     <div>
-  <nav className="navbar navbar-expand navbar-light bg-white p-3"> 
-        <Link to={"/"} className="navbar-brand">
-          <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
+      <nav className="navbar navbar-expand navbar-light bg-white p-3">
+        <Link to={'/'} className="navbar-brand">
+          <img
+            src={logo}
+            alt="Logo"
+            height="50"
+            width="160"
+            className="logo-img"
+          />
+          ;
         </Link>
         <div className="navbar-nav mr-auto">
           {/* <li className="nav-item">
@@ -78,7 +85,7 @@ const App: React.FC = () => {
 
           {showModeratorBoard && (
             <li className="nav-item">
-              <Link to={"/mod"} className="nav-link">
+              <Link to={'/mod'} className="nav-link">
                 Moderator Board
               </Link>
             </li>
@@ -86,7 +93,7 @@ const App: React.FC = () => {
 
           {showAdminBoard && (
             <li className="nav-item">
-              <Link to={"/admin"} className="nav-link">
+              <Link to={'/admin'} className="nav-link">
                 Admin Board
               </Link>
             </li>
@@ -94,7 +101,7 @@ const App: React.FC = () => {
 
           {currentUser && (
             <li className="nav-item">
-              <Link to={"/user"} className="nav-link">
+              <Link to={'/user'} className="nav-link">
                 User
               </Link>
             </li>
@@ -104,7 +111,7 @@ const App: React.FC = () => {
         {currentUser ? (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link to={"/profile"} className="nav-link">
+              <Link to={'/profile'} className="nav-link">
                 profile
               </Link>
             </li>
@@ -117,13 +124,21 @@ const App: React.FC = () => {
         ) : (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
-            <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
+              <Link
+                to={'/login'}
+                className="nav-link"
+                style={generateActiveStyle('/login')}
+              >
                 Login
               </Link>
             </li>
 
             <li className="nav-item">
-              <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
+              <Link
+                to={'/register'}
+                className="nav-link"
+                style={generateActiveStyle('/register')}
+              >
                 Sign Up
               </Link>
             </li>
@@ -136,6 +151,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route
             path="/profile"
             element={
@@ -172,4 +188,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
