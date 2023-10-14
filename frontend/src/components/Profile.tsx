@@ -37,7 +37,7 @@ const Profile: React.FC = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorType, setErrorType] = useState("");
-  const [passwordbuttonClicked, setPasswordButtonClicked] = useState(false);
+  const [passwordButtonClicked, setPasswordButtonClicked] = useState(false);
 
   const toggleTextFields = () => {
     setShowPasswordTextFields(!showPasswordTextFields);
@@ -520,10 +520,10 @@ const Profile: React.FC = () => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault(); // Prevent form submission
-                      if (!textFieldsEnabled && !passwordbuttonClicked) {
+                      if (!textFieldsEnabled && !passwordButtonClicked) {
                         setTextFieldsEnabled(true);
                       } else {
-                        if (!passwordbuttonClicked) {
+                        if (!passwordButtonClicked) {
                           updateFormik.handleSubmit(); // Call the Update Profile method
                         } else {
                           passwordFormik.handleSubmit(); // Call the Update Password method
@@ -538,7 +538,7 @@ const Profile: React.FC = () => {
                       width: "97%",
                     }}
                   >
-                    {textFieldsEnabled || passwordbuttonClicked
+                    {textFieldsEnabled || passwordButtonClicked
                       ? "Save"
                       : "Edit Profile"}
                   </Button>
