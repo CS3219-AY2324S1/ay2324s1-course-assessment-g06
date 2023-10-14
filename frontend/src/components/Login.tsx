@@ -13,8 +13,7 @@ type Props = {}
 
 const Login: React.FC<Props> = () => {
   let navigate: NavigateFunction = useNavigate();
-  const [loginError, setLoginError] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [successful, setSuccessful] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
   const initialValues: {
@@ -33,26 +32,20 @@ const Login: React.FC<Props> = () => {
   const handleLogin = (formValue: { username: string; password: string }) => {
     const { username, password } = formValue;
 
-    setMessage("");
-    setLoading(true);
-
-    login(username, password).then(
-      () => {
-        navigate("/");
-        window.location.reload();
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
-        setLoading(false);
-        setMessage(resMessage);
+    login(username, password)
+    .then((response) => {
+      setSuccessful(true);
+      navigate("/profile");
+      window.location.reload();
+    })
+    .catch((error) => {
+      setSuccessful(false);
+      if (error.response) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("An error occurred.");
       }
-    );
+    });
   };
 
   const mascotStyles = {
@@ -73,6 +66,8 @@ const Login: React.FC<Props> = () => {
             >
               {({ handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
+                 {!successful && (
+                  <div>
               <div className="form-floating mb-3">
                 <Field
                   name="username"
@@ -95,6 +90,11 @@ const Login: React.FC<Props> = () => {
                 >
                   Username
                 </label>
+                <ErrorMessage
+                  name="username"
+                  component="div"
+                  className="alert alert-danger"
+                />
               </div>
 
               <div className="form-floating">
@@ -119,6 +119,11 @@ const Login: React.FC<Props> = () => {
                 >
                   Password
                 </label>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="alert alert-danger"
+                />
               </div>
               
               <div className="form-group mt-3 d-flex align-items-center">
@@ -144,27 +149,27 @@ const Login: React.FC<Props> = () => {
                   >
                     Login
                   </button>
+                  </div>
                 </div>
               </div>
+              )}
+
               {message && (
-                  <div className="form-group">
-                    <div
-                      className={
-                        loginError
-                          ? "alert alert-success"
-                          : "alert alert-danger"
-                      }
-                      role="alert"
-                    >
+                    <div className="form-group">
+                      <div
+                        className="alert alert-danger"
+                        role="alert"
+                      >
                       {message}
+                      </div>
                     </div>
-                  </div>
-                )}
-            </Form>
+                  )}
+                </Form>
               )}
             </Formik>
           </div>
         </div>
+
         <div className="col-md-7 d-flex align-items-center justify-content-center">
           <img src={mascot} alt="mascot" style={mascotStyles} />
         </div>
