@@ -95,7 +95,8 @@ export default function QuestionForm() {
         if ((!value) || ((key === "content") && (value === "<p></p>\n"))) {
           console.error(`${key} is empty`);
           setFormSubmitted(true);
-          setErrorMessage(`${key} is empty`);
+          setErrorMessage(`Required fields cannot be empty`);
+          // setErrorMessage(`${key} is empty`);
           return;
         }
       }
@@ -170,7 +171,7 @@ export default function QuestionForm() {
           {errorMessage && (
             <Alert severity="error">
               <AlertTitle>Error!</AlertTitle>
-              {/* {errorMessage} */}
+              {errorMessage}
             </Alert>
           )}
 

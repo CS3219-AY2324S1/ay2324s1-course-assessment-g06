@@ -93,7 +93,9 @@ export default function UpdateForm() {
           setQuestion(responseData);
           const { title, topics, difficulty, content } = responseData;
           setValue("title", title);
-          setValue("topics", topics.split(',').map((topic: string) => topic.trim()).join(', '));
+          setValue("topics", topics.split(',').map((topic: string) => topic.trim()));
+          console.log(topics.split(',').map((topic: string) => topic.trim()));
+
           setValue("difficulty", difficulty);
           setEditorContent(content);
         })
@@ -118,8 +120,10 @@ export default function UpdateForm() {
       if (formDataWithEditorContent.hasOwnProperty(key)) {
         const value = formDataWithEditorContent[key as keyof IFormInput];
         if ((!value) || ((key === "content") && (value === "<p></p>\n"))) {
+          console.error(`${key} is empty`);
           setFormSubmitted(true);
-          setErrorMessage(`${key} is empty`);
+          setErrorMessage(`Required fields cannot be empty`);
+          // setErrorMessage(`${key} is empty`);
           return;
         }
       }
@@ -177,12 +181,12 @@ export default function UpdateForm() {
           {errorMessage && (
             <Alert severity="error">
               <AlertTitle>Error!</AlertTitle>
-              {/* {errorMessage} */}
+              {errorMessage}
             </Alert>
           )}
           <FormInputText name="title" control={control} label="Question Title" options={[]} formSubmitted={formSubmitted} />
-          <FormMultipleInputDropdown name="topics" control={control} label="Topics" options={dropdownTopicsOptions} formSubmitted={formSubmitted} />
-          <FormInputDropdown name="difficulty" control={control} label="Complexity" options={dropdownComplexityOptions} formSubmitted={formSubmitted}   defaultValue={question.difficulty} // Set the default value here
+          <FormMultipleInputDropdown name="topics" control={control} label="Topics" options={dropdownTopicsOptions} formSubmitted={formSubmitted} defaultValue={question.topics}/>
+          <FormInputDropdown name="difficulty" control={control} label="Complexity" options={dropdownComplexityOptions} formSubmitted={formSubmitted}  defaultValue={question.difficulty}
 />
             <FormInputTextEditor onChange={editorHandleChange} content={question.content} formSubmitted={formSubmitted} />
           <div style={{ justifyContent: "space-between", margin: "0 auto" }}>
