@@ -23,7 +23,6 @@ export const FormInputText: React.FC<FormInputProps> = ({
         <TextField
           // required
           helperText={formSubmitted && value === ""? "Required" : null}
-          size="small"
           error={formSubmitted && value === ""}
           onChange={onChange}
           value={value}
