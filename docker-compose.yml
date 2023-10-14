@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3'
 
 services:
   user-service:
@@ -58,4 +58,13 @@ services:
       - USER_HOST=http://user-service:3003/api/users
       - QUESTION_HOST=http://question-service:3000/api/questions
     ports:
-      - "20:3000"
+      - 3002:3002
+    depends_on:
+      - user-service
+      - question-service
+    networks:
+      - service
+networks:
+  service:
+    driver: bridge
+
