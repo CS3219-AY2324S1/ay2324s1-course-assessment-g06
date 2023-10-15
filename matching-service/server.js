@@ -2,8 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
+const socketioJwt = require('socketio-jwt');
 const { v4: uuidv4 } = require('uuid');
+// To keep track of active rooms
 const rooms = new Map();
+// To keep track of users connected to socket
+const users = new Map();
 
 const app = express();
 const server = http.createServer(app);
@@ -53,8 +57,18 @@ app.get('/api/room/:roomId', (req, res) => {
 
 const waitingQueue = [];
 
-io.on('connection', (socket) => {
+const userNamespace = io.of("/users");
+
+// Middleware to authenticate users using JWT token
+// Can check token validity here
+io.use(socketioJwt.authorize({
+  secret: 'secret', // Replace with your actual JWT secret key
+  handshake: true,
+}));
+
+io.on('connection', async (socket) => {
   console.log('A user connected');
+  console.log('Authenticated user connected:', socket.decoded_token);
 
   socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
     const matchingUserIndex = waitingQueue.findIndex(
@@ -63,8 +77,9 @@ io.on('connection', (socket) => {
 
     if (matchingUserIndex !== -1) {
       console.log('User match!');
-      const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
-      startMatch(user1, socket, selectedDifficulty, selectedTopic, selectedLanguage);
+      // Add users to the room and start match
+      const user1Socket = waitingQueue.splice(matchingUserIndex, 1)[0];
+      startMatch(user1Socket, socket, selectedDifficulty, selectedTopic, selectedLanguage);
     } else {
       console.log('No user found');
       socket.selectedDifficulty = selectedDifficulty;
@@ -143,7 +158,7 @@ io.on('connection', (socket) => {
   });
 });
 
-function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
+function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic) {
   const roomId = uuidv4();
 
   generateQuestion(selectedDifficulty, selectedTopic)
@@ -151,14 +166,14 @@ function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
       if (question) {
         rooms.set(roomId, { questionId: question._id });
 
-        user1.emit('match found', roomId, 'You are matched with another user!');
-        user2.emit('match found', roomId, 'You are matched with another user!');
+        user1Socket.emit('match found', roomId, 'You are matched with another user!');
+        user2Socket.emit('match found', roomId, 'You are matched with another user!');
 
-        user1.join(roomId);
-        user2.join(roomId);
+        user1Socket.join(roomId);
+        user2Socket.join(roomId);
 
-        user1.emit('question', question._id);
-        user2.emit('question', question._id);
+        user1Socket.emit('question', question._id);
+        user2Socket.emit('question', question._id);
       } else {
         console.error('Failed to fetch question.');
       }
