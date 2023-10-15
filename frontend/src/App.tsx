@@ -89,12 +89,12 @@ const App: React.FC = () => {
             </li>
             <li className="nav-item">
               <Link to={"/profile"} className="nav-link">
-                profile
+                Profile
               </Link>
             </li>
             <li className="nav-item">
               <a href="/login" className="nav-link" onClick={logOut}>
-                LogOut
+                Log Out
               </a>
             </li>
           </div>
