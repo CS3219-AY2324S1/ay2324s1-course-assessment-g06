@@ -18,6 +18,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Protected from "./components/Protected";
+import GuestRoute from "./components/GuestRoute";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -134,8 +135,22 @@ const App: React.FC = () => {
       <div className="container mt-3">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={
+              <GuestRoute isLoggedIn={currentUser}>
+                <Login />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <GuestRoute isLoggedIn={currentUser}>
+                <Register />
+              </GuestRoute>
+            }
+          />
           <Route
             path="/profile"
             element={
