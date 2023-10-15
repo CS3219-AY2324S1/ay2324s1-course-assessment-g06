@@ -69,40 +69,24 @@ const App: React.FC = () => {
         <Link to={"/"} className="navbar-brand">
           <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
         </Link>
-        <div className="navbar-nav mr-auto">
-          {/* <li className="nav-item">
-            <Link to={"/home"} className="nav-link">
-              Home
-            </Link>
-          </li> */}
-
-          {showModeratorBoard && (
-            <li className="nav-item">
-              <Link to={"/mod"} className="nav-link">
-                Moderator Board
-              </Link>
-            </li>
-          )}
-
-          {showAdminBoard && (
-            <li className="nav-item">
-              <Link to={"/admin"} className="nav-link">
-                Admin Board
-              </Link>
-            </li>
-          )}
-
-          {currentUser && (
-            <li className="nav-item">
-              <Link to={"/user"} className="nav-link">
-                User
-              </Link>
-            </li>
-          )}
-        </div>
 
         {currentUser ? (
           <div className="navbar-nav ml-auto">
+            <li className="nav-item">
+              <Link to={"/"} className="nav-link">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/matching"} className="nav-link">
+                Matching
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/questions"} className="nav-link">
+                Questions
+              </Link>
+            </li>
             <li className="nav-item">
               <Link to={"/profile"} className="nav-link">
                 profile
