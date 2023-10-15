@@ -1,0 +1,216 @@
+/* Grouping of difficulty buttons (Easy, Medium, Hard) */
+div.difficulty-buttons {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+}
+  
+div.difficulty-buttons button {
+  width: 100%;
+  margin-bottom: 8px; /* spacing between buttons */
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Easy Button */
+button.difficulty-easy {
+    background-color: #deeedb;
+    color: gray;
+    transition: background-color 0.3s;
+    border-radius: 15px;
+    padding: 8% 18%;
+    border: none;
+}
+
+button.difficulty-easy:hover {
+  background-color: #7ec575;
+  color: black;
+}
+
+button.difficulty-easy.active {
+  background-color: #7ec575;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+/* Medium Button */
+button.difficulty-medium {
+  background-color: #f6edd2;
+  color: gray;
+  transition: background-color 0.3s;
+  border-radius: 15px;
+  padding: 8% 18%;
+  border: none;
+}
+
+button.difficulty-medium:hover {
+  background-color: rgb(236, 197, 89);
+  color: black;
+}
+
+button.difficulty-medium.active {
+  background-color: rgb(236, 197, 89);
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+/* Hard Button */
+button.difficulty-hard {
+    background-color: #f0caca;
+    color: gray;
+    transition: background-color 0.3s;
+    border-radius: 15px;
+    padding: 8% 18%;
+    border: none;
+}
+
+button.difficulty-hard:hover {
+  background-color: #f14949;
+  color: black;
+  transition: background-color 0.3s;
+}
+
+button.difficulty-hard.active {
+  background-color: #f14949;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+/* Grouping of difficulty buttons (Easy, Medium, Hard) */
+div.topic-img {
+    display: flex;
+    flex-direction: row;
+    white-space: wrap;
+  }
+
+/* CSS classes for topic buttons */
+button.topic-button {
+  height: 120px; /* Set a fixed height for the buttons */
+  width: 210px;
+  flex: 1; /* Make buttons grow and fill available space */
+  padding: 10px 30px;
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #E6E6E6;
+  color: black;
+  transition: background-color 0.3s;
+  border-radius: 15px;
+  border: none;
+  overflow: hidden;
+  margin-bottom: 8px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+button.topic-button:disabled {
+  opacity: 0.5;
+  background-color: #E6E6E6;
+}
+  
+button.topic-button img {
+  width: 100%; /* Set the width of the image to 100% of the button */
+  height: auto; /* Allow the image to maintain aspect ratio */
+  max-width: 100%;
+  max-height: 60px;
+}
+
+button.topic-button:hover {
+    background-color: #9f9bfb;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+button.topic-button.active {
+    background-color: #6C63FF;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    font-weight: bold;
+}
+
+label.topic-label {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Match Button */
+button.custom-match-button {
+    background-color: #6C63FF;
+    color: white;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 12px 24px;
+    transition: background-color 0.3s;
+  }
+
+button.custom-match-button:hover {
+    background-color: #9792f9;
+    color: white;
+}
+
+div.scrollable-container {
+    overflow-x: hidden; /* Hide horizontal overflow */
+    overflow-y: scroll; /* Always show vertical scrollbar */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-height: 480px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f0f0f0; 
+  }
+
+/* For Webkit browsers (such as Chrome, Safari) */
+.scrollable-container::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+  border-radius: 15px;
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* Color of the scrollbar track */
+  border-radius: 15px;
+}
+
+.new-row {
+  clear: both;
+  margin-top: 0px; /* Adjust the margin as needed */
+}
+
+@media (max-width: 768px) {
+  button.topic-button {
+    padding: 10px 30px;
+    margin: 5px;
+  }
+
+  button.difficulty-easy {
+    height: 5px;
+  }
+
+  button.difficulty-medium {
+    height: 5px;
+  }
+  
+  button.difficulty-hard {
+    height: 5px;
+  }
+}
+
+@media (max-width: 525px) {
+  button.topic-button {
+    width: 90%;
+  }
+
+  label.topic-label {
+    width: 90%;
+  }
+}

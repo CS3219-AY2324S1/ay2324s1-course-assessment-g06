@@ -58,22 +58,20 @@ const waitingQueue = [];
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('match me', (selectedDifficulty, selectedTopic) => {
-    console.log(selectedDifficulty);
+  socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
     const matchingUserIndex = waitingQueue.findIndex(
-      (user) =>
-        user.selectedDifficulty === selectedDifficulty &&
-        user.selectedTopic === selectedTopic
+      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic && user.selectedLanguage == selectedLanguage
     );
 
     if (matchingUserIndex !== -1) {
       console.log('User match!');
       const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
-      startMatch(user1, socket, selectedDifficulty, selectedTopic);
+      startMatch(user1, socket, selectedDifficulty, selectedTopic, selectedLanguage);
     } else {
       console.log('No user found');
       socket.selectedDifficulty = selectedDifficulty;
       socket.selectedTopic = selectedTopic;
+      socket.selectedLanguage = selectedLanguage;
       waitingQueue.push(socket);
     }
   });
@@ -110,17 +108,6 @@ io.on('connection', (socket) => {
     if (socket.rooms.has(roomId)) {
       // Broadcast the code change only to sockets in the same room
       io.to(roomId).emit('codeChange', newCode);
-    }
-  });
-
-  // Listen for the 'codeChange' event from the client
-  socket.on('languageChange', (newLanguage, roomId) => {
-    console.log('emit languagechange from server');
-
-    // Check if the sender belongs to the same room
-    if (socket.rooms.has(roomId)) {
-      // Broadcast the code change only to sockets in the same room
-      io.to(roomId).emit('languageChange', newLanguage);
     }
   });
 
