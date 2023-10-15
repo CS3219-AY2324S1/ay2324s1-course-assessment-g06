@@ -69,23 +69,31 @@ io.use(socketioJwt.authorize({
 io.on('connection', async (socket) => {
   console.log('A user connected');
   console.log('Authenticated user connected:', socket.decoded_token);
-
+  
   socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
-    const matchingUserIndex = waitingQueue.findIndex(
-      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic && user.selectedLanguage == selectedLanguage
-    );
+    const userId = socket.decoded_token.id; // Assuming user ID is in the token
 
-    if (matchingUserIndex !== -1) {
-      console.log('User match!');
-      // Add users to the room and start match
-      const user1Socket = waitingQueue.splice(matchingUserIndex, 1)[0];
-      startMatch(user1Socket, socket, selectedDifficulty, selectedTopic, selectedLanguage);
+    if (waitingQueue.find(user => user.userId === userId)) {
+      console.log('User is already in the queue and cannot self-match.');
     } else {
-      console.log('No user found');
-      socket.selectedDifficulty = selectedDifficulty;
-      socket.selectedTopic = selectedTopic;
-      socket.selectedLanguage = selectedLanguage;
-      waitingQueue.push(socket);
+      // Check if a match is found with another user
+      const matchingUserIndex = waitingQueue.findIndex(
+        (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic && user.selectedLanguage == selectedLanguage
+      );
+  
+      if (matchingUserIndex !== -1) {
+        console.log('User match!');
+        const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
+        startMatch(user1, socket, selectedDifficulty, selectedTopic, selectedLanguage);
+      } else {
+        console.log('No user found');
+        socket.userId = userId;
+        socket.selectedDifficulty = selectedDifficulty;
+        socket.selectedTopic = selectedTopic;
+        socket.selectedLanguage = selectedLanguage;
+        waitingQueue.push(socket);
+        // waitingQueue.set(userId, { socket, selectedDifficulty, selectedTopic, selectedLanguage });
+      }
     }
   });
 
@@ -100,9 +108,11 @@ io.on('connection', async (socket) => {
 
   // Listen for the 'joinRoom' event from the client
   socket.on('joinRoom', (roomId) => {
-    // Use Socket.IO's join method to add the socket to the room
-    socket.join(roomId);
-    socket.to(roomId).emit("userConnected");
+    // Check if the user is not joining a room with themselves
+    if (socket.id !== roomId) {
+      socket.join(roomId);
+      socket.to(roomId).emit("userConnected");
+    }
   });
 
   // Disconnect the user who has quit
@@ -164,7 +174,7 @@ function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic)
   generateQuestion(selectedDifficulty, selectedTopic)
     .then((question) => {
       if (question) {
-        rooms.set(roomId, { questionId: question._id });
+        rooms.set(roomId, { questionId: question._id, user1Id: user1Socket.id, user2Id: user2Socket.id });
 
         user1Socket.emit('match found', roomId, 'You are matched with another user!');
         user2Socket.emit('match found', roomId, 'You are matched with another user!');
@@ -196,4 +206,3 @@ async function generateQuestion(difficulty, topic) {
     return null;
   }
 }
-
