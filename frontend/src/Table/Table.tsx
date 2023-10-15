@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import "./Table.css";
 import CircularProgress from "@mui/material/CircularProgress";
+import { getCurrentUser } from "../services/auth.service";
 
 
 const AddButton = styled(Button)`
@@ -66,6 +67,9 @@ const BasicTable: React.FC = () => {
         console.error("Error fetching data:", error);
       });
   };
+
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,25 +177,27 @@ const BasicTable: React.FC = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Grid>
-        <Grid item xs={12}>
-        <AddButton
-          sx={{
-            position: 'fixed',
-            bottom: '30px',
-            right: '30px',
-            height: '30px',
-            fontSize: '25px',
-            borderRadius: '40px',
-            minWidth: '40px', // Set the minimum width
-            maxWidth: '40px',  // Set the maximum width
-          }}
-          variant="contained"
-          onClick={handleAddButtonClick}
-        >
-          +
-        </AddButton>
+        {isAdmin && (
+          <Grid item xs={12}>
+            <AddButton
+              sx={{
+                position: 'fixed',
+                bottom: '30px',
+                right: '30px',
+                height: '30px',
+                fontSize: '25px',
+                borderRadius: '40px',
+                minWidth: '40px',
+                maxWidth: '40px',
+              }}
+              variant="contained"
+              onClick={handleAddButtonClick}
+            >
+              +
+            </AddButton>
+          </Grid>
+        )}
 
-        </Grid>
       </Grid>
     </Container>
   );
