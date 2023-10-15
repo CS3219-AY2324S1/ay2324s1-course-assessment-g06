@@ -144,10 +144,6 @@ const App: React.FC = () => {
               </Protected>
             }
           />
-          {/* <Route path="/user" element={<BoardUser />} />
-          <Route path="/mod" element={<BoardModerator />} />
-          <Route path="/admin" element={<BoardAdmin />} /> */}
-          {/* Can only access questions if there is logged in user */}
           <Route
             path="/questions"
             element={
