@@ -147,20 +147,51 @@ const App: React.FC = () => {
           <Route
             path="/questions"
             element={
-              <BasicTable />
-              // <Protected isLoggedIn={currentUser}>
-              //   <BasicTable />
-              // </Protected>
+              <Protected isLoggedIn={currentUser}>
+                <BasicTable />
+              </Protected>
             }
           />
-          <Route path="/questions/:id" element={<Question />} />
-          <Route path="/matching" element={<Matching />} />
-          <Route path="/match/:roomId" element={<CodeSpace />} />
+          <Route
+            path="/questions/:id"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Question />
+              </Protected>
+            }
+          />
+          <Route
+            path="/matching"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Matching />
+              </Protected>
+            }
+          />
+          <Route
+            path="/match/:roomId"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <CodeSpace />
+              </Protected>
+            }
+          />
           <Route
             path="/questions/:id/update"
-            element={<UpdateQuestionForm />}
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <UpdateQuestionForm />
+              </Protected>
+            }
           />
-          <Route path="/questions/add-question" element={<AddQuestionForm />} />
+          <Route
+            path="/questions/add-question"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <AddQuestionForm />
+              </Protected>
+            }
+          />
         </Routes>
       </div>
     </div>
