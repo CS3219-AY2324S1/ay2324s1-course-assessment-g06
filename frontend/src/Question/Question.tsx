@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from "@mui/material/CircularProgress";
+import { getCurrentUser } from "../services/auth.service";
 
 import {
   Dialog,
@@ -87,6 +88,9 @@ export default function Question() {
   const [question, setQuestion] = useState<QuestionInt | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Confirmation dialog state
 
@@ -189,28 +193,32 @@ export default function Question() {
               </h1>
             </div>
             <div>
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#6C63FF",
-                  borderRadius: "50px",
-                  fontSize: "15px",
-                  marginRight: "10px",
-                }}
-                onClick={handleUpdate}
-              >
-                <EditIcon />
-              </Button>
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#FF6A6A",
-                  borderRadius: "20px",
-                }}
-                onClick={openDeleteDialog}
-              >
-                <DeleteIcon />
-              </Button>
+              {isAdmin && (
+                <>
+                  <Button
+                    variant="contained"
+                    style={{
+                      backgroundColor: "#6C63FF",
+                      borderRadius: "50px",
+                      fontSize: "15px",
+                      marginRight: "10px",
+                    }}
+                    onClick={handleUpdate}
+                  >
+                    <EditIcon />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={{
+                      backgroundColor: "#FF6A6A",
+                      borderRadius: "20px",
+                    }}
+                    onClick={openDeleteDialog}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </>
+              )}
             </div>
           </Grid>
 

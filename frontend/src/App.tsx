@@ -28,7 +28,6 @@ import logo from './images/peerPrepLogo.png';
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
   const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
-  // const [currentUser, setCurrentUser] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
     localStorage.getItem("user") ? true : false
   );
