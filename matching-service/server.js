@@ -115,54 +115,6 @@ io.on('connection', async (socket) => {
     }
   });
 
-  // Disconnect the user who has quit
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-    socket.leave();
-  });
-
-  // Listen for the 'disconnect' event from the client
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-
-    // Search for the room this socket disconnected from
-    for (const [roomId, roomInfo] of rooms.entries()) {
-      // Compare socketid with user1Id and user2Id
-      if (socket.id === roomInfo.user1Id || socket.id === roomInfo.user2Id) {
-        socket.to(roomId).emit('userDisconnected');
-        socket.leave(roomId);
-        
-        if (rooms.delete(roomId)) {
-          console.log("Removed room with ID", roomId, "from rooms map.");
-        } else {
-          console.log("Room with ID", roomId, "not found in rooms map.");
-        }
-        break; // Guard clause
-      }
-    }
-    socket.leave();
-  });
-  
-
-  // Disconnect users in the session
-  socket.on('quitSession', (roomId) => {
-    console.log("A user clicked on quit session")
-    // Check if the user is in the specified room
-    if (socket.rooms.has(roomId)) {
-      // Emit an event to inform the other user that the session is ending
-      socket.to(roomId).emit('sessionEnded');
-      // Leave the room
-      socket.leave(roomId);
-  
-      // Remove the room from the 'rooms' map
-      if (rooms.delete(roomId)) {
-        console.log("Removed room with ID", roomId, "from rooms map.");
-      } else {
-        console.log("Room with ID", roomId, "not found in rooms map.");
-      }
-    }
-  });
-
   // Listen for the 'codeChange' event from the client
   socket.on('codeChange', (newCode, roomId) => {
     console.log('emit codechange from server');
@@ -186,6 +138,63 @@ io.on('connection', async (socket) => {
 
   socket.on('userTyping', (roomId, isTyping) => {
     socket.to(roomId).emit('userTyping', isTyping);
+  });
+
+  // Listen for the 'disconnect' event from the client
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+
+    // Search for the room this socket disconnected from
+    for (const [roomId, roomInfo] of rooms.entries()) {
+      // Compare socketid with user1Id and user2Id
+      if (socket.id === roomInfo.user1Id || socket.id === roomInfo.user2Id) {
+        socket.to(roomId).emit('userDisconnected');
+        socket.leave(roomId);
+        
+        if (rooms.delete(roomId)) {
+          console.log("Removed room with ID", roomId, "from rooms map.");
+        } else {
+          console.log("Room with ID", roomId, "not found in rooms map.");
+        }
+        break; // Guard clause
+      }
+    }
+    socket.leave();
+  });
+
+  socket.on('timerEnd', (roomId) => {
+    console.log("The time has ended");
+    // socket.emit('timeEnded');
+    // Check if the user is in the specified room
+    if (rooms.has(roomId)) {
+      socket.to(roomId).emit('timeEnded');
+
+      if (rooms.delete(roomId)) {
+        console.log("Removed room with ID", roomId, "from rooms map.");
+      } else {
+        console.log("Room with ID", roomId, "not found in rooms map.");
+      } 
+    }
+    socket.leave(roomId);
+  });
+  
+  // Disconnect users in the session
+  socket.on('quitSession', (roomId) => {
+    console.log("A user clicked on quit session")
+    // Check if the user is in the specified room
+    if (socket.rooms.has(roomId)) {
+      // Emit an event to inform the other user that the session is ending
+      socket.to(roomId).emit('sessionEnded');
+      // Leave the room
+      socket.leave(roomId);
+  
+      // Remove the room from the 'rooms' map
+      if (rooms.delete(roomId)) {
+        console.log("Removed room with ID", roomId, "from rooms map.");
+      } else {
+        console.log("Room with ID", roomId, "not found in rooms map.");
+      }
+    }
   });
 });
 

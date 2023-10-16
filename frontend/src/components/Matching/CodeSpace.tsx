@@ -27,7 +27,6 @@ interface ChatMessage {
   time: string;
 }
 
-
 const CodeSpace = () => {
   // Id of the current code space room
   const { roomId } = useParams();
@@ -44,6 +43,11 @@ const CodeSpace = () => {
   // To track if the user has quit the room
   const [hasQuitRoom, setHasQuitRoom] = useState(false); 
   
+  // Initilise timer for the collaboration session
+  const [timer, setTimer] = useState(10);
+  const [isTimerEnded, setIsTimerEnded] = useState(false);
+  const [formattedTime, setformattedTime] = useState("");
+
   // To track the code text input
   const [value, setValue] = React.useState(() => {
     // Retrieve the code value from localStorage or set a default value
@@ -94,6 +98,33 @@ const CodeSpace = () => {
       window.removeEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
     }
   }, [location]);
+
+  // Update timer for session
+  useEffect(() => {
+    if (!isTimerEnded) {
+      const timerInterval = setInterval(() => {
+        if (timer > 0) {
+          setTimer(timer - 1);
+          const minutes = Math.floor((timer - 1) / 60);
+          const remainingSeconds = (timer - 1) % 60;
+          const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+          setformattedTime(formattedTime);
+        } else {
+          setIsTimerEnded(true);
+          clearInterval(timerInterval); // Stop the timer when it reaches 0
+        }
+      }, 1000); // Update the timer every 1000ms (1 second)
+    }
+  }, [timer, isTimerEnded]);
+
+  useEffect(() => {
+    if (isTimerEnded && socket) {
+      console.log("emitting timer end");
+      socket.emit('timerEnd', roomId);
+      alert('The time is up');
+      navigate("/");
+    }
+  }, [isTimerEnded, roomId, socket]);
 
   // On change handlers
   const handleNewMessageChange = (e: any) => {
@@ -240,6 +271,17 @@ const CodeSpace = () => {
         }
       });
 
+      matchedSocket.on('timeEnded', (roomId) => {
+        console.log("time ended received in client");
+        alert('The time is up');
+        navigate("/");
+        setHasQuitRoom(true);
+
+        return () => {
+          matchedSocket.off('timeEnded', (roomId));
+        };
+      });
+
       // // Listen for the 'sessionEnded' event from the server
       matchedSocket.on('sessionEnded', () => {
         // Handle the session ending, display a message, or redirect users
@@ -295,6 +337,7 @@ const CodeSpace = () => {
       <p>
         You are matched with another user using difficulty: {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and language: {language || 'Not selected'}
       </p>
+      <div className="timer">Time left: {formattedTime} minutes</div>
 
       <br />
       <br />
