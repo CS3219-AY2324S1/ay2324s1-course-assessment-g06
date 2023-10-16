@@ -6,6 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { styled } from "@mui/material/styles";
 import { NavigateFunction, useNavigate, useLocation } from "react-router-dom";
 import { Alert, TextField } from "@mui/material";
 import { useFormik } from "formik";
@@ -23,6 +24,29 @@ interface User {
   roles: string[];
   id: string;
 }
+
+const CustomDialog = styled(Dialog)``;
+
+const CustomDialogTitle = styled(DialogTitle)`
+  font-weight: bold;
+`;
+
+const CustomDialogContent = styled(DialogContent)`
+  padding: 20px;
+`;
+
+const CustomDialogActions = styled(DialogActions)`
+  justify-content: space-between;
+`;
+
+const BackButton = styled(Button)`
+  background-color: #d8d8d8;
+  color: white;
+  font-weight: bold;
+  &:hover {
+    background-color: #6c63ff;
+  }
+`;
 
 const Profile: React.FC = () => {
   const currentUser = getCurrentUser();
@@ -595,69 +619,172 @@ const Profile: React.FC = () => {
 
       {/* delete user */}
       <div>
-        <Dialog
+        <CustomDialog
           open={openDeleteModel}
           onClose={toggleDeleteModal}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          PaperProps={{
+            sx: { bgcolor: "lightgray", borderRadius: "20px", padding: "5px" },
+          }}
         >
-          <DialogTitle id="alert-dialog-title">
-            {`Delete your account? ${profile?.username}`}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you want to delete your account?
+          <CustomDialogTitle
+            id="alert-dialog-title"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {`Confirm to delete account.`}
+          </CustomDialogTitle>
+          <CustomDialogContent>
+            <DialogContentText
+              id="alert-dialog-description"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Note: All history will be deleted.
             </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={toggleDeleteModal}>Disagree</Button>
-            <Button onClick={deleteUserAccount} autoFocus>
-              Agree
+          </CustomDialogContent>
+          <CustomDialogActions sx={{ justifyContent: "space-between" }}>
+            <Button
+              onClick={toggleDeleteModal}
+              style={{
+                fontSize: "18px",
+                backgroundColor: "white",
+                borderRadius: "20px",
+                color: "black",
+                textTransform: "none",
+                margin: "0 auto",
+                paddingLeft: "30px",
+                paddingRight: "30px",
+              }}
+            >
+              Cancel
             </Button>
-          </DialogActions>
-        </Dialog>
+            <Button
+              onClick={deleteUserAccount}
+              autoFocus
+              style={{
+                fontSize: "18px",
+                backgroundColor: "#6C63FF",
+                borderRadius: "20px",
+                color: "white",
+                textTransform: "none",
+                margin: "0 auto",
+                paddingLeft: "30px",
+                paddingRight: "30px",
+              }}
+            >
+              Confirm
+            </Button>
+          </CustomDialogActions>
+        </CustomDialog>
       </div>
 
       {/* Error */}
       <div>
-        <Dialog
+        <CustomDialog
           open={showErrorModal}
           onClose={() => setShowErrorModal(false)}
           aria-labelledby="error-dialog-title"
           aria-describedby="error-dialog-description"
+          PaperProps={{
+            sx: { bgcolor: "lightgray", borderRadius: "20px", padding: "5px" },
+          }}
         >
-          <DialogTitle id="error-dialog-title">Error</DialogTitle>
-          <DialogContent>
+          <CustomDialogTitle
+            id="error-dialog-title"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            Error
+          </CustomDialogTitle>
+          <CustomDialogContent>
             <DialogContentText id="error-dialog-description">
               {/* Current password is incorrect. */}
               {errorType === "password" && passwordErrorMessage}
               {errorType === "user" && userErrorMessage}
             </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setShowErrorModal(false)}>Close</Button>
-          </DialogActions>
-        </Dialog>
+          </CustomDialogContent>
+          <CustomDialogActions>
+            <Button
+              onClick={() => setShowErrorModal(false)}
+              style={{
+                fontSize: "18px",
+                backgroundColor: "white",
+                borderRadius: "20px",
+                color: "black",
+                textTransform: "none",
+                margin: "0 auto",
+                paddingLeft: "30px",
+                paddingRight: "30px",
+              }}
+            >
+              Close
+            </Button>
+          </CustomDialogActions>
+        </CustomDialog>
       </div>
 
       {/* Success */}
       <div>
-        <Dialog
+        <CustomDialog
           open={showSuccessModal}
           onClose={() => setShowSuccessModal(false)}
           aria-labelledby="success-dialog-title"
           aria-describedby="success-dialog-description"
+          PaperProps={{
+            sx: { bgcolor: "lightgray", borderRadius: "20px", padding: "5px" },
+          }}
         >
-          <DialogTitle id="success-dialog-title">Success</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="success-dialog-description">
+          <CustomDialogTitle
+            id="success-dialog-title"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            Success
+          </CustomDialogTitle>
+          <CustomDialogContent>
+            <DialogContentText
+              id="success-dialog-description"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               Successfully updated!
             </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setShowSuccessModal(false)}>Close</Button>
-          </DialogActions>
-        </Dialog>
+          </CustomDialogContent>
+          <CustomDialogActions>
+            <Button
+              onClick={() => setShowSuccessModal(false)}
+              style={{
+                fontSize: "18px",
+                backgroundColor: "white",
+                borderRadius: "20px",
+                color: "black",
+                textTransform: "none",
+                margin: "0 auto",
+                paddingLeft: "30px",
+                paddingRight: "30px",
+              }}
+            >
+              Close
+            </Button>
+          </CustomDialogActions>
+        </CustomDialog>
       </div>
     </div>
   );
