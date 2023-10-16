@@ -9,9 +9,9 @@ RUN npm install
 # RUN npm ci --omit=dev
 # Bundle app source
 COPY . .
-EXPOSE 3000
+EXPOSE 3002
 CMD [ "node", "server.js" ]
-# docker run -p 1010:3000 cs3219-quest
 
-# docker run -d -p 127.0.0.1:3000:3000  --env-file ../.env cs3219-question-v1
-# localhost:3001
+
+# docker run -d -p 127.0.0.1:3002:3002  --env-file ../.env cs3219-matching-v1
+# localhost:3002
