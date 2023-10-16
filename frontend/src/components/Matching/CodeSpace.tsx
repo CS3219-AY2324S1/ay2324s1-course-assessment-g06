@@ -136,8 +136,6 @@ const CodeSpace = () => {
     // const matchedSocket = io('http://localhost:3002', {
     //   query: { roomId },
     // });
-    console.log("in use effect");
-
     if (socket) {
       console.log("connected to socket", socket, socket.id);
       const matchedSocket = socket;
@@ -222,7 +220,6 @@ const CodeSpace = () => {
         setMessageList((list) => [...list, messageData]);
       });
 
-      // setSocket(matchedSocket);
       fetchData();
 
       return () => {

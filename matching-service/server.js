@@ -116,16 +116,17 @@ io.on('connection', async (socket) => {
   });
 
   // Disconnect the user who has quit
-  // socket.on('disconnect', () => {
-  //   console.log('A user disconnected');
-  //   const index = waitingQueue.indexOf(socket);
-  //   if (index !== -1) {
-  //     waitingQueue.splice(index, 1);
-  //   }
-  // });
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+    const index = waitingQueue.indexOf(socket);
+    if (index !== -1) {
+      waitingQueue.splice(index, 1);
+    }
+  });
 
   // Disconnect users in the session
   socket.on('quitSession', (roomId) => {
+    console.log("A user clicked on quit session")
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is ending
