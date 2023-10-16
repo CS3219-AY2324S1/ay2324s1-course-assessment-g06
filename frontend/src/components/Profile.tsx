@@ -38,6 +38,7 @@ const Profile: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorType, setErrorType] = useState("");
   const [passwordButtonClicked, setPasswordButtonClicked] = useState(false);
+  const [buttonWidth, setButtonWidth] = useState("100%");
 
   const toggleTextFields = () => {
     setShowPasswordTextFields(!showPasswordTextFields);
@@ -515,6 +516,8 @@ const Profile: React.FC = () => {
                     display: "flex",
                     alignItems: "center",
                     marginTop: "20px",
+                    justifyContent: "flex-end",
+                    marginRight: "3.5%",
                   }}
                 >
                   <Button
@@ -529,13 +532,14 @@ const Profile: React.FC = () => {
                           passwordFormik.handleSubmit(); // Call the Update Password method
                         }
                       }
+                      setButtonWidth("48.5%");
                     }}
                     style={{
                       backgroundColor: "#D9D9D9",
                       borderRadius: "20px",
                       lineHeight: "2.5rem",
                       margin: 0,
-                      width: "97%",
+                      width: buttonWidth,
                     }}
                   >
                     {textFieldsEnabled || passwordButtonClicked
