@@ -327,6 +327,7 @@ const Profile: React.FC = () => {
                       <Button
                         onClick={toggleTextFields}
                         style={{
+                          color: "black",
                           backgroundColor: "#D9D9D9",
                           borderRadius: "20px",
                           lineHeight: "2.5rem",
@@ -519,14 +520,12 @@ const Profile: React.FC = () => {
                   </button>
                 </div>
               </div>
-              <div className="col-12 col-sm-7">
+              <div className="col-12 col-sm-7 justify-content-center align-items-center">
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     marginTop: "20px",
-                    // justifyContent: "flex-end",
-                    // marginRight: "3.5%",
                   }}
                 >
                   {showBackButton && (
@@ -538,10 +537,12 @@ const Profile: React.FC = () => {
                         setShowPasswordTextFields(!showPasswordTextFields);
                       }}
                       style={{
+                        color: "black",
                         backgroundColor: "#D9D9D9",
                         borderRadius: "20px",
                         lineHeight: "2.5rem",
-                        margin: 0,
+                        marginRight: "15%",
+                        right: "1%",
                         width: buttonWidth,
                       }}
                     >
@@ -557,16 +558,24 @@ const Profile: React.FC = () => {
                         if (!passwordButtonClicked) {
                           updateFormik.handleSubmit(); // Call the Update Profile method
                         } else {
-                          setButtonWidth("48.5%");
+                          setButtonWidth("46%");
                           passwordFormik.handleSubmit(); // Call the Update Password method
                         }
                       }
                     }}
                     style={{
-                      backgroundColor: "#D9D9D9",
+                      color:
+                        textFieldsEnabled || passwordButtonClicked
+                          ? "white"
+                          : "black",
+                      backgroundColor:
+                        textFieldsEnabled || passwordButtonClicked
+                          ? "#6C63FF"
+                          : "#D9D9D9",
                       borderRadius: "20px",
                       lineHeight: "2.5rem",
                       margin: 0,
+                      right: passwordButtonClicked ? "3.5%" : "0",
                       width: buttonWidth,
                     }}
                   >
