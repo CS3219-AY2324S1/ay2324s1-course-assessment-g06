@@ -7,6 +7,10 @@ const rooms = new Map();
 
 const app = express();
 const server = http.createServer(app);
+const QUESTION_HOST = process.env.QUESTION_HOST
+  ? process.env.QUESTION_HOST
+  : 'http://localhost:3000/api/questions';
+// JK need change
 const io = socketIo(server, {
   cors: {
     origin: ['http://localhost:3001', 'http://localhost:3002'],
@@ -28,7 +32,7 @@ app.get('/api/room/:roomId', (req, res) => {
   const roomInfo = rooms.get(roomId);
   if (roomInfo) {
     const questionId = roomInfo.questionId;
-    fetch(`http://localhost:3000/api/questions/${questionId}`)
+    fetch(QUESTION_HOST + `/${questionId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
@@ -39,8 +43,10 @@ app.get('/api/room/:roomId', (req, res) => {
         res.json(responseData);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
-        res.status(500).json({ error: 'Error fetching data from external API' });
+        console.error('Error fetching data:', error);
+        res
+          .status(500)
+          .json({ error: 'Error fetching data from external API' });
       });
   } else {
     res.status(404).json({ error: 'Room not found' });
@@ -52,23 +58,35 @@ const waitingQueue = [];
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
-    const matchingUserIndex = waitingQueue.findIndex(
-      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic && user.selectedLanguage == selectedLanguage
-    );
+  socket.on(
+    'match me',
+    (selectedDifficulty, selectedTopic, selectedLanguage) => {
+      const matchingUserIndex = waitingQueue.findIndex(
+        (user) =>
+          user.selectedDifficulty === selectedDifficulty &&
+          user.selectedTopic === selectedTopic &&
+          user.selectedLanguage == selectedLanguage
+      );
 
-    if (matchingUserIndex !== -1) {
-      console.log('User match!');
-      const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
-      startMatch(user1, socket, selectedDifficulty, selectedTopic, selectedLanguage);
-    } else {
-      console.log('No user found');
-      socket.selectedDifficulty = selectedDifficulty;
-      socket.selectedTopic = selectedTopic;
-      socket.selectedLanguage = selectedLanguage;
-      waitingQueue.push(socket);
+      if (matchingUserIndex !== -1) {
+        console.log('User match!');
+        const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
+        startMatch(
+          user1,
+          socket,
+          selectedDifficulty,
+          selectedTopic,
+          selectedLanguage
+        );
+      } else {
+        console.log('No user found');
+        socket.selectedDifficulty = selectedDifficulty;
+        socket.selectedTopic = selectedTopic;
+        socket.selectedLanguage = selectedLanguage;
+        waitingQueue.push(socket);
+      }
     }
-  });
+  );
 
   socket.on('cancel match', () => {
     const index = waitingQueue.indexOf(socket);
@@ -83,7 +101,7 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (roomId) => {
     // Use Socket.IO's join method to add the socket to the room
     socket.join(roomId);
-    socket.to(roomId).emit("userConnected");
+    socket.to(roomId).emit('userConnected');
   });
 
   socket.on('disconnect', () => {
@@ -120,7 +138,7 @@ io.on('connection', (socket) => {
   });
 });
 
-function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
+async function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
   const roomId = uuidv4();
 
   generateQuestion(selectedDifficulty, selectedTopic)
@@ -147,14 +165,17 @@ function startMatch(user1, user2, selectedDifficulty, selectedTopic) {
 
 async function generateQuestion(difficulty, topic) {
   try {
-    const response = await fetch(`http://localhost:3000/api/questions/matched?difficulty=${difficulty}&topics=${topic}`);
+    const response = await fetch(
+      QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`
+    );
+    console.log(QUESTION_HOST);
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }
     const responseData = await response.json();
     return responseData;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
     return null;
   }
 }

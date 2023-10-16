@@ -1,8 +1,7 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
-
 
 app.use(cors());
 
@@ -13,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // database
-const db = require("./models");
+const db = require('./models');
 const Role = db.role;
 
 db.sequelize.sync();
@@ -24,8 +23,8 @@ db.sequelize.sync();
 // });
 
 // simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Hello World" });
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello World' });
 });
 
 // routes
@@ -33,8 +32,9 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.USER_PORT || 3003;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
 
