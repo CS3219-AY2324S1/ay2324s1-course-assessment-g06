@@ -29,22 +29,31 @@ interface ChatMessage {
 
 
 const CodeSpace = () => {
+  // Id of the current code space room
   const { roomId } = useParams();
-
+  // Get location/path of current page
   const location = useLocation();
-
   const navigate = useNavigate();
-  const { socketId, difficulty, topic , language} = location.state || {};
-  // const [socket, setSocket] = useState<Socket | null>(null);
+
+  // To show user the match information
+  const { socketId, difficulty, topic, language} = location.state || {};
+
+  // To show the question allocated
   const [question, setQuestion] = useState<Question | null>(null);
-  const [hasQuitRoom, setHasQuitRoom] = useState(false); // Track if the user has quit the room
-  const [confirmQuit, setConfirmQuit] = useState(false);
+
+  // To track if the user has quit the room
+  const [hasQuitRoom, setHasQuitRoom] = useState(false); 
+  
+  // To track the code text input
   const [value, setValue] = React.useState(() => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
+
+  // Check if the dialog to prompt confirmation of quit session is open
   const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
 
+  // Initilaise the chat message with a connected prompt
   const messageData: ChatMessage = {
     roomId: roomId !== undefined ? roomId : "0", 
     author: 'System', 
@@ -57,6 +66,7 @@ const CodeSpace = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
+  // To open of close the confirm quit session modal/dialog
   const openQuitDialog = () => {
     setIsQuitDialogOpen(true);
   };
@@ -68,18 +78,15 @@ const CodeSpace = () => {
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
 
+  // To handle user changing path / disconnecting from match
   useEffect(() => {
-    // window.addEventListener('beforeunload', handleOnBeforeUnload);
-
     console.log('Route changed to', location.pathname);
 
     function handleOnBeforeUnload(event: BeforeUnloadEvent) {
       if (!hasQuitRoom) {
-        const confirmationMessage = 'Are you sure you want to leave the session?';
-        (event || window.event).returnValue = confirmationMessage;
+        const confirmationMessage = '';
         return confirmationMessage;
       }
-      // If `hasQuitRoom` is true, don't prevent the user from leaving.
     }
 
     window.addEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
@@ -88,6 +95,7 @@ const CodeSpace = () => {
     }
   }, [location]);
 
+  // On change handlers
   const handleNewMessageChange = (e: any) => {
     setNewMessage(e.target.value);
 
@@ -129,10 +137,22 @@ const CodeSpace = () => {
     }
   };
 
+  const handleQuitSession = () => {
+    if (socket) {
+      // Emit a "quitSession" event to the server
+      socket.emit('quitSession', roomId);
+    }
+    console.log("quitting session");
+
+    alert('You have quit the session');
+    navigate("/matching");
+  }
+
+  // Handle code change events
   const onChange = React.useCallback((val: string, viewUpdate: any) => {
     console.log('val:', val);
     setValue(val);
-    // Save the code value to localStorage
+    // Save the code value to localStorage, to be changed to sql later
     localStorage.setItem('code', val);
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
@@ -161,6 +181,7 @@ const CodeSpace = () => {
   };
 
   useEffect(() => {
+    // Handle all socket events listened from server
     if (socket) {
       console.log("connected to socket", socket, socket.id);
       const matchedSocket = socket;
@@ -172,7 +193,6 @@ const CodeSpace = () => {
 
       matchedSocket.on('connect', () => {
         console.log('Connected to matched socket');
-
         // Emit the "userConnected" event when the socket connects
         matchedSocket.emit('userConnected', socketId, roomId);
         // Emit the "joinRoom" event when the socket connects
@@ -256,6 +276,7 @@ const CodeSpace = () => {
     }
   }, [roomId]);
 
+  // Set the code syntax
   const getCodeMirrorExtensions = () => {
     switch (language) {
       case 'python':
@@ -267,20 +288,10 @@ const CodeSpace = () => {
     }
   };
 
-  const handleQuitSession = () => {
-    if (socket) {
-      // Emit a "quitSession" event to the server
-      socket.emit('quitSession', roomId);
-    }
-    console.log("quitting session");
-
-    alert('You have quit the session');
-    navigate("/matching");
-  }
-
   return (
     <div className="container mt-5" >
       <h2>Welcome, {socketId || 'Loading...'}</h2>
+      {/* Match Information */}
       <p>
         You are matched with another user using difficulty: {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and language: {language || 'Not selected'}
       </p>
@@ -288,6 +299,7 @@ const CodeSpace = () => {
       <br />
       <br />
 
+      {/* Question */}
       {question !== null ? (
         <div>
           <div>
@@ -304,6 +316,7 @@ const CodeSpace = () => {
       <br />
       <br />
 
+      {/* Coding Space */}
       <div>
         <CodeMirror
           value={value}
@@ -352,6 +365,7 @@ const CodeSpace = () => {
           </div>
         </div>
 
+        {/* Quit Button */}
         <div className = "col-md-5">
           <button className="quit-button" onClick={openQuitDialog}>
               Quit Session
@@ -359,26 +373,26 @@ const CodeSpace = () => {
         </div>
       </div>
 
-        <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Confirm Deletion</h5>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeQuitDialog}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            <p>Are you sure you want to quit this session?</p>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={closeQuitDialog}>Cancel</button>
-            <button type="button" className="btn btn-danger" onClick={handleQuitSession}>Quit</button>
+      {/* Quit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Deletion</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeQuitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Are you sure you want to quit this session?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={closeQuitDialog}>Cancel</button>
+              <button type="button" className="btn btn-danger" onClick={handleQuitSession}>Quit</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    
     </div>
   );
 };
