@@ -34,6 +34,7 @@ const App: React.FC = () => {
     localStorage.getItem("user") ? true : false
   );
   const location = useLocation(); // Get the current location
+  const isCodeSpaceRoute = location.pathname.startsWith('/match/');
 
   function generateActiveStyle(path: string) {
     return {
@@ -66,6 +67,7 @@ const App: React.FC = () => {
 
   return (
     <div>
+      {isCodeSpaceRoute ? null : (
   <nav className="navbar navbar-expand navbar-light bg-white p-3"> 
         <Link to={"/"} className="navbar-brand">
           <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
@@ -115,6 +117,7 @@ const App: React.FC = () => {
           </div>
         )}
       </nav>
+      )}
 
       <div className="container mt-3">
         <Routes>
