@@ -88,8 +88,8 @@ const CodeSpace = () => {
 
     function handleOnBeforeUnload(event: BeforeUnloadEvent) {
       if (!hasQuitRoom) {
-        const confirmationMessage = '';
-        return confirmationMessage;
+        event.preventDefault();
+        return (event.returnValue = "");
       }
     }
 
