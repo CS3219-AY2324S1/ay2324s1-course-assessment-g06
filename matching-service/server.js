@@ -34,12 +34,16 @@ app.get('/api/room/:roomId', (req, res) => {
 
   // Check if the room is still active
   if (rooms.has(roomId)) {
+    // Check if user belongs in this room
+    // console.log("user connecting to ", roomId, "is", )
+
     const questionId = roomInfo.questionId;
     fetch(`http://localhost:3000/api/questions/${questionId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
         }
+        // console.log("success", response.json());
         return response.json();
       })
       .then((responseData) => {
@@ -68,7 +72,7 @@ io.use(socketioJwt.authorize({
 
 io.on('connection', async (socket) => {
   console.log('A user connected');
-  console.log('Authenticated user connected:', socket.decoded_token);
+  console.log('User Token:', socket.decoded_token, "connected");
   
   socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
     const userId = socket.decoded_token.id; // Assuming user ID is in the token
@@ -108,10 +112,19 @@ io.on('connection', async (socket) => {
 
   // Listen for the 'joinRoom' event from the client
   socket.on('joinRoom', (roomId) => {
-    // Check if the user is not joining a room with themselves
-    if (socket.id !== roomId) {
-      socket.join(roomId);
-      socket.to(roomId).emit("userConnected");
+    // Check if the user is in the specified room
+    if (rooms.has(roomId)) {
+      const roomInfo = rooms.get(roomId);
+      const user = socket.decoded_token; 
+  
+      if (user === roomInfo.user1 || user === roomInfo.user2) {
+        socket.join(roomId);
+        socket.to(roomId).emit('userConnected');
+      } else {
+        socket.emit('accessDenied', 'You are not authorized to join this room.');
+      }
+    } else {
+      socket.emit('accessDenied', 'Room not found or no user information available.');
     }
   });
 

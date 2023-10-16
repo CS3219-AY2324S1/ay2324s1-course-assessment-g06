@@ -57,6 +57,9 @@ const CodeSpace = () => {
   // Check if the dialog to prompt confirmation of quit session is open
   const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
 
+  // To hide information if user is not authorised into code space
+  const [isAccessAllowed, setIsAccessAllowed] = useState(false);
+
   // Initilaise the chat message with a connected prompt
   const messageData: ChatMessage = {
     roomId: roomId !== undefined ? roomId : "0", 
@@ -122,7 +125,7 @@ const CodeSpace = () => {
       console.log("emitting timer end");
       socket.emit('timerEnd', roomId);
       alert('The time is up');
-      navigate("/");
+      navigate("/matching");
     }
   }, [isTimerEnded, roomId, socket]);
 
@@ -257,6 +260,7 @@ const CodeSpace = () => {
         console.log('receive userConnected from server');
         console.log("current" + socketId)
         console.log("connected" + connectedSocket)
+        setIsAccessAllowed(true);
 
         if (connectedSocket !== socketId) {
         // Send a message to the chat when another user connects
@@ -297,6 +301,13 @@ const CodeSpace = () => {
         return () => {
           matchedSocket.off('userDisconnected', (roomId))
         };
+      });
+
+      // Listen for 'accessDenied' events from server indicating an unauthorised (but logged in) user trying to access a room they are not matched/allowed in
+      matchedSocket.on('accessDenied', (message) => {
+        setIsAccessAllowed(false);
+        alert(message);
+        navigate("/matching");
       });
 
       fetchData();
