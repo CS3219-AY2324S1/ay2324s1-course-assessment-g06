@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, Location, useNavigate } from 'react-router-dom';
+import useHistory from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import { socket } from './socket';
 import CodeMirror from '@uiw/react-codemirror';
@@ -31,7 +32,9 @@ interface ChatMessage {
 
 const CodeSpace = () => {
   const { roomId } = useParams();
+
   const location = useLocation();
+
   const navigate = useNavigate();
   const { socketId, difficulty, topic , language} = location.state || {};
   // const [socket, setSocket] = useState<Socket | null>(null);
@@ -41,7 +44,7 @@ const CodeSpace = () => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
-  
+
   const messageData: ChatMessage = {
     roomId: roomId !== undefined ? roomId : "0", 
     author: 'System', 
@@ -56,7 +59,21 @@ const CodeSpace = () => {
 
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
-  ;
+
+  useEffect(() => {
+    console.log('Route changed to', location.pathname);
+
+    function handleOnBeforeUnload(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      return (event.returnValue = '');
+    }
+
+    window.addEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
+    return () => {
+      window.removeEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
+    }
+  }, [location]);
+  
 
   const handleNewMessageChange = (e: any) => {
     setNewMessage(e.target.value);
