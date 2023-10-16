@@ -507,7 +507,10 @@ const Profile: React.FC = () => {
                   }}
                 >
                   <button
-                    onClick={toggleDeleteModal}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleDeleteModal();
+                    }}
                     style={{
                       position: "relative",
                       border: "none",
