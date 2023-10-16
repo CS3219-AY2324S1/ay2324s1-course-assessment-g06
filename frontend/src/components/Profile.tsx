@@ -38,12 +38,19 @@ const Profile: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorType, setErrorType] = useState("");
   const [passwordButtonClicked, setPasswordButtonClicked] = useState(false);
-  const [buttonWidth, setButtonWidth] = useState("100%");
+  const [buttonWidth, setButtonWidth] = useState("97%");
+  const [showBackButton, setShowBackButton] = useState(false);
+  const [isTextFieldClicked, setIsTextFieldClicked] = useState(false);
+
+  const enableTextField = () => {
+    setIsTextFieldClicked(true);
+  };
 
   const toggleTextFields = () => {
     setShowPasswordTextFields(!showPasswordTextFields);
     setTextFieldsEnabled(false);
     setPasswordButtonClicked(true);
+    setShowBackButton(!showBackButton);
   };
 
   useEffect(() => {
@@ -371,6 +378,8 @@ const Profile: React.FC = () => {
                             passwordFormik.errors.currentPassword
                           }
                           InputProps={{
+                            readOnly: !isTextFieldClicked,
+                            onClick: enableTextField,
                             style: {
                               borderRadius: "20px",
                               backgroundColor: "white",
@@ -516,10 +525,29 @@ const Profile: React.FC = () => {
                     display: "flex",
                     alignItems: "center",
                     marginTop: "20px",
-                    justifyContent: "flex-end",
-                    marginRight: "3.5%",
+                    // justifyContent: "flex-end",
+                    // marginRight: "3.5%",
                   }}
                 >
+                  {showBackButton && (
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent form submission
+                        setShowBackButton(!showBackButton);
+                        setPasswordButtonClicked(!passwordButtonClicked);
+                        setShowPasswordTextFields(!showPasswordTextFields);
+                      }}
+                      style={{
+                        backgroundColor: "#D9D9D9",
+                        borderRadius: "20px",
+                        lineHeight: "2.5rem",
+                        margin: 0,
+                        width: buttonWidth,
+                      }}
+                    >
+                      Back
+                    </Button>
+                  )}
                   <Button
                     onClick={(e) => {
                       e.preventDefault(); // Prevent form submission
@@ -529,10 +557,10 @@ const Profile: React.FC = () => {
                         if (!passwordButtonClicked) {
                           updateFormik.handleSubmit(); // Call the Update Profile method
                         } else {
+                          setButtonWidth("48.5%");
                           passwordFormik.handleSubmit(); // Call the Update Password method
                         }
                       }
-                      setButtonWidth("48.5%");
                     }}
                     style={{
                       backgroundColor: "#D9D9D9",
