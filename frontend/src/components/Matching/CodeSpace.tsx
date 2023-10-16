@@ -52,6 +52,7 @@ const CodeSpace = () => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
+  const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
 
   const messageData: ChatMessage = {
     roomId: roomId !== undefined ? roomId : "0", 
@@ -64,6 +65,14 @@ const CodeSpace = () => {
   const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
+  const openQuitDialog = () => {
+    setIsQuitDialogOpen(true);
+  };
+
+  const closeQuitDialog = () => {
+    setIsQuitDialogOpen(false);
+  };
 
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
@@ -353,11 +362,32 @@ const CodeSpace = () => {
         </div>
 
         <div className = "col-md-5">
-          <button className="quit-button" onClick={handleQuitSession}>
+          <button className="quit-button" onClick={openQuitDialog}>
               Quit Session
           </button>
         </div>
       </div>
+
+        <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Confirm Deletion</h5>
+            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeQuitDialog}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <p>Are you sure you want to quit this session?</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={closeQuitDialog}>Cancel</button>
+            <button type="button" className="btn btn-danger" onClick={handleQuitSession}>Quit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     </div>
   );
 };
