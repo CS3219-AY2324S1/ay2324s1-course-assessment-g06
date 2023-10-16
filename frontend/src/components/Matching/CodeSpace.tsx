@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
+import { socket } from './socket';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
@@ -33,7 +34,7 @@ const CodeSpace = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { socketId, difficulty, topic , language} = location.state || {};
-  const [socket, setSocket] = useState<Socket | null>(null);
+  // const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [hasQuitRoom, setHasQuitRoom] = useState(false); // Track if the user has quit the room
   const [value, setValue] = React.useState(() => {
@@ -130,97 +131,104 @@ const CodeSpace = () => {
   };
 
   useEffect(() => {
+
     // Create a socket connection
-    const matchedSocket = io('http://localhost:3002', {
-      query: { roomId },
-    });
+    // const matchedSocket = io('http://localhost:3002', {
+    //   query: { roomId },
+    // });
+    console.log("in use effect");
 
-    matchedSocket.on('sessionEnded', () => {
-      console.log("session has ended")
-      navigate("/404");
-    })
+    if (socket) {
+      console.log("connected to socket", socket, socket.id);
+      const matchedSocket = socket;
 
-    matchedSocket.on('connect', () => {
-      console.log('Connected to matched socket');
+      matchedSocket.on('sessionEnded', () => {
+        console.log("session has ended")
+        navigate("/404");
+      })
 
-      // Emit the "userConnected" event when the socket connects
-      matchedSocket.emit('userConnected', socketId, roomId);
-      // Emit the "joinRoom" event when the socket connects
-      matchedSocket.emit('joinRoom', roomId);
-    });
+      matchedSocket.on('connect', () => {
+        console.log('Connected to matched socket');
 
-    // Handle disconnection event
-    matchedSocket.on('userDisconnected', () => {
-      console.log('user disconnected from client')
-      // Emit a custom event to inform the server or other clients
-      matchedSocket.emit('userDisconnected', roomId);
-    });
+        // Emit the "userConnected" event when the socket connects
+        matchedSocket.emit('userConnected', socketId, roomId);
+        // Emit the "joinRoom" event when the socket connects
+        matchedSocket.emit('joinRoom', roomId);
+      });
 
-    // Listen for 'codeChange' events from the server
-    matchedSocket.on('codeChange', (newCode: string) => {
-      setValue(newCode); // Update the value with the new code
-    });
+      // Handle disconnection event
+      matchedSocket.on('userDisconnected', () => {
+        console.log('user disconnected from client')
+        // Emit a custom event to inform the server or other clients
+        matchedSocket.emit('userDisconnected', roomId);
+      });
 
-    // Listen for 'receive message' events from the server
-    matchedSocket.on('receiveMessage', (data) => {
-      console.log('receiveMessage from server');
-      setMessageList((list) => [...list, data]); // Update the selected language
-    }); 
+      // Listen for 'codeChange' events from the server
+      matchedSocket.on('codeChange', (newCode: string) => {
+        setValue(newCode); // Update the value with the new code
+      });
 
-    // Listen for 'userTyping' events from the server
-    matchedSocket.on('userTyping', (isTyping) => {
-      setIsTyping(isTyping);
-    });
+      // Listen for 'receive message' events from the server
+      matchedSocket.on('receiveMessage', (data) => {
+        console.log('receiveMessage from server');
+        setMessageList((list) => [...list, data]); // Update the selected language
+      }); 
 
-    // Listen for 'userConnected' and 'userDisconnected' events from the server
-    matchedSocket.on('userConnected', (connectedSocket) => {
-      console.log('receive userConnected from server');
-      console.log("current" + socketId)
-      console.log("connected" + connectedSocket)
+      // Listen for 'userTyping' events from the server
+      matchedSocket.on('userTyping', (isTyping) => {
+        setIsTyping(isTyping);
+      });
 
-      if (connectedSocket !== socketId) {
-      // Send a message to the chat when another user connects
-      const messageData: ChatMessage = {
-        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
-        author: 'System', 
-        // message: `A user (${connectedSocket}) has connected`,
-        message: `A user has connected`,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessageList((list) => [...list, messageData]);
-      }
-    });
+      // Listen for 'userConnected' and 'userDisconnected' events from the server
+      matchedSocket.on('userConnected', (connectedSocket) => {
+        console.log('receive userConnected from server');
+        console.log("current" + socketId)
+        console.log("connected" + connectedSocket)
 
-    // // Listen for the 'sessionEnded' event from the server
-    matchedSocket.on('sessionEnded', () => {
-      // Handle the session ending, display a message, or redirect users
-      alert('The session has ended');
-      setHasQuitRoom(true);
-      
+        if (connectedSocket !== socketId) {
+        // Send a message to the chat when another user connects
+        const messageData: ChatMessage = {
+          roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+          author: 'System', 
+          // message: `A user (${connectedSocket}) has connected`,
+          message: `A user has connected`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessageList((list) => [...list, messageData]);
+        }
+      });
+
+      // // Listen for the 'sessionEnded' event from the server
+      matchedSocket.on('sessionEnded', () => {
+        // Handle the session ending, display a message, or redirect users
+        alert('The session has ended');
+        setHasQuitRoom(true);
+        
+        return () => {
+          matchedSocket.off("sessionEnded");
+        };
+      });
+
+      // Might not be able to work due to current implementation and window closes terminates socket abruptly
+      matchedSocket.on('userDisconnected', () => {
+        // Send a message to the chat when a user disconnects
+        const messageData: ChatMessage = {
+          roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+          author: 'System', 
+          message: `A user has disconnected`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessageList((list) => [...list, messageData]);
+      });
+
+      // setSocket(matchedSocket);
+      fetchData();
+
       return () => {
-        matchedSocket.off("sessionEnded");
+        matchedSocket.disconnect();
       };
-    });
-
-    // Might not be able to work due to current implementation and window closes terminates socket abruptly
-    matchedSocket.on('userDisconnected', () => {
-      // Send a message to the chat when a user disconnects
-      const messageData: ChatMessage = {
-        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
-        author: 'System', 
-        message: `A user has disconnected`,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setMessageList((list) => [...list, messageData]);
-    });
-
-    setSocket(matchedSocket);
-    fetchData();
-
-    return () => {
-      matchedSocket.disconnect();
-    };
+    }
   }, [roomId]);
 
   const getCodeMirrorExtensions = () => {
