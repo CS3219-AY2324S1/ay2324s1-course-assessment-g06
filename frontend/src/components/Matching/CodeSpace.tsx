@@ -41,7 +41,7 @@ const CodeSpace = () => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
-
+  
   const messageData: ChatMessage = {
     roomId: roomId !== undefined ? roomId : "0", 
     author: 'System', 
@@ -142,7 +142,7 @@ const CodeSpace = () => {
 
       matchedSocket.on('sessionEnded', () => {
         console.log("session has ended")
-        navigate("/404");
+        navigate("/matching");
       })
 
       matchedSocket.on('connect', () => {
@@ -245,7 +245,9 @@ const CodeSpace = () => {
       socket.emit('quitSession', roomId);
     }
     console.log("quitting session");
-    navigate("/404");
+
+    alert('You have quit the session');
+    navigate("/matching");
   }
 
   return (
