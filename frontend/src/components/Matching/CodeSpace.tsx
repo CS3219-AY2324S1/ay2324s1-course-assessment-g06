@@ -9,7 +9,14 @@ import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import './CodeSpace.css'; 
 
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+
 import {Grid, Container, Card } from '@mui/material';
+import { match } from 'assert';
 
 interface Question {
   _id: string;
@@ -40,6 +47,7 @@ const CodeSpace = () => {
   // const [socket, setSocket] = useState<Socket | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [hasQuitRoom, setHasQuitRoom] = useState(false); // Track if the user has quit the room
+  const [confirmQuit, setConfirmQuit] = useState(false);
   const [value, setValue] = React.useState(() => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
@@ -61,11 +69,17 @@ const CodeSpace = () => {
   let typingTimer: NodeJS.Timeout;
 
   useEffect(() => {
+    // window.addEventListener('beforeunload', handleOnBeforeUnload);
+
     console.log('Route changed to', location.pathname);
 
     function handleOnBeforeUnload(event: BeforeUnloadEvent) {
-      event.preventDefault();
-      return (event.returnValue = '');
+      if (!hasQuitRoom) {
+        const confirmationMessage = 'Are you sure you want to leave the session?';
+        (event || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+      }
+      // If `hasQuitRoom` is true, don't prevent the user from leaving.
     }
 
     window.addEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
@@ -73,7 +87,6 @@ const CodeSpace = () => {
       window.removeEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
     }
   }, [location]);
-  
 
   const handleNewMessageChange = (e: any) => {
     setNewMessage(e.target.value);
@@ -148,11 +161,6 @@ const CodeSpace = () => {
   };
 
   useEffect(() => {
-
-    // Create a socket connection
-    // const matchedSocket = io('http://localhost:3002', {
-    //   query: { roomId },
-    // });
     if (socket) {
       console.log("connected to socket", socket, socket.id);
       const matchedSocket = socket;
@@ -172,10 +180,9 @@ const CodeSpace = () => {
       });
 
       // Handle disconnection event
-      matchedSocket.on('userDisconnected', () => {
-        console.log('user disconnected from client')
-        // Emit a custom event to inform the server or other clients
-        matchedSocket.emit('userDisconnected', roomId);
+      matchedSocket.on('userDisconnected', (roomId) => {
+        alert('The other user has disconnected');
+        navigate("/matching");
       });
 
       // Listen for 'codeChange' events from the server
@@ -224,8 +231,7 @@ const CodeSpace = () => {
         };
       });
 
-      // Might not be able to work due to current implementation and window closes terminates socket abruptly
-      matchedSocket.on('userDisconnected', () => {
+      matchedSocket.on('userDisconnected', (roomId) => {
         // Send a message to the chat when a user disconnects
         const messageData: ChatMessage = {
           roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
@@ -233,8 +239,13 @@ const CodeSpace = () => {
           message: `A user has disconnected`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
-
+        setHasQuitRoom(true);
         setMessageList((list) => [...list, messageData]);
+
+        matchedSocket.emit('sessionEnded', roomId);
+        return () => {
+          matchedSocket.off('userDisconnected', (roomId))
+        };
       });
 
       fetchData();

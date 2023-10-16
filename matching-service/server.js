@@ -118,11 +118,31 @@ io.on('connection', async (socket) => {
   // Disconnect the user who has quit
   socket.on('disconnect', () => {
     console.log('A user disconnected');
-    const index = waitingQueue.indexOf(socket);
-    if (index !== -1) {
-      waitingQueue.splice(index, 1);
-    }
+    socket.leave();
   });
+
+  // Listen for the 'disconnect' event from the client
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+
+    // Search for the room this socket disconnected from
+    for (const [roomId, roomInfo] of rooms.entries()) {
+      // Compare socketid with user1Id and user2Id
+      if (socket.id === roomInfo.user1Id || socket.id === roomInfo.user2Id) {
+        socket.to(roomId).emit('userDisconnected');
+        socket.leave(roomId);
+        
+        if (rooms.delete(roomId)) {
+          console.log("Removed room with ID", roomId, "from rooms map.");
+        } else {
+          console.log("Room with ID", roomId, "not found in rooms map.");
+        }
+        break; // Guard clause
+      }
+    }
+    socket.leave();
+  });
+  
 
   // Disconnect users in the session
   socket.on('quitSession', (roomId) => {
