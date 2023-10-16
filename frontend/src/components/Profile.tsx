@@ -558,6 +558,7 @@ const Profile: React.FC = () => {
                   {showBackButton && (
                     <Button
                       onClick={(e) => {
+                        setButtonWidth("97%");
                         e.preventDefault(); // Prevent form submission
                         setShowBackButton(!showBackButton);
                         setPasswordButtonClicked(!passwordButtonClicked);
