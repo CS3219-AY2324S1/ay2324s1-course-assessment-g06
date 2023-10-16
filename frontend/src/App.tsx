@@ -19,6 +19,7 @@ import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Protected from "./components/Protected";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
+import GuestRoute from "./components/GuestRoute";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -29,7 +30,6 @@ import logo from './images/peerPrepLogo.png';
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
   const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
-  // const [currentUser, setCurrentUser] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
     localStorage.getItem("user") ? true : false
   );
@@ -70,48 +70,32 @@ const App: React.FC = () => {
         <Link to={"/"} className="navbar-brand">
           <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
         </Link>
-        <div className="navbar-nav mr-auto">
-          {/* <li className="nav-item">
-            <Link to={"/home"} className="nav-link">
-              Home
-            </Link>
-          </li> */}
-
-          {showModeratorBoard && (
-            <li className="nav-item">
-              <Link to={"/mod"} className="nav-link">
-                Moderator Board
-              </Link>
-            </li>
-          )}
-
-          {showAdminBoard && (
-            <li className="nav-item">
-              <Link to={"/admin"} className="nav-link">
-                Admin Board
-              </Link>
-            </li>
-          )}
-
-          {currentUser && (
-            <li className="nav-item">
-              <Link to={"/user"} className="nav-link">
-                User
-              </Link>
-            </li>
-          )}
-        </div>
 
         {currentUser ? (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link to={"/profile"} className="nav-link">
-                profile
+              <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
+                Matching
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
+                Questions
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
+                Profile
               </Link>
             </li>
             <li className="nav-item">
               <a href="/login" className="nav-link" onClick={logOut}>
-                LogOut
+                Log Out
               </a>
             </li>
           </div>
@@ -135,8 +119,22 @@ const App: React.FC = () => {
       <div className="container mt-3">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={
+              <GuestRoute isLoggedIn={currentUser}>
+                <Login />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <GuestRoute isLoggedIn={currentUser}>
+                <Register />
+              </GuestRoute>
+            }
+          />
           <Route
             path="/profile"
             element={
@@ -145,30 +143,50 @@ const App: React.FC = () => {
               </Protected>
             }
           />
-          {/* <Route path="/user" element={<BoardUser />} />
-          <Route path="/mod" element={<BoardModerator />} />
-          <Route path="/admin" element={<BoardAdmin />} /> */}
-          {/* Can only access questions if there is logged in user */}
           <Route
             path="/questions"
             element={
-              <BasicTable />
-              // <Protected isLoggedIn={currentUser}>
-              //   <BasicTable />
-              // </Protected>
+              <Protected isLoggedIn={currentUser}>
+                <BasicTable />
+              </Protected>
             }
           />
-          <Route path="/questions/:id" element={<Question />} />
-          <Route path="/matching" element={<Matching />} />
-          <Route path="/match/:roomId" element={<CodeSpace />} />
+          <Route
+            path="/questions/:id"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Question />
+              </Protected>
+            }
+          />
+          <Route
+            path="/matching"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Matching />
+              </Protected>
+            }
+          />
+          <Route
+            path="/match/:roomId"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <CodeSpace />
+              </Protected>
+            }
+          />
           <Route
             path="/questions/:id/update"
-            element={<UpdateQuestionForm />}
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <UpdateQuestionForm />
+              </Protected>
+            }
           />
           <Route path="/questions/add-question" element={<AddQuestionForm />} />
 
-          {/* 404 Route */}
           <Route path="*" element={<PageNotFound />} />
+        
         </Routes>
 
         
