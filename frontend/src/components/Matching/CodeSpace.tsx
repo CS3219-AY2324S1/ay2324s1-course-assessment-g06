@@ -271,18 +271,7 @@ const CodeSpace = () => {
         }
       });
 
-      matchedSocket.on('timeEnded', (roomId) => {
-        console.log("time ended received in client");
-        alert('The time is up');
-        navigate("/");
-        setHasQuitRoom(true);
-
-        return () => {
-          matchedSocket.off('timeEnded', (roomId));
-        };
-      });
-
-      // // Listen for the 'sessionEnded' event from the server
+      // Listen for the 'sessionEnded' event from the server
       matchedSocket.on('sessionEnded', () => {
         // Handle the session ending, display a message, or redirect users
         alert('The session has ended');

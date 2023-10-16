@@ -164,11 +164,8 @@ io.on('connection', async (socket) => {
 
   socket.on('timerEnd', (roomId) => {
     console.log("The time has ended");
-    // socket.emit('timeEnded');
     // Check if the user is in the specified room
     if (rooms.has(roomId)) {
-      socket.to(roomId).emit('timeEnded');
-
       if (rooms.delete(roomId)) {
         console.log("Removed room with ID", roomId, "from rooms map.");
       } else {
