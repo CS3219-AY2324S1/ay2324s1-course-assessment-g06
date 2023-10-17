@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
     difficulty: {
       type: Sequelize.STRING,
     },
+    attempt: {
+      type: Sequelize.STRING,
+    }
   });
 
   return userQuestions;

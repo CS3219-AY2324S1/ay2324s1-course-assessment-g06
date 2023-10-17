@@ -5,14 +5,17 @@ const User = db.user;
 const Op = db.Sequelize.Op;
 const sequelize = db.Sequelize;
 
+ // Controller function to create a user history
+  // Usage: Post request to http://localhost:3003/api/user/history
 exports.addHistory = (req, res) => {
-  const { userId, questionId, difficulty } = req.body;
+  const { userId, questionId, difficulty, attempt } = req.body;
 
   UserQuestions.create({
     userId: userId,
     question_id: questionId,
     attemptedAt: new Date(),
     difficulty: difficulty,
+    attempt: attempt,
   })
     .then((userQuestions) => {
       res.status(200).send({ message: 'User Questions added successfully!' });
@@ -22,6 +25,28 @@ exports.addHistory = (req, res) => {
     });
 };
 
+// Controller function to create a user history with custom date
+// Usage: Post request to http://localhost:3003/api/user/customhistory
+exports.addCustomHistory = (req, res) => {
+  const { userId, questionId, difficulty, attempt, date } = req.body;
+
+  UserQuestions.create({
+    userId: userId,
+    question_id: questionId,
+    attemptedAt: new Date(date),
+    difficulty: difficulty,
+    attempt: attempt,
+  })
+    .then((userQuestions) => {
+      res.status(200).send({ message: 'User Questions added successfully!' });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+// Controller function to get all unique questions id
+// Usage: Get request to http://localhost:3003/api/user/history/:id
 exports.getAllUniqueQuestions = (req, res) => {
   const { userId } = req.params;
   UserQuestions.findAll({
@@ -44,6 +69,8 @@ exports.getAllUniqueQuestions = (req, res) => {
     });
 };
 
+// Controller function to get all questions id
+// Usage: Get request to http://localhost:3003/api/user/history/:id/Medium
 exports.getAllUniqueQuestionsByDifficulty = (req, res) => {
   const { userId, difficulty } = req.params;
   UserQuestions.findAll({
@@ -51,6 +78,7 @@ exports.getAllUniqueQuestionsByDifficulty = (req, res) => {
     attributes: [
       'question_id',
       [sequelize.fn('MAX', sequelize.col('attemptedAt')), 'latestAttemptedAt'],
+     
     ],
     group: ['question_id'],
     order: [[sequelize.literal('latestAttemptedAt'), 'ASC']],
@@ -66,12 +94,14 @@ exports.getAllUniqueQuestionsByDifficulty = (req, res) => {
     });
 };
 
+// Controller function to get all questions id for one user
+// Usage: Get request to http://localhost:3003/api/user/allhistory/:id
 exports.getAllQuestions = (req, res) => {
   const { userId } = req.params;
   UserQuestions.findAll({
     where: { userId: userId },
     order: [['attemptedAt', 'ASC']],
-    attributes: ['question_id', 'attemptedAt', 'difficulty'],
+    attributes: ['question_id', 'attemptedAt', 'difficulty', 'attempt'],
   })
     .then((userQuestions) => {
       if (userQuestions) {

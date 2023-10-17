@@ -10,6 +10,7 @@ module.exports = function (app) {
   });
 
   app.post('/api/user/history', controller.addHistory);
+  app.post('/api/user/customhistory', controller.addCustomHistory);
   app.get('/api/user/history/:userId', controller.getAllUniqueQuestions);
   app.get(
     '/api/user/history/:userId/:difficulty',

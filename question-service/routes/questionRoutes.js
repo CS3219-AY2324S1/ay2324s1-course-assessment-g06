@@ -10,6 +10,8 @@ router.get("/pagination/remaining", questionController.getRemainingPaginatedQues
 router.get("/matched", questionController.getRandomQuestionByFilter);
 router.get("/:id", questionController.getQuestionById);
 
+router.post("/questionbyid", questionController.getQuestionsByIds);
+
 // Create a new question
 router.post("/", questionController.createQuestion);
 
