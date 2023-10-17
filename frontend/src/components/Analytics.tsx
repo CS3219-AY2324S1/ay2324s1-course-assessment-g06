@@ -7,17 +7,51 @@ import {
 } from '@mui/material';
 import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import HeatMap from '@uiw/react-heat-map';
 import axios from 'axios';
 
 const USER_HOST = process.env.USER_HOST || 'http://localhost:3003/api/auth';
-const USER_HISTORY = process.env.USER_HISTORY || 'http://localhost:3003/api/user';
-const QUESTION_HOST = process.env.QUESTION_HOST || 'http://localhost:3000/api/questions';
+const USER_HISTORY =
+  process.env.USER_HISTORY || 'http://localhost:3003/api/user';
+const QUESTION_HOST =
+  process.env.QUESTION_HOST || 'http://localhost:3000/api/questions';
 
+type QuestionDetails = {
+  Easy: number;
+  Medium: number;
+  Hard: number;
+  Total: number;
+};
+// how many the user solved
+type UserDetails = {
+  Easy: number;
+  Medium: number;
+  Hard: number;
+  Total: number;
+  Questions: [];
+  //need attempted
+};
+type questionData = {};
 const Analytics: React.FC = () => {
- 
-  const [solvedValue, setSolvedValue] = useState(10);
+  // all unique values
+  const [heatData, setHeatData] = useState([]);
+
+  const [userDetails, setUserDetails] = useState<UserDetails>({
+    Easy: 0,
+    Medium: 0,
+    Hard: 0,
+    Total: 0,
+    Questions: [],
+  });
+
+  const [questionDetails, setQuestionDetails] = useState<QuestionDetails>({
+    Easy: 1,
+    Medium: 1,
+    Hard: 1,
+    Total: 3,
+  });
+
   const value = 0.66;
   const maxValue = 1;
   const heatvalue = [
@@ -34,11 +68,58 @@ const Analytics: React.FC = () => {
     { date: '2016/05/02', count: 5 },
     { date: '2016/05/04', count: 11 },
   ];
-  // const [heatValue,setHeatValue] = useState(heatvalue);
 
-  useEffect(()=> {
-    axios.get()
-  });
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = userData.id || 1;
+
+    // get all user details
+    axios
+      .get(USER_HISTORY + '/history/' + userId)
+      .then((res) => {
+        // Assuming res.data is an array of solved questions
+        const solvedQuestions = res.data;
+
+        // Calculate the count for each difficulty level
+        const easyCount = solvedQuestions.filter(
+          (q: any) => q.difficulty === 'Easy'
+        ).length;
+        const mediumCount = solvedQuestions.filter(
+          (q: any) => q.difficulty === 'Medium'
+        ).length;
+        const hardCount = solvedQuestions.filter(
+          (q: any) => q.difficulty === 'Hard'
+        ).length;
+        // console.log(res.data);
+        setUserDetails({
+          ...userDetails,
+          Easy: easyCount,
+          Medium: mediumCount,
+          Hard: hardCount,
+          Total: solvedQuestions.length,
+          Questions: solvedQuestions,
+        });
+      })
+      .catch((err) => console.log(err));
+    axios.get(QUESTION_HOST + '/total').then((response) => {
+      // console.log(response.data);
+      const data = response.data; // Assuming your data is an array of objects
+      let total = 0;
+      data.forEach((item: any) => {
+        total += item.count;
+        setQuestionDetails((prevQuestionDetails) => ({
+          ...prevQuestionDetails,
+          [item.difficulty]: item.count,
+        }));
+      });
+      console.log(total);
+      // Update the Total count
+      setQuestionDetails((prevQuestionDetails) => ({
+        ...prevQuestionDetails,
+        Total: total || 1,
+      }));
+    });
+  }, []);
   return (
     <div className="container">
       <Card sx={{ display: 'flex' }}>
@@ -57,9 +138,11 @@ const Analytics: React.FC = () => {
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <CardContent>
-            <CircularProgressbarWithChildren value={value} maxValue={maxValue}>
-              
-              <h6>{solvedValue}</h6>
+            <CircularProgressbarWithChildren
+              value={userDetails.Total}
+              maxValue={questionDetails.Total}
+            >
+              <h6>{userDetails.Total}</h6>
               <h6>solved</h6>
             </CircularProgressbarWithChildren>
           </CardContent>
@@ -70,19 +153,30 @@ const Analytics: React.FC = () => {
               <Typography variant="h6" align="center">
                 Easy
               </Typography>
-              <LinearProgress variant="determinate" value={10} />
+              <LinearProgress
+                variant="determinate"
+                value={100 * (userDetails.Easy / (questionDetails.Easy || 1))}
+              />
             </Box>
             <Box>
               <Typography variant="h6" align="center">
                 Medium
               </Typography>
-              <LinearProgress variant="determinate" value={10} />
+              <LinearProgress
+                variant="determinate"
+                value={
+                  100 * (userDetails.Medium / (questionDetails.Medium || 1))
+                }
+              />
             </Box>
             <Box>
               <Typography variant="h6" align="center">
                 Hard
               </Typography>
-              <LinearProgress variant="determinate" value={10} />
+              <LinearProgress
+                variant="determinate"
+                value={100 * (userDetails.Hard / (questionDetails.Hard || 1))}
+              />
             </Box>
           </CardContent>
         </Box>

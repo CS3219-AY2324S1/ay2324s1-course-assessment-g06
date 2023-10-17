@@ -1,6 +1,7 @@
 const Question = require('../models/question');
 const mongoose = require('mongoose');
-const USER_HOST = process.env.REACT_APP_USER_SVC_URL || 'http://localhost:3003/api/auth';
+const USER_HOST =
+  process.env.REACT_APP_USER_SVC_URL || 'http://localhost:3003/api/auth';
 
 module.exports = {
   // Controller function to get all questions
@@ -206,6 +207,31 @@ module.exports = {
       })
       .catch((error) => {
         res.status(500).json({ error: 'Error fetching questions' });
+      });
+  },
+  // controller function to separate the total number of questions
+  // Usage: GET request to http://localhost:3000/api/questions/total
+  getQuestionTotal: (req, res) => {
+    Question.aggregate([
+      {
+        $group: {
+          _id: '$difficulty',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          difficulty: '$_id',
+          count: 1,
+        },
+      },
+    ])
+      .then((question) => {
+        res.status(200).json(question);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   },
 };

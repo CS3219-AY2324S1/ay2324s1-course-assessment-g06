@@ -1,25 +1,30 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const questionController = require("../controllers/questionController");
+const questionController = require('../controllers/questionController');
 
 // Route for retrieving questions
-router.get("/", questionController.getAllQuestions);
-router.get("/pagination/first", questionController.getFirstPaginatedQuestions);
-router.get("/pagination/remaining", questionController.getRemainingPaginatedQuestions);
+router.get('/', questionController.getAllQuestions);
+router.get('/pagination/first', questionController.getFirstPaginatedQuestions);
+router.get(
+  '/pagination/remaining',
+  questionController.getRemainingPaginatedQuestions
+);
 
-router.get("/matched", questionController.getRandomQuestionByFilter);
-router.get("/:id", questionController.getQuestionById);
+router.get('/matched', questionController.getRandomQuestionByFilter);
+router.get('/total', questionController.getQuestionTotal);
+// must be last method if not it'll always call this method
+router.get('/:id', questionController.getQuestionById);
 
-router.post("/questionbyid", questionController.getQuestionsByIds);
+router.post('/questionbyid', questionController.getQuestionsByIds);
 
 // Create a new question
-router.post("/", questionController.createQuestion);
+router.post('/', questionController.createQuestion);
 
 // Update an existing question by frontendQuestionId
-router.put("/:id", questionController.updateQuestion);
+router.put('/:id', questionController.updateQuestion);
 
 // Delete a question by frontendQuestionId
-router.delete("/:id", questionController.deleteQuestion);
+router.delete('/:id', questionController.deleteQuestion);
 
 // No difference if i add the below
 // router.get("/", "add-question");

@@ -53,9 +53,10 @@ exports.getAllUniqueQuestions = (req, res) => {
     where: { userId: userId },
     attributes: [
       'question_id',
+      'difficulty',
       [sequelize.fn('MAX', sequelize.col('attemptedAt')), 'latestAttemptedAt'],
     ],
-    group: ['question_id'],
+    group: ['question_id','difficulty'],
     order: [[sequelize.literal('latestAttemptedAt'), 'ASC']],
   })
     .then((userQuestions) => {
@@ -113,3 +114,6 @@ exports.getAllQuestions = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+// controller function to update difficulty of question 
+// Usage: Put request to http://localhost:3003/api/user/Question/:id
