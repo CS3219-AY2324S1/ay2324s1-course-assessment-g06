@@ -38,10 +38,11 @@ services:
       context: ./frontend
     ports: 
       - 3001:3001
-    # environment: 
+    environment: 
     #   - REACT_APP_USER_HOST=http://localhost:3003/api/users
     #   - REACT_APP_QUESTION_HOST=http://localhost:3000/api/questions
     #   - REACT_APP_MATCHING_HOST=http://localhost:3002
+    - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
     depends_on:
       - user-service
       - question-service
