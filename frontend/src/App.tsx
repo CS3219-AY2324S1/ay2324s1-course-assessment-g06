@@ -1,24 +1,24 @@
-import React from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
-import "./App.css";
-import "./Table/Table";
-import BasicTable from "./Table/Table";
-import Question from "./Question/Question";
-import Matching from "./components/Matching/Matching";
-import CodeSpace from "./components/Matching/CodeSpace";
-import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
-import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import * as AuthService from "./services/auth.service";
-import IUser from "./types/user.type";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Home from "./components/Home";
-import Profile from "./components/Profile";
-import Protected from "./components/Protected";
-import GuestRoute from "./components/GuestRoute";
+import React from 'react';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import './App.css';
+import './Table/Table';
+import BasicTable from './Table/Table';
+import Question from './Question/Question';
+import Matching from './components/Matching/Matching';
+import CodeSpace from './components/Matching/CodeSpace';
+import AddQuestionForm from './AddQuestionForm/AddQuestionForm';
+import UpdateQuestionForm from './UpdateQuestionForm/UpdateQuestionForm';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import * as AuthService from './services/auth.service';
+import IUser from './types/user.type';
+import Login from './components/Login';
+import Register from './components/Register';
+import Home from './components/Home';
+import Profile from './components/Profile';
+import Protected from './components/Protected';
+import GuestRoute from './components/GuestRoute';
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
 // import BoardAdmin from "./components/BoardAdmin";
@@ -80,23 +80,48 @@ const App: React.FC = () => {
         {currentUser ? (
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
+              <Link
+                to={'/'}
+                className="nav-link"
+                style={generateActiveStyle('/')}
+              >
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
+              <Link
+                to={'/matching'}
+                className="nav-link"
+                style={generateActiveStyle('/matching')}
+              >
                 Matching
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
+              <Link
+                to={'/questions'}
+                className="nav-link"
+                style={generateActiveStyle('/questions')}
+              >
                 Questions
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
+              <Link
+                to={'/profile'}
+                className="nav-link"
+                style={generateActiveStyle('/profile')}
+              >
                 Profile
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                to={'/analytics'}
+                className="nav-link"
+                style={generateActiveStyle('/analytics')}
+              >
+                Analytics
               </Link>
             </li>
             <li className="nav-item">
@@ -178,6 +203,14 @@ const App: React.FC = () => {
             element={
               <Protected isLoggedIn={currentUser}>
                 <Matching />
+              </Protected>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Analytics />
               </Protected>
             }
           />
