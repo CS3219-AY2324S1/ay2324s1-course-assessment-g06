@@ -32,7 +32,7 @@ app.get('/api/room/:roomId', (req, res) => {
   const roomInfo = rooms.get(roomId);
   if (roomInfo) {
     const questionId = roomInfo.questionId;
-    fetch(QUESTION_HOST + `${questionId}`)
+    fetch(QUESTION_HOST + `/${questionId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
@@ -58,24 +58,35 @@ const waitingQueue = [];
 io.on('connection', (socket) => {
   console.log('A user connected');
 
-  socket.on('match me', (selectedDifficulty, selectedTopic) => {
-    console.log(selectedDifficulty);
-    const matchingUserIndex = waitingQueue.findIndex(
-      (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic
-    );
+  socket.on(
+    'match me',
+    (selectedDifficulty, selectedTopic, selectedLanguage) => {
+      const matchingUserIndex = waitingQueue.findIndex(
+        (user) =>
+          user.selectedDifficulty === selectedDifficulty &&
+          user.selectedTopic === selectedTopic &&
+          user.selectedLanguage == selectedLanguage
+      );
 
-    if (matchingUserIndex !== -1) {
-      console.log('User match!');
-      const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
-      startMatch(user1, socket, selectedDifficulty, selectedTopic, selectedLanguage);
-    } else {
-      console.log('No user found');
-      socket.selectedDifficulty = selectedDifficulty;
-      socket.selectedTopic = selectedTopic;
-      socket.selectedLanguage = selectedLanguage;
-      waitingQueue.push(socket);
+      if (matchingUserIndex !== -1) {
+        console.log('User match!');
+        const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
+        startMatch(
+          user1,
+          socket,
+          selectedDifficulty,
+          selectedTopic,
+          selectedLanguage
+        );
+      } else {
+        console.log('No user found');
+        socket.selectedDifficulty = selectedDifficulty;
+        socket.selectedTopic = selectedTopic;
+        socket.selectedLanguage = selectedLanguage;
+        waitingQueue.push(socket);
+      }
     }
-  });
+  );
 
   socket.on('cancel match', () => {
     const index = waitingQueue.indexOf(socket);

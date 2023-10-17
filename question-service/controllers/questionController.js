@@ -13,6 +13,33 @@ module.exports = {
         res.status(500).json({ error: "Error fetching questions" });
       });
   },
+  // Controller function to get first page paginated questions
+  // Usage: Get request to http://localhost:3000/api/questions/pagination/first
+  getFirstPaginatedQuestions : (req, res) => {
+    const perPage = 20;
+
+    Question.find()
+      .limit(perPage)
+      .then((questions) => {
+        res.json(questions);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error fetching questions" });
+      });
+  },
+  // Controller function to get remaining paginated questions
+  // Usage: Get request to http://localhost:3000/api/questions/pagination/remaining
+  getRemainingPaginatedQuestions: (req, res) => {
+    const perPage = 20; 
+    Question.find()
+      .skip(perPage)
+      .then((questions) => {
+        res.json(questions);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Error fetching questions" });
+      });
+  },
   // Controller function to get a question by its _id
   // Usage: Get request to http://localhost:3000/api/questions/:id
   getQuestionById: (req, res) => {

@@ -3,15 +3,29 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./Question.css";
 import { styled } from "@mui/material/styles";
 import { Button, Container, Grid, Paper } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CircularProgress from "@mui/material/CircularProgress";
+import { getCurrentUser } from "../services/auth.service";
+
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button as DialogButton,
+} from "@mui/material";
 
 const DeleteButton = styled(Button)`
-  background-color: #ff5733; /* Change the background color */
-  color: black; /* Change the text color */
-  border-radius: 5px; /* Add rounded corners */
-  font-size: 16px; /* Adjust the font size */
+  background-color: #ff5733;
+  color: black;
+  border-radius: 5px;
+  font-size: 16px;
   font-weight: bold;
   &:hover {
-    background-color: #fe6848; /* Change the background color on hover */
+    background-color: #fe6848;
   }
 `;
 
@@ -32,6 +46,11 @@ const QuestionWrapper = styled(Container)(({ theme }) => ({
   fontWeight: "bold",
   textAlign: "center",
   borderRadius: "50px",
+  fontSize: "12px",
+  // Media query for smaller screens
+  '@media (max-width: 1200px)': {
+    fontSize: "10px", // Decrease font size for smaller screens
+  },
 }));
 
 const CategoryWrapper = styled(Container)(({ theme }) => ({
@@ -41,45 +60,91 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
   fontWeight: "bold",
   textAlign: "center",
   borderRadius: "50px",
+  fontSize: "12px",
+    // Media query for smaller screens
+    '@media (max-width: 1200px)': {
+      fontSize: "10px", // Decrease font size for smaller screens
+    },
 }));
+
+const CustomDialog = styled(Dialog)`
+`;
+
+const CustomDialogTitle = styled(DialogTitle)`
+  font-weight: bold
+`;
+
+const CustomDialogContent = styled(DialogContent)`
+  padding: 20px;
+`;
+
+const CustomDialogActions = styled(DialogActions)`
+  justify-content: space-between;
+`;
+
+const BackButton = styled(Button)`
+  background-color: #d8d8d8;
+  color: white;
+  font-weight: bold;
+  &:hover {
+    background-color: #6C63FF;
+  }
+`;
 
 export default function Question() {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
   const [question, setQuestion] = useState<QuestionInt | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Confirmation dialog state
 
   useEffect(() => {
     const fetchDataWithDelay = () => {
-      console.log("Fetching data for id:", id);
-
-      // Add a delay of, for example, 1000 milliseconds (1 second)
-      const delay = 200;
-
-      setTimeout(() => {
-        fetch(`http://localhost:3000/api/questions/${id}`)
-          .then((response) => response.json())
-          .then((responseData) => {
-            setQuestion(responseData);
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-            setQuestion(null);
-          });
-      }, delay);
+      fetch(`http://localhost:3000/api/questions/${id}`)
+        .then((response) => response.json())
+        .then((responseData) => {
+          setQuestion(responseData);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          setQuestion(null);
+          setIsLoading(false);
+        });
     };
 
-    fetchDataWithDelay(); // Call the function immediately
+    fetchDataWithDelay();
   }, [id]);
 
   function wrapPreTags(content: string) {
-    // Use regular expressions to add a class to <pre> tags
     const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
     return wrappedContent;
   }
 
+  const handleBack = () => {
+    navigate("/questions");
+  };
+
+  const openDeleteDialog = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleUpdate = () => {
+    navigate(`/questions/${id}/update`);
+  };
+
   const handleDelete = () => {
-    // Send a DELETE request to delete the question
+    // Close the confirmation dialog
+    closeDeleteDialog();
+
     fetch(`http://localhost:3000/api/questions/${id}`, {
       method: "DELETE",
       headers: {
@@ -99,118 +164,148 @@ export default function Question() {
       });
   };
 
-  const handleUpdate = () => {
-    navigate(`/questions/${id}/update`);
-  };
-
-  const handleBack = () => {
-    navigate("/questions");
-  };
+  if (isLoading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+        <CircularProgress color="inherit" />
+      </div>
+    );
+  }
 
   if (question === null) {
     return <div>Loading...</div>;
   }
 
-  // Check if question is defined before accessing its properties
-  if (question !== undefined) {
-    return (
-      <Container
-        maxWidth="lg"
+  return (
+    <Container
+      maxWidth="lg"
+      style={{
+        margin: "40px auto 0 auto",
+        backgroundColor: "#E6E6E6",
+        borderRadius: "20px",
+        width: "80%",
+        padding: "20px",
+      }}
+    >
+      <Paper
         style={{
-          margin: "40px auto 0 auto",
-          backgroundColor: "#E6E6E6",
-          borderRadius: "20px",
-          width: "80%", // Adjust the width as needed (percentage or pixels)
-          height: "80vh", // Adjust the height as needed (pixels)
+          padding: "20px",
+          borderRadius: "15px",
         }}
       >
-        {/* <div className="box"> */}
-
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            style={{
-              left: "-100px",
-              fontSize: "25px",
-              borderRadius: "80px",
-              backgroundColor: "#D9D9D9",
-            }}
-            onClick={handleBack}
-          >
-            &lt;
-          </Button>
-        </Grid>
-
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-          <Grid item xs={12}>
-            <h1 style={{ fontSize: "30px" }}>{question.title}</h1>
+          <Grid item xs={12} container justifyContent="space-between">
+            <div>
+              <h1 style={{ fontSize: "25px", fontWeight: "bold" }}>
+                {question.title}
+              </h1>
+            </div>
+            <div>
+              {isAdmin && (
+                <>
+                  <Button
+                    variant="contained"
+                    style={{
+                      backgroundColor: "#6C63FF",
+                      borderRadius: "50px",
+                      fontSize: "15px",
+                      marginRight: "10px",
+                    }}
+                    onClick={handleUpdate}
+                  >
+                    <EditIcon />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={{
+                      backgroundColor: "#FF6A6A",
+                      borderRadius: "20px",
+                    }}
+                    onClick={openDeleteDialog}
+                  >
+                    <DeleteIcon />
+                  </Button>
+                </>
+              )}
+            </div>
           </Grid>
 
-          <Grid item xs={6}>
-            <QuestionWrapper>{question.category}</QuestionWrapper>
-          </Grid>
-
-          <Grid item xs={6}>
+          <Grid item xs={1.5}>
             <CategoryWrapper>{question.difficulty}</CategoryWrapper>
           </Grid>
 
-          <Container maxWidth="lg">
-            <Paper
-              style={{
-                padding: "20px",
-                margin: "10px",
-              }}
-            >
-              <Grid item xs={12}>
-                <div
-                  className="content-wrapper"
-                  style={{ overflow: "auto", maxHeight: "400px" }}
-                >
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: wrapPreTags(question.content),
-                    }}
-                  />
-                </div>
-              </Grid>
-            </Paper>
-          </Container>
+          {question.topics.split(', ').map((topic, index) => (
+            <Grid item xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3} key={index}>
+              <QuestionWrapper>{topic}</QuestionWrapper>
+            </Grid>
+          ))}
 
-          <Grid item xs={6}>
-            <DeleteButton
-              variant="contained"
-              style={{
-                backgroundColor: "#FF6A6A",
-                left: "213%",
-                bottom: "1500%",
-                borderRadius: "20px",
-              }}
-              onClick={handleDelete}
-            >
-              Delete
-            </DeleteButton>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              style={{
-                position: "relative",
-                backgroundColor: "#6C63FF",
-                left: "80%",
-                bottom: "1490%",
-                borderRadius: "50px",
-                fontWeight: "bold",
-                fontSize: "15px",
-              }}
-              onClick={handleUpdate}
-            >
-              Update
-            </Button>
-          </Grid>
+          <Container maxWidth="lg" style={{ marginTop: "25px" }}>
+            <Grid item xs={12}>
+              <div
+                className="content-wrapper"
+                style={{ overflow: "auto", maxHeight: "350px" }}
+              >
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: wrapPreTags(question.content),
+                  }}
+                />
+              </div>
+            </Grid>
+          </Container>
         </Grid>
-      </Container>
-    );
-  } else {
-    return <div>Question not found.</div>;
-  }
+      </Paper>
+    
+      <CustomDialog
+        open={isDeleteDialogOpen}
+        onClose={closeDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{ sx: { bgcolor: "lightgray", borderRadius: "20px", padding: "5px" } }}
+      >
+        <CustomDialogTitle id="alert-dialog-title">Confirm Deletion</CustomDialogTitle>
+        <CustomDialogContent>  
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to delete this question?
+            </DialogContentText>
+        </CustomDialogContent>
+        <CustomDialogActions sx={{ justifyContent: 'space-between' }}>
+          <DialogButton
+            onClick={closeDeleteDialog}
+            style={{ fontSize: "18px", backgroundColor: 'white', borderRadius: '15px', color: 'black', textTransform: 'none',  margin: '0 auto'  }}
+          >
+            Cancel
+          </DialogButton>
+          <DialogButton
+            onClick={handleDelete}
+            autoFocus
+            style={{ fontSize: "18px", backgroundColor: '#FF6A6A', borderRadius: '15px', color: 'white', textTransform: 'none', margin: '0 auto' }}
+          >
+            Delete
+          </DialogButton>
+        </CustomDialogActions>
+      </CustomDialog>
+      <Grid item xs={12}>
+
+      <BackButton
+          sx={{
+            position: 'fixed',
+            bottom: '30px',
+            left: '30px',
+            height: '32 px',
+            fontSize: '25px',
+            borderRadius: '40px',
+            minWidth: '40px', // Set the minimum width
+            maxWidth: '40px',  // Set the maximum width
+          }}
+          variant="contained"
+          onClick={handleBack}
+        >
+          <ArrowBackIcon />
+        </BackButton>
+        </Grid>
+
+  </Container>
+  );
 }
