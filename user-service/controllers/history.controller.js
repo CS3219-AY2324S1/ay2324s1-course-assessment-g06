@@ -8,23 +8,18 @@ const sequelize = db.Sequelize;
 exports.addHistory = (req, res) => {
   const { userId, questionId, difficulty } = req.body;
 
-  UserQuestions.findOne({
-    where: { userId: userId, question_id: questionId, difficulty: difficulty },
-  }).then((userQuestions) => {
-    // if (!userQuestions) {
-    return UserQuestions.create({
-      userId: userId,
-      question_id: questionId,
-      attemptedAt: new Date(),
-      difficulty: difficulty,
+  UserQuestions.create({
+    userId: userId,
+    question_id: questionId,
+    attemptedAt: new Date(),
+    difficulty: difficulty,
+  })
+    .then((userQuestions) => {
+      res.status(200).send({ message: 'User Questions added successfully!' });
     })
-      .then((userQuestions) => {
-        res.status(200).send({ message: 'User Questions added successfully!' });
-      })
-      .catch((err) => {
-        res.status(500).send({ message: err.message });
-      });
-  });
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
 };
 
 exports.getAllUniqueQuestions = (req, res) => {

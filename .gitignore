@@ -26,3 +26,6 @@ yarn-error.log*
 
 */.env
 .env
+
+gcp-service-account-key.json
+```

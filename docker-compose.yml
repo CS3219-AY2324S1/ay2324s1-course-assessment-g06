@@ -21,7 +21,7 @@ services:
     build:
       context: ./question-service
     environment:
-      - USER_HOST=http://user-service:3003/api/users
+      - USER_HOST=http://user-service:3003/api/auth
       # - QUESTION_HOST=http://question-backend:3000/api/questions
       - MONGO_USERNAME=${MONGO_USERNAME}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
@@ -39,7 +39,7 @@ services:
     ports: 
       - 3001:3001
     # environment: 
-    #   - REACT_APP_USER_HOST=http://localhost:3003/api/users
+    #   - REACT_APP_USER_HOST=http://localhost:3003/api/auth
     #   - REACT_APP_QUESTION_HOST=http://localhost:3000/api/questions
     #   - REACT_APP_MATCHING_HOST=http://localhost:3002
     depends_on:
