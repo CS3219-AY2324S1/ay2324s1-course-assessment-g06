@@ -32,10 +32,32 @@ type UserDetails = {
   Questions: [];
   //need attempted
 };
+
+type HeatMapValue = {
+  date: string;
+  content?: string | string[] | React.ReactNode;
+  count: number;
+};
+
 type questionData = {};
 const Analytics: React.FC = () => {
+  // dummy values
+  const heatvalue = [
+    { date: '2022-01-11T16:00:00.000Z', count: 2 },
+    { date: '2022-01-12T16:00:00.000Z', count: 20 },
+    { date: '2022-01-13T16:00:00.000Z', count: 10 },
+    ...[...Array(17)].map((_, idx) => ({
+      date: `2022/02/${idx + 10}T16:00:00.000Z`,
+      count: idx,
+      content: '',
+    })),
+    { date: '2022/04/11T16:00:00.000Z', count: 2 },
+    { date: '2022/05/01T16:00:00.000Z', count: 5 },
+    { date: '2022/05/02T16:00:00.000Z', count: 5 },
+    { date: '2022/05/04T16:00:00.000Z', count: 11 },
+  ];
   // all unique values
-  const [heatData, setHeatData] = useState([]);
+  const [heatData, setHeatData] = useState<Array<HeatMapValue>>(heatvalue);
 
   const [userDetails, setUserDetails] = useState<UserDetails>({
     Easy: 0,
@@ -52,23 +74,7 @@ const Analytics: React.FC = () => {
     Total: 3,
   });
 
-  const value = 0.66;
-  const maxValue = 1;
-  const heatvalue = [
-    { date: '2016/01/11', count: 2 },
-    { date: '2016/01/12', count: 20 },
-    { date: '2016/01/13', count: 10 },
-    ...[...Array(17)].map((_, idx) => ({
-      date: `2016/02/${idx + 10}`,
-      count: idx,
-      content: '',
-    })),
-    { date: '2016/04/11', count: 2 },
-    { date: '2016/05/01', count: 5 },
-    { date: '2016/05/02', count: 5 },
-    { date: '2016/05/04', count: 11 },
-  ];
-
+  // 4 API calls
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = userData.id || 1;
@@ -101,23 +107,33 @@ const Analytics: React.FC = () => {
         });
       })
       .catch((err) => console.log(err));
-    axios.get(QUESTION_HOST + '/total').then((response) => {
-      // console.log(response.data);
-      const data = response.data; // Assuming your data is an array of objects
-      let total = 0;
-      data.forEach((item: any) => {
-        total += item.count;
+
+    axios
+      .get(QUESTION_HOST + '/total')
+      .then((response) => {
+        // console.log(response.data);
+        const data = response.data; // Assuming your data is an array of objects
+        let total = 0;
+        data.forEach((item: any) => {
+          total += item.count;
+          setQuestionDetails((prevQuestionDetails) => ({
+            ...prevQuestionDetails,
+            [item.difficulty]: item.count,
+          }));
+        });
+        console.log(total);
+        // Update the Total count
         setQuestionDetails((prevQuestionDetails) => ({
           ...prevQuestionDetails,
-          [item.difficulty]: item.count,
+          Total: total || 1,
         }));
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      console.log(total);
-      // Update the Total count
-      setQuestionDetails((prevQuestionDetails) => ({
-        ...prevQuestionDetails,
-        Total: total || 1,
-      }));
+    axios.get(USER_HISTORY + '/attempts/' + userId).then((response) => {
+      console.log(response.data);
+      setHeatData(response.data);
     });
   }, []);
   return (
@@ -186,9 +202,15 @@ const Analytics: React.FC = () => {
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
             <CardContent>
               <HeatMap
-                value={heatvalue}
+                value={heatData}
+                width={800}
+                rectSize={20}
                 weekLabels={['', 'Mon', '', 'Wed', '', 'Fri', '']}
-                startDate={new Date('2016/01/01')}
+                startDate={new Date('2022/01/01')}
+                // endDate={new Date('2022/12/31')}
+                //legendCellSize?
+                //rectProps?
+                // go see props for css in the future
                 panelColors={{
                   0: '#f4decd',
                   2: '#e4b293',

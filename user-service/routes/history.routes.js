@@ -16,5 +16,6 @@ module.exports = function (app) {
     '/api/user/history/:userId/:difficulty',
     controller.getAllUniqueQuestionsByDifficulty
   );
+  app.get('/api/user/attempts/:userId', controller.getAttemptedDates);
   app.get('/api/user/allhistory/:userId', controller.getAllQuestions);
 };

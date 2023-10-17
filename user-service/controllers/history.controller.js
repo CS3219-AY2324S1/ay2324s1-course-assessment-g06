@@ -5,8 +5,8 @@ const User = db.user;
 const Op = db.Sequelize.Op;
 const sequelize = db.Sequelize;
 
- // Controller function to create a user history
-  // Usage: Post request to http://localhost:3003/api/user/history
+// Controller function to create a user history
+// Usage: Post request to http://localhost:3003/api/user/history
 exports.addHistory = (req, res) => {
   const { userId, questionId, difficulty, attempt } = req.body;
 
@@ -56,7 +56,7 @@ exports.getAllUniqueQuestions = (req, res) => {
       'difficulty',
       [sequelize.fn('MAX', sequelize.col('attemptedAt')), 'latestAttemptedAt'],
     ],
-    group: ['question_id','difficulty'],
+    group: ['question_id', 'difficulty'],
     order: [[sequelize.literal('latestAttemptedAt'), 'ASC']],
   })
     .then((userQuestions) => {
@@ -79,7 +79,6 @@ exports.getAllUniqueQuestionsByDifficulty = (req, res) => {
     attributes: [
       'question_id',
       [sequelize.fn('MAX', sequelize.col('attemptedAt')), 'latestAttemptedAt'],
-     
     ],
     group: ['question_id'],
     order: [[sequelize.literal('latestAttemptedAt'), 'ASC']],
@@ -115,5 +114,29 @@ exports.getAllQuestions = (req, res) => {
     });
 };
 
-// controller function to update difficulty of question 
+// controller function to update difficulty of question
 // Usage: Put request to http://localhost:3003/api/user/Question/:id
+
+// Controller function to get all questions id for one user
+// Usage: Get request to http://localhost:3003/api/user/allhistory/:id
+exports.getAttemptedDates = (req, res) => {
+  const { userId } = req.params;
+  UserQuestions.findAll({
+    where: { userId: userId },
+    order: [['attemptedAt', 'ASC']],
+    attributes: [
+      ['attemptedAt', 'date'],
+      [sequelize.fn('COUNT', sequelize.col('attemptedAt')), 'count'],
+    ],
+    group: ['attemptedAt'],
+  })
+    .then((userQuestions) => {
+      if (userQuestions) {
+        return res.status(200).send(userQuestions);
+      }
+      return res.status(404).send({ message: 'User Questions not found!' });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
