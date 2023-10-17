@@ -4,18 +4,18 @@ import {
   CardContent,
   Typography,
   LinearProgress,
-} from '@mui/material';
-import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import { useState, useEffect } from 'react';
-import HeatMap from '@uiw/react-heat-map';
-import axios from 'axios';
+} from "@mui/material";
+import { CircularProgressbarWithChildren } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import { useState, useEffect } from "react";
+import HeatMap from "@uiw/react-heat-map";
+import axios from "axios";
 
-const USER_HOST = process.env.USER_HOST || 'http://localhost:3003/api/auth';
+const USER_HOST = process.env.USER_HOST || "http://localhost:3003/api/auth";
 const USER_HISTORY =
-  process.env.USER_HISTORY || 'http://localhost:3003/api/user';
+  process.env.USER_HISTORY || "http://localhost:3003/api/user";
 const QUESTION_HOST =
-  process.env.QUESTION_HOST || 'http://localhost:3000/api/questions';
+  process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
 
 type QuestionDetails = {
   Easy: number;
@@ -43,18 +43,18 @@ type questionData = {};
 const Analytics: React.FC = () => {
   // dummy values
   const heatvalue = [
-    { date: '2022-01-11T16:00:00.000Z', count: 2 },
-    { date: '2022-01-12T16:00:00.000Z', count: 20 },
-    { date: '2022-01-13T16:00:00.000Z', count: 10 },
+    { date: "2022-01-11T16:00:00.000Z", count: 2 },
+    { date: "2022-01-12T16:00:00.000Z", count: 20 },
+    { date: "2022-01-13T16:00:00.000Z", count: 10 },
     ...[...Array(17)].map((_, idx) => ({
       date: `2022/02/${idx + 10}T16:00:00.000Z`,
       count: idx,
-      content: '',
+      content: "",
     })),
-    { date: '2022/04/11T16:00:00.000Z', count: 2 },
-    { date: '2022/05/01T16:00:00.000Z', count: 5 },
-    { date: '2022/05/02T16:00:00.000Z', count: 5 },
-    { date: '2022/05/04T16:00:00.000Z', count: 11 },
+    { date: "2022/04/11T16:00:00.000Z", count: 2 },
+    { date: "2022/05/01T16:00:00.000Z", count: 5 },
+    { date: "2022/05/02T16:00:00.000Z", count: 5 },
+    { date: "2022/05/04T16:00:00.000Z", count: 11 },
   ];
   // all unique values
   const [heatData, setHeatData] = useState<Array<HeatMapValue>>(heatvalue);
@@ -76,25 +76,25 @@ const Analytics: React.FC = () => {
 
   // 4 API calls
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
     const userId = userData.id || 1;
 
     // get all user details
     axios
-      .get(USER_HISTORY + '/history/' + userId)
+      .get(USER_HISTORY + "/history/" + userId)
       .then((res) => {
         // Assuming res.data is an array of solved questions
         const solvedQuestions = res.data;
 
         // Calculate the count for each difficulty level
         const easyCount = solvedQuestions.filter(
-          (q: any) => q.difficulty === 'Easy'
+          (q: any) => q.difficulty === "Easy"
         ).length;
         const mediumCount = solvedQuestions.filter(
-          (q: any) => q.difficulty === 'Medium'
+          (q: any) => q.difficulty === "Medium"
         ).length;
         const hardCount = solvedQuestions.filter(
-          (q: any) => q.difficulty === 'Hard'
+          (q: any) => q.difficulty === "Hard"
         ).length;
         // console.log(res.data);
         setUserDetails({
@@ -109,7 +109,7 @@ const Analytics: React.FC = () => {
       .catch((err) => console.log(err));
 
     axios
-      .get(QUESTION_HOST + '/total')
+      .get(QUESTION_HOST + "/total")
       .then((response) => {
         // console.log(response.data);
         const data = response.data; // Assuming your data is an array of objects
@@ -131,28 +131,33 @@ const Analytics: React.FC = () => {
       .catch((err) => {
         console.log(err);
       });
-    axios.get(USER_HISTORY + '/attempts/' + userId).then((response) => {
-      console.log(response.data);
-      setHeatData(response.data);
-    });
+    axios
+      .get(USER_HISTORY + "/attempts/" + userId)
+      .then((response) => {
+        console.log(response.data);
+        setHeatData(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
   return (
     <div className="container">
-      <Card sx={{ display: 'flex' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Card sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
           <CardContent>
             <h1
               style={{
-                fontFamily: 'Cascadia Code, Inter, sans-serif',
-                letterSpacing: '1px',
-                fontSize: '2rem',
+                fontFamily: "Cascadia Code, Inter, sans-serif",
+                letterSpacing: "1px",
+                fontSize: "2rem",
               }}
             >
               Solved Problems
             </h1>
           </CardContent>
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
           <CardContent>
             <CircularProgressbarWithChildren
               value={userDetails.Total}
@@ -163,7 +168,7 @@ const Analytics: React.FC = () => {
             </CircularProgressbarWithChildren>
           </CardContent>
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
           <CardContent>
             <Box>
               <Typography variant="h6" align="center">
@@ -198,26 +203,26 @@ const Analytics: React.FC = () => {
         </Box>
       </Card>
       <Box sx={{ marginBottom: 3 }}>
-        <Card sx={{ display: 'flex' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Card sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
             <CardContent>
               <HeatMap
                 value={heatData}
                 width={800}
                 rectSize={20}
-                weekLabels={['', 'Mon', '', 'Wed', '', 'Fri', '']}
-                startDate={new Date('2022/01/01')}
+                weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
+                startDate={new Date("2022/01/01")}
                 // endDate={new Date('2022/12/31')}
                 //legendCellSize?
                 //rectProps?
                 // go see props for css in the future
                 panelColors={{
-                  0: '#f4decd',
-                  2: '#e4b293',
-                  4: '#d48462',
-                  10: '#c2533a',
-                  20: '#ad001d',
-                  30: '#000',
+                  0: "#f4decd",
+                  2: "#e4b293",
+                  4: "#d48462",
+                  10: "#c2533a",
+                  20: "#ad001d",
+                  30: "#000",
                 }}
               />
             </CardContent>
@@ -225,7 +230,7 @@ const Analytics: React.FC = () => {
         </Card>
       </Box>
 
-      <Card sx={{ display: 'flex', margin: '10' }}>
+      <Card sx={{ display: "flex", margin: "10" }}>
         <CardContent>History of Questions Attempted</CardContent>
       </Card>
     </div>
