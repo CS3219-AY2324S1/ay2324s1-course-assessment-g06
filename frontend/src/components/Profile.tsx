@@ -672,7 +672,7 @@ const Profile: React.FC = () => {
               autoFocus
               style={{
                 fontSize: "18px",
-                backgroundColor: "#6C63FF",
+                backgroundColor: "#FF6A6A",
                 borderRadius: "20px",
                 color: "white",
                 textTransform: "none",
@@ -773,9 +773,9 @@ const Profile: React.FC = () => {
               onClick={() => setShowSuccessModal(false)}
               style={{
                 fontSize: "18px",
-                backgroundColor: "white",
+                backgroundColor: "#6C63FF",
                 borderRadius: "20px",
-                color: "black",
+                color: "white",
                 textTransform: "none",
                 margin: "0 auto",
                 paddingLeft: "30px",
