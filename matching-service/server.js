@@ -15,9 +15,15 @@ const QUESTION_HOST = process.env.QUESTION_HOST
   ? process.env.QUESTION_HOST
   : 'http://localhost:3000/api/questions';
 // JK need change
+const MATCHING_SERVICE_CORS =
+  process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
+
+const FRONTEND_SERVICE_CORS =
+  process.env.FRONTEND_SERVICE_CORS || 'http://localhost:3001';
+const MATCHING_PORT = process.env.MATCHING_PORT || 3002;
 const io = socketIo(server, {
   cors: {
-    origin: ['http://localhost:3001', 'http://localhost:3002'],
+    origin: [FRONTEND_SERVICE_CORS, MATCHING_SERVICE_CORS],
   },
 });
 
@@ -25,6 +31,7 @@ const io = socketIo(server, {
 const db = require('./models');
 const SessionHistory = db.SessionHistory;
 db.sequelize.sync();
+
 
 app.use(cors());
 app.use(express.json());
@@ -38,8 +45,12 @@ app.get('/', (req, res) => {
 });
 
 console.log("Server is starting...")
-server.listen(3002, () => {
-  console.log('Server is listening on port 3002');
+// server.listen(3002, () => {
+//   console.log('Server is listening on port 3002');
+// });
+
+server.listen(MATCHING_PORT, () => {
+  console.log(`Server is listening on port ${MATCHING_PORT}`);
 });
 
 app.get('/api/room/:roomId', (req, res) => {

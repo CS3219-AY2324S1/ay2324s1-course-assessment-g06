@@ -50,6 +50,8 @@ const CodeSpace = () => {
   const [timer, setTimer] = useState(10);
   const [isTimerEnded, setIsTimerEnded] = useState(false);
   const [formattedTime, setformattedTime] = useState("");
+  const MATCHING_SERVICE_CORS =
+    process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
 
   // To track the code text input
   const [code, setCode] = React.useState(() => {
@@ -72,10 +74,13 @@ const CodeSpace = () => {
 
   // Initilaise the chat message with a connected prompt
   const messageData: ChatMessage = {
-    roomId: roomId !== undefined ? roomId : "0", 
-    author: 'System', 
+    roomId: roomId !== undefined ? roomId : '0',
+    author: 'System',
     message: 'You have connected',
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    time: new Date().toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
   };
 
   // Initialize the state with an empty array of ChatMessage objects
@@ -191,9 +196,12 @@ const CodeSpace = () => {
         roomId: roomId,
         author: socketId,
         message: newMessage,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-  
+        time: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      };
+
       if (socket) {
         socket.emit('sendMessage', messageData);
       }
@@ -253,7 +261,7 @@ const CodeSpace = () => {
   const fetchData = async () => {
     // Check if the room is active
     try {
-      const response = await fetch(`http://localhost:3002/api/room/${roomId}`);
+      const response = await fetch(MATCHING_SERVICE_CORS + `/api/room/${roomId}`);
       if (response.ok) {
         const data = await response.json();
         setQuestion(data);
@@ -276,6 +284,10 @@ const CodeSpace = () => {
     if (socket) {
       console.log("connected to socket", socket, socket.id);
       const matchedSocket = socket;
+
+      // Below change then wont work properly
+      // const matchedSocket = io(MATCHING_SERVICE_CORS, {query: { roomId }});
+
 
       // Handle for initial connection event from server
       matchedSocket.on('connect', () => {
@@ -418,7 +430,9 @@ const CodeSpace = () => {
       <h2>Welcome, {socketId || 'Loading...'}</h2>
       {/* Match Information */}
       <p>
-        You are matched with another user using difficulty: {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and language: {language || 'Not selected'}
+        You are matched with another user using difficulty:{' '}
+        {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and
+        language: {language || 'Not selected'}
       </p>
       <div className="timer">Time left: {formattedTime} minutes</div>
 

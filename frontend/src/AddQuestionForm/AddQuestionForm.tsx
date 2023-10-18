@@ -74,6 +74,7 @@ export default function QuestionForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const QUESTION_HOST= process.env.QUESTION_HOST || 'http://localhost:3000/api/questions';
 
   // console.log(control._formValues.topics);
 
@@ -103,7 +104,7 @@ export default function QuestionForm() {
     }
 
     // Handle form submission logic here
-    fetch('http://localhost:3000/api/questions', {
+    fetch(QUESTION_HOST, {
       method: 'POST',
       mode: 'cors',
       headers: {
