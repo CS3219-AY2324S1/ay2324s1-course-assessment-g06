@@ -90,6 +90,16 @@ button.quit-button {
   padding: 12px 24px;
   transition: background-color 0.3s;
 }
+
+/* Submit button */
+button.submit-button {
+  background-color: #6C63FF;
+  color: white;
+  font-weight: bold;
+  border-radius: 15px;
+  padding: 12px 24px;
+  transition: background-color 0.3s;
+}
   
   /* Style for 'own' messages */
   #own {

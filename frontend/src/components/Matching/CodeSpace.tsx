@@ -7,6 +7,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { savesession } from "../../services/save.service";
 import './CodeSpace.css'; 
 
 interface Question {
@@ -49,13 +50,17 @@ const CodeSpace = () => {
   const [formattedTime, setformattedTime] = useState("");
 
   // To track the code text input
-  const [value, setValue] = React.useState(() => {
+  const [code, setCode] = React.useState(() => {
     // Retrieve the code value from localStorage or set a default value
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
 
   // Check if the dialog to prompt confirmation of quit session is open
   const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
+
+  // Check if the dialog to prompt confirmation of submit session is open
+  const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
+  const [message, setMessage] = useState<string>("");
 
   // To hide information if user is not authorised into code space
   const [isAccessAllowed, setIsAccessAllowed] = useState(false);
@@ -80,6 +85,15 @@ const CodeSpace = () => {
 
   const closeQuitDialog = () => {
     setIsQuitDialogOpen(false);
+  };
+
+  // Handle submit button click
+  const openSubmitDialog = () => {
+    setIsSubmitDialogOpen(true);
+  };
+
+  const closeSubmitDialog = () => {
+    setIsSubmitDialogOpen(false);
   };
 
   // Debounce timer to control when to emit "user typing" event
@@ -171,6 +185,7 @@ const CodeSpace = () => {
     }
   };
 
+  // Handle quit session logic
   const handleQuitSession = () => {
     if (socket) {
       // Emit a "quitSession" event to the server
@@ -182,15 +197,44 @@ const CodeSpace = () => {
     navigate("/matching");
   }
 
+  // Handle submit session logic
+  const handleSubmitSession = () => {
+    if (socket) {
+      // Emit a "submitSession" event to the server
+      socket.emit('submitSession', roomId);
+    }
+    console.log("submitting session");
+    console.log("code:", code);
+
+    savesession(code, [11, 12]).then(
+      (response) => {
+        setMessage(response.data.message);
+        console.log("message:", message);
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          console.log("Error in submission: ", resMessage);
+      }
+    );
+
+    alert("You have submitted the session.");
+    // navigate("/matching");
+  };
+
   // Handle code change events
-  const onChange = React.useCallback((val: string, viewUpdate: any) => {
-    console.log('val:', val);
-    setValue(val);
+  const onChange = React.useCallback((code: string, viewUpdate: any) => {
+    console.log('code:', code);
+    setCode(code);
     // Save the code value to localStorage, to be changed to sql later
-    localStorage.setItem('code', val);
+    localStorage.setItem('code', code);
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
-      socket.emit('codeChange', val, roomId); // Pass roomId or any identifier
+      socket.emit('codeChange', code, roomId); // Pass roomId or any identifier
       console.log('emitting codeChange from client');
     }
   }, [socket, roomId]);
@@ -220,11 +264,7 @@ const CodeSpace = () => {
       console.log("connected to socket", socket, socket.id);
       const matchedSocket = socket;
 
-      matchedSocket.on('sessionEnded', () => {
-        console.log("session has ended")
-        navigate("/matching");
-      })
-
+      // Handle for initial connection event from server
       matchedSocket.on('connect', () => {
         console.log('Connected to matched socket');
         // Emit the "userConnected" event when the socket connects
@@ -241,7 +281,7 @@ const CodeSpace = () => {
 
       // Listen for 'codeChange' events from the server
       matchedSocket.on('codeChange', (newCode: string) => {
-        setValue(newCode); // Update the value with the new code
+        setCode(newCode); // Update the value with the new code
       });
 
       // Listen for 'receive message' events from the server
@@ -275,16 +315,25 @@ const CodeSpace = () => {
         }
       });
 
-      // Listen for the 'sessionEnded' event from the server
       matchedSocket.on('sessionEnded', () => {
-        // Handle the session ending, display a message, or redirect users
         alert('The session has ended');
         setHasQuitRoom(true);
-        
+        navigate("/matching");
+
         return () => {
           matchedSocket.off("sessionEnded");
         };
-      });
+      })
+
+      matchedSocket.on('submitSession', () => {
+        alert('The session has been submitted');
+        setHasQuitRoom(true);
+        navigate("/matching");
+
+        return () => {
+          matchedSocket.off("submitSession");
+        };
+      })
 
       matchedSocket.on('userDisconnected', (roomId) => {
         // Send a message to the chat when a user disconnects
@@ -296,8 +345,7 @@ const CodeSpace = () => {
         };
         setHasQuitRoom(true);
         setMessageList((list) => [...list, messageData]);
-
-        matchedSocket.emit('sessionEnded', roomId);
+        
         return () => {
           matchedSocket.off('userDisconnected', (roomId))
         };
@@ -362,7 +410,7 @@ const CodeSpace = () => {
       {/* Coding Space */}
       <div>
         <CodeMirror
-          value={value}
+          value={code}
           height="200px"
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
@@ -414,6 +462,13 @@ const CodeSpace = () => {
               Quit Session
           </button>
         </div>
+
+        {/* Submit Button */}
+        <div className = "col-md-5">
+          <button className="submit-button" onClick={openSubmitDialog}>
+              Submit
+          </button>
+        </div>
       </div>
 
       {/* Quit Session Dialog/Modal */}
@@ -432,6 +487,27 @@ const CodeSpace = () => {
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={closeQuitDialog}>Cancel</button>
               <button type="button" className="btn btn-danger" onClick={handleQuitSession}>Quit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Submit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Deletion</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Confirm submission?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={closeSubmitDialog}>Cancel</button>
+              <button type="button" className="btn btn-danger" onClick={handleSubmitSession}>Submit</button>
             </div>
           </div>
         </div>

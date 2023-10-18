@@ -17,15 +17,25 @@ const io = socketIo(server, {
   },
 });
 
-server.listen(3002, () => {
-  console.log('Server is listening on port 3002');
-});
+// database
+const db = require('./models');
+const Save = db.Save;
+db.sequelize.sync();
 
 app.use(cors());
+app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+
+
+server.listen(3002, () => {
+  console.log('Server is listening on port 3002');
+});
+
+require('./routes/save.routes')(app);
 
 app.get('/api/room/:roomId', (req, res) => {
   const roomId = req.params.roomId;
@@ -35,8 +45,6 @@ app.get('/api/room/:roomId', (req, res) => {
   // Check if the room is still active
   if (rooms.has(roomId)) {
     // Check if user belongs in this room
-    // console.log("user connecting to ", roomId, "is", )
-
     const questionId = roomInfo.questionId;
     fetch(`http://localhost:3000/api/questions/${questionId}`)
       .then((response) => {
@@ -66,7 +74,7 @@ const userNamespace = io.of("/users");
 // Middleware to authenticate users using JWT token
 // Can check token validity here
 io.use(socketioJwt.authorize({
-  secret: 'secret', // Replace with your actual JWT secret key
+  secret: 'secret',
   handshake: true,
 }));
 
@@ -164,11 +172,7 @@ io.on('connection', async (socket) => {
         socket.to(roomId).emit('userDisconnected');
         socket.leave(roomId);
         
-        if (rooms.delete(roomId)) {
-          console.log("Removed room with ID", roomId, "from rooms map.");
-        } else {
-          console.log("Room with ID", roomId, "not found in rooms map.");
-        }
+        removeRoomSession(roomId);
         break; // Guard clause
       }
     }
@@ -178,13 +182,7 @@ io.on('connection', async (socket) => {
   socket.on('timerEnd', (roomId) => {
     console.log("The time has ended");
     // Check if the user is in the specified room
-    if (rooms.has(roomId)) {
-      if (rooms.delete(roomId)) {
-        console.log("Removed room with ID", roomId, "from rooms map.");
-      } else {
-        console.log("Room with ID", roomId, "not found in rooms map.");
-      } 
-    }
+    removeRoomSession(roomId);
     socket.leave(roomId);
   });
   
@@ -199,14 +197,33 @@ io.on('connection', async (socket) => {
       socket.leave(roomId);
   
       // Remove the room from the 'rooms' map
-      if (rooms.delete(roomId)) {
-        console.log("Removed room with ID", roomId, "from rooms map.");
-      } else {
-        console.log("Room with ID", roomId, "not found in rooms map.");
-      }
+      removeRoomSession(roomId);
+    }
+  });
+
+  // Submit data to sql history
+  socket.on('submitSession', (roomId) => {
+    console.log("A user clicked on submit session")
+    
+    // Check if the user is in the specified room
+    if (socket.rooms.has(roomId)) {
+      // Emit an event to inform the other user that the session is being submitted
+      socket.to(roomId).emit('submitSession');
+      // Leave the room
+      socket.leave(roomId);
+      // Remove the room from the 'rooms' map
+      removeRoomSession(roomId);
     }
   });
 });
+
+function removeRoomSession(roomId) {
+  if (rooms.delete(roomId)) {
+    console.log("Removed room with ID", roomId, "from rooms map.");
+  } else {
+    console.log("Room with ID", roomId, "not found in rooms map.");
+  }
+}
 
 function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic) {
   const roomId = uuidv4();
