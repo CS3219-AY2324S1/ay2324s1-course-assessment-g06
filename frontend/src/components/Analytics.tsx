@@ -149,8 +149,9 @@ const Analytics: React.FC = () => {
       <Card
         sx={{
           display: "flex",
-          borderRadius: "20px",
+          borderRadius: "15px",
           backgroundColor: "#E6E6E6",
+          boxShadow: "none",
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -188,7 +189,7 @@ const Analytics: React.FC = () => {
               })}
             >
               {/* <h6>{userDetails.Total}</h6> */}
-              <p style={{ paddingTop: "33%" }}>solved</p>
+              <p style={{ paddingTop: "30%" }}>solved</p>
             </CircularProgressbarWithChildren>
           </CardContent>
         </Box>
@@ -227,7 +228,30 @@ const Analytics: React.FC = () => {
         </Box>
       </Card>
       <Box sx={{ marginBottom: 3 }}>
-        <Card sx={{ display: "flex" }}>
+        <Card
+          sx={{
+            display: "flex",
+            backgroundColor: "#E6E6E6",
+            borderRadius: "15px",
+            marginTop: "20px",
+            boxShadow: "none",
+          }}
+        >
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <CardContent>
+              <header
+                style={{
+                  fontFamily: "Cascadia Code, Inter, sans-serif",
+                  letterSpacing: "1px",
+                  fontSize: "90%",
+                  paddingLeft: "20px",
+                  paddingTop: "10px",
+                }}
+              >
+                0 submissions in the last year
+              </header>
+            </CardContent>
+          </Box>
           <Box sx={{ display: "flex", flexDirection: "row" }}>
             <CardContent>
               <HeatMap
