@@ -1,9 +1,71 @@
-version: "3.8"
+version: '3'
 
 services:
-  web:
-    container_name: cs3219-web
-    image: cs3219-web
-    build: ./frontend
+  user-service:
+    build:
+      context: ./user-service
+    # hosting this for other users
+    environment:
+      # - USER_HOST=http://user-service:3003/api/auth
+      - USER_PORT=${USER_PORT}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SQL_USERNAME=${SQL_USERNAME}
+      - SQL_HOST=${SQL_HOST}
+      - secret_key=${secret_key}
+    ports: 
+      - 3003:3003
+    networks:
+      - service
+  
+  question-service:
+    build:
+      context: ./question-service
+    environment:
+      # - USER_HOST=http://user-service:3003/api/auth
+      # - QUESTION_HOST=http://question-backend:3000/api/questions
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_CLUSTER_URL=${MONGO_CLUSTER_URL}
+    ports: 
+      - 3000:3000
+    depends_on:
+      - user-service
+    networks:
+      - service
+
+  frontend:
+    build:
+      context: ./frontend
+    ports: 
+      - 3001:3001
+    environment: 
+    #   - REACT_APP_USER_HOST=http://localhost:3003/api/users
+    #   - REACT_APP_QUESTION_HOST=http://localhost:3000/api/questions
+    #   - REACT_APP_MATCHING_HOST=http://localhost:3002
+    - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
+    depends_on:
+      - user-service
+      - question-service
+      - matching-service
+    networks:
+      - service
+
+  matching-service:
+    build:
+      context: ./matching-service
+    environment:
+    # shd put localhost here?
+      - FRONTEND_HOST=http://frontend:3001
+      - USER_HOST=http://user-service:3003/api/users
+      - QUESTION_HOST=http://question-service:3000/api/questions
     ports:
-      - "20:3000"
+      - 3002:3002
+    depends_on:
+      - user-service
+      - question-service
+    networks:
+      - service
+networks:
+  service:
+    driver: bridge
+

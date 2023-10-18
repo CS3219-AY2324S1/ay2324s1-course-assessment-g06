@@ -46,7 +46,11 @@ const QuestionWrapper = styled(Container)(({ theme }) => ({
   fontWeight: "bold",
   textAlign: "center",
   borderRadius: "50px",
-  fontSize: "12px"
+  fontSize: "12px",
+  // Media query for smaller screens
+  '@media (max-width: 1200px)': {
+    fontSize: "10px", // Decrease font size for smaller screens
+  },
 }));
 
 const CategoryWrapper = styled(Container)(({ theme }) => ({
@@ -56,7 +60,11 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
   fontWeight: "bold",
   textAlign: "center",
   borderRadius: "50px",
-  fontSize: "12px"
+  fontSize: "12px",
+    // Media query for smaller screens
+    '@media (max-width: 1200px)': {
+      fontSize: "10px", // Decrease font size for smaller screens
+    },
 }));
 
 const CustomDialog = styled(Dialog)`

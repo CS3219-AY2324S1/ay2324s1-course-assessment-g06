@@ -11,6 +11,10 @@ const users = new Map();
 
 const app = express();
 const server = http.createServer(app);
+const QUESTION_HOST = process.env.QUESTION_HOST
+  ? process.env.QUESTION_HOST
+  : 'http://localhost:3000/api/questions';
+// JK need change
 const io = socketIo(server, {
   cors: {
     origin: ['http://localhost:3001', 'http://localhost:3002'],
@@ -48,7 +52,7 @@ app.get('/api/room/:roomId', (req, res) => {
   if (rooms.has(roomId)) {
     // Check if user belongs in this room
     const questionId = roomInfo.questionId;
-    fetch(`http://localhost:3000/api/questions/${questionId}`)
+    fetch(QUESTION_HOST + `/${questionId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
@@ -60,8 +64,10 @@ app.get('/api/room/:roomId', (req, res) => {
         res.json(responseData);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
-        res.status(500).json({ error: 'Error fetching data from external API' });
+        console.error('Error fetching data:', error);
+        res
+          .status(500)
+          .json({ error: 'Error fetching data from external API' });
       });
   } else {
     // Room not found, throw 404 error to api request
@@ -256,14 +262,17 @@ function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic)
 
 async function generateQuestion(difficulty, topic) {
   try {
-    const response = await fetch(`http://localhost:3000/api/questions/matched?difficulty=${difficulty}&topics=${topic}`);
+    const response = await fetch(
+      QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`
+    );
+    console.log(QUESTION_HOST);
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }
     const responseData = await response.json();
     return responseData;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
     return null;
   }
 }
