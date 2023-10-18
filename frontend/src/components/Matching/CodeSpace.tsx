@@ -56,7 +56,7 @@ const CodeSpace = () => {
   // To track the code text input
   const [code, setCode] = React.useState(() => {
     // Set a default value
-    return "console.log('hello world!')";
+    return "Start peer prepping together now!";
   });
 
   // Check if the dialog to prompt confirmation of quit session is open
@@ -278,6 +278,15 @@ const CodeSpace = () => {
       navigate("/404"); // Redirect to the 404 error page
     }
   };
+
+  // Set default code in space after match according to language
+  useEffect(() => {
+    if (language == 'python') {
+      setCode("# " + code);
+    } else {
+      setCode("// " + code);
+    }
+  }, [language]);
 
   useEffect(() => {
     // Handle all socket events listened from server
