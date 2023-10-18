@@ -19,25 +19,27 @@ const io = socketIo(server, {
 
 // database
 const db = require('./models');
-const Save = db.Save;
+const SessionHistory = db.SessionHistory;
 db.sequelize.sync();
 
 app.use(cors());
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+
+// Define after app.use
+require('./routes/save.routes')(app);
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-
+console.log("Server is starting...")
 server.listen(3002, () => {
   console.log('Server is listening on port 3002');
 });
 
-require('./routes/save.routes')(app);
-
 app.get('/api/room/:roomId', (req, res) => {
+  console.log('Received GET request for /api/room/:roomId');
   const roomId = req.params.roomId;
   const roomInfo = rooms.get(roomId);
   console.log("rooms data: ", rooms);
@@ -69,8 +71,6 @@ app.get('/api/room/:roomId', (req, res) => {
 
 const waitingQueue = [];
 
-const userNamespace = io.of("/users");
-
 // Middleware to authenticate users using JWT token
 // Can check token validity here
 io.use(socketioJwt.authorize({
@@ -83,7 +83,7 @@ io.on('connection', async (socket) => {
   console.log('User Token:', socket.decoded_token, "connected");
   
   socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
-    const userId = socket.decoded_token.id; // Assuming user ID is in the token
+    const userId = socket.decoded_token.id;
 
     if (waitingQueue.find(user => user.userId === userId)) {
       console.log('User is already in the queue and cannot self-match.');
@@ -104,7 +104,6 @@ io.on('connection', async (socket) => {
         socket.selectedTopic = selectedTopic;
         socket.selectedLanguage = selectedLanguage;
         waitingQueue.push(socket);
-        // waitingQueue.set(userId, { socket, selectedDifficulty, selectedTopic, selectedLanguage });
       }
     }
   });

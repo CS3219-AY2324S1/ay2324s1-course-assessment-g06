@@ -1,40 +1,60 @@
 const db = require('../models');
 const config = require('../config/save.config');
-const Save = db.save;
+const SessionHistory = db.save;
 const Op = db.Sequelize.Op;
 
-exports.save = (req, res) => {
-  console.log("controller req.body:", req.body);
+exports.save = async (req, res) => {
+  console.log("controller.save req.body:", req.body);
+  console.log("controller.save req.userId:", req.userId);
 
   try {
+    const userId = req.userId;
+    const questionId = req.body.questionId;
+    const difficulty = req.body.difficulty;
     const code = req.body.code;
-    const arrOfUserIds = req.body.userIds;
 
-    if (!code || !Array.isArray(arrOfUserIds) || arrOfUserIds.length === 0) {
+    if (!questionId || !difficulty || !code) {
       // Handle the case where 'code' is missing or 'userIds' is not an array or emptys
       console.log("Input arguments invalid in save controller");
-      return res.status(400).send({ message: 'Invalid request data. code value is "' + code + '" and arrOfUserIds is ' + arrOfUserIds});
+      return res.status(400).send({ message: 'Invalid request data. Check if there are missing parameters or empty user ids.'});
     }
 
     // Create an array to store the promises for creating rows
-    const createPromises = [];
+    const upsertPromises = [];
 
-    for (const data of arrOfUserIds) {
-      console.log("Saving: ", code, "|", data);
-      // Save User to Database
-      createPromises.push(
-        Save.create({
+    try {
+      const [record, created] = await SessionHistory.findOrCreate({
+        where: { userId: userId, questionId: questionId },
+        defaults: {
+          difficulty: difficulty,
+          attemptedDate: db.sequelize.literal('CURRENT_TIMESTAMP'),
           code: code,
-          userId: data
-        })
+        },
+      });
+      
+      // Insert or update record done by .update 
+      await SessionHistory.update(
+        {
+          difficulty: difficulty,
+          attemptedDate: db.sequelize.literal('CURRENT_TIMESTAMP'),
+          code: code,
+        },
+        {
+          where: { userId: userId, questionId: questionId },
+        }
       );
+
+      upsertPromises.push(Promise.resolve("Record executed successfully."));
+    } catch (error) {
+      console.log("Error in promise chain, " + error);
+      upsertPromises.push(Promise.reject(error));
     }
 
     // Execute all promises and respond once they are all completed
-    Promise.all(createPromises)
+    Promise.all(upsertPromises)
       .then((saves) => {
         // All rows have been successfully created
-        res.status(200).send({ message: 'Code data saved successfully' });
+        res.status(200).send({ message: saves });
       })
       .catch((err) => {
         // Handle any errors that occurred during Promise execution
@@ -42,6 +62,7 @@ exports.save = (req, res) => {
       });
   } catch (error) {
     // Handle any unexpected errors that occur outside of the Promise chain
-    res.status(500).send({ message: 'Error outside of promise chain, req.body value is ' + req.body });
+    console.log("Save Controller Error => " + error);
+    res.status(500).send({ message: `Error outside of promise chain, req.body value is ${JSON.stringify(req.body)}` });
   }
 };
