@@ -64,6 +64,9 @@ const CodeSpace = () => {
   const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
   const [message, setMessage] = useState<string>("");
 
+  // Check if the dialog to prompt confirmation of submit session upon timer end is open
+  const [isTimerEndSubmitDialogOpen, setIsTimerEndSubmitDialogOpen] = useState(false);
+
   // To hide information if user is not authorised into code space
   const [isAccessAllowed, setIsAccessAllowed] = useState(false);
 
@@ -96,6 +99,17 @@ const CodeSpace = () => {
 
   const closeSubmitDialog = () => {
     setIsSubmitDialogOpen(false);
+  };
+
+  // Handle submit button click
+  const openTimerEndSubmitDialog = () => {
+    setIsTimerEndSubmitDialogOpen(true);
+  };
+
+  const closeTimerEndSubmitDialog = () => {
+    setIsTimerEndSubmitDialogOpen(false);
+    navigate("/matching");
+    socket.emit('timerEnd', roomId);
   };
 
   // Debounce timer to control when to emit "user typing" event
@@ -138,10 +152,13 @@ const CodeSpace = () => {
 
   useEffect(() => {
     if (isTimerEnded && socket) {
-      console.log("emitting timer end");
-      socket.emit('timerEnd', roomId);
-      alert('The time is up');
-      navigate("/matching");
+      // console.log("emitting timer end");
+      // socket.emit('timerEnd', roomId);
+      // alert('The time is up');
+      // navigate("/matching");
+
+      // Open submission prompt dialog on timer end
+      openTimerEndSubmitDialog();
     }
   }, [isTimerEnded, roomId, socket]);
 
@@ -212,6 +229,18 @@ const CodeSpace = () => {
     navigate("/matching");
   };
 
+  // Handle submit session on timer end logic
+  const handleSubmitOnTimerEndSession = () => {
+    if (socket) {
+      // Emit a "submitSession" event to the server
+      socket.emit('submitIndividualSession', roomId, questionId, questionDifficulty);
+    }
+    console.log("submitting session");
+    saveSessionHistory(questionId, questionDifficulty);
+    alert("You have submitted the session.");
+    navigate("/matching");
+  };
+
   // Handle code change events
   const onChange = React.useCallback((code: string, viewUpdate: any) => {
     console.log('code:', code);
@@ -263,8 +292,10 @@ const CodeSpace = () => {
 
       // Handle disconnection event
       matchedSocket.on('userDisconnected', (roomId) => {
-        alert('The other user has disconnected');
-        navigate("/matching");
+        if (isTimerEndSubmitDialogOpen) {
+          alert('The other user has disconnected');
+          navigate("/matching");
+        }
       });
 
       // Listen for 'codeChange' events from the server
@@ -484,7 +515,7 @@ const CodeSpace = () => {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Confirm Deletion</h5>
+              <h5 className="modal-title">Confirm Quit</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeQuitDialog}>
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -505,17 +536,39 @@ const CodeSpace = () => {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Confirm Deletion</h5>
+              <h5 className="modal-title">Confirm Submission</h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmitDialog}>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div className="modal-body">
-              <p>Confirm submission?</p>
+              <p>Are you ready to submit this session?</p>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={closeSubmitDialog}>Cancel</button>
               <button type="button" className="btn btn-danger" onClick={handleSubmitSession}>Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Timer End Prompt Submit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isTimerEndSubmitDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Submission</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeTimerEndSubmitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>The time has ended. Do you want to submit your code?</p>
+              <p>Note: Your choice of no submission will not affect the other user's choice of submission.</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={handleSubmitOnTimerEndSession}>Yes</button>
+              <button type="button" className="btn btn-danger" onClick={closeTimerEndSubmitDialog}>No</button>
             </div>
           </div>
         </div>

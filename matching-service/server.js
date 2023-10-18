@@ -213,6 +213,12 @@ io.on('connection', async (socket) => {
       socket.leave(roomId);
     }
   });
+
+  // Submit data to sql history
+  socket.on('submitIndividualSession', (roomId, questionId, questionDifficulty) => {
+    console.log("A user clicked on submit session on timer end")
+    socket.leave(roomId);
+  });
 });
 
 function removeRoomSession(roomId) {
