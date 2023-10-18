@@ -40,6 +40,8 @@ const CodeSpace = () => {
 
   // To show the question allocated
   const [question, setQuestion] = useState<Question | null>(null);
+  const [questionId, setQuestiondId] = useState("");
+  const [questionDifficulty, setQuestiondDifficulty] = useState("");
 
   // To track if the user has quit the room
   const [hasQuitRoom, setHasQuitRoom] = useState(false); 
@@ -181,7 +183,6 @@ const CodeSpace = () => {
 
       // Clear the input field
       setNewMessage('');
-
     }
   };
 
@@ -195,35 +196,20 @@ const CodeSpace = () => {
 
     alert('You have quit the session');
     navigate("/matching");
-  }
+  };
 
   // Handle submit session logic
   const handleSubmitSession = () => {
     if (socket) {
       // Emit a "submitSession" event to the server
-      socket.emit('submitSession', roomId);
+      socket.emit('submitSession', roomId, questionId, questionDifficulty);
     }
     console.log("submitting session");
-    console.log("code:", code);
 
-    savesession(code, [11, 12]).then(
-      (response) => {
-        setMessage(response.data.message);
-        console.log("message:", message);
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-          console.log("Error in submission: ", resMessage);
-      }
-    );
+    saveSessionHistory(questionId, questionDifficulty);
 
     alert("You have submitted the session.");
-    // navigate("/matching");
+    navigate("/matching");
   };
 
   // Handle code change events
@@ -246,7 +232,9 @@ const CodeSpace = () => {
       if (response.ok) {
         const data = await response.json();
         setQuestion(data);
-        console.log(data);
+        setQuestiondId(data._id);
+        setQuestiondDifficulty(data.difficulty);
+        console.log("question is ", data);
       } else {
         console.error('Error fetching room data:', response.status);
         navigate("/404"); // Redirect to the 404 error page
@@ -325,8 +313,9 @@ const CodeSpace = () => {
         };
       })
 
-      matchedSocket.on('submitSession', () => {
+      matchedSocket.on('submitSession', (questionIdFromServer, questionDifficultyFromServer) => {
         alert('The session has been submitted');
+        saveSessionHistory(questionIdFromServer, questionDifficultyFromServer);
         setHasQuitRoom(true);
         navigate("/matching");
 
@@ -376,6 +365,25 @@ const CodeSpace = () => {
       default:
         return [javascript()]; // Default to JavaScript if none selected
     }
+  };
+
+  const saveSessionHistory = (questionId : string, questionDifficulty : string) => {
+    console.log("submitting session");
+    savesession(questionId, questionDifficulty, code).then(
+      (response) => {
+        setMessage(response.data.message);
+        console.log("message:", message);
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          console.log("Error in submission: ", resMessage);
+      }
+    );
   };
 
   return (

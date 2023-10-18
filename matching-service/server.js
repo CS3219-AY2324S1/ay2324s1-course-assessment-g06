@@ -201,17 +201,16 @@ io.on('connection', async (socket) => {
   });
 
   // Submit data to sql history
-  socket.on('submitSession', (roomId) => {
+  socket.on('submitSession', (roomId, questionId, questionDifficulty) => {
     console.log("A user clicked on submit session")
     
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
-      socket.to(roomId).emit('submitSession');
+      console.log("sharing id and difficulty: ", questionId, questionDifficulty);
+      socket.to(roomId).emit('submitSession', questionId, questionDifficulty);
       // Leave the room
       socket.leave(roomId);
-      // Remove the room from the 'rooms' map
-      removeRoomSession(roomId);
     }
   });
 });
