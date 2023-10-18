@@ -106,7 +106,7 @@ const CodeSpace = () => {
     setIsSubmitDialogOpen(false);
   };
 
-  // Handle submit button click
+  // Handle timer end dialog for submission
   const openTimerEndSubmitDialog = () => {
     setIsTimerEndSubmitDialogOpen(true);
   };
