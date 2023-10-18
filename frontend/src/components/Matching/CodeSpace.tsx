@@ -53,8 +53,8 @@ const CodeSpace = () => {
 
   // To track the code text input
   const [code, setCode] = React.useState(() => {
-    // Retrieve the code value from localStorage or set a default value
-    return localStorage.getItem('code') || "console.log('hello world!')";
+    // Set a default value
+    return "console.log('hello world!')";
   });
 
   // Check if the dialog to prompt confirmation of quit session is open
@@ -245,8 +245,8 @@ const CodeSpace = () => {
   const onChange = React.useCallback((code: string, viewUpdate: any) => {
     console.log('code:', code);
     setCode(code);
-    // Save the code value to localStorage, to be changed to sql later
-    localStorage.setItem('code', code);
+    // Save the code value to localStorage
+    // localStorage.setItem('code', code);
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
       socket.emit('codeChange', code, roomId); // Pass roomId or any identifier
