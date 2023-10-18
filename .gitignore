@@ -12,6 +12,9 @@ node_modules
 # production
 */build
 
+
+gcp-service-account-key.json
+
 # misc
 .DS_Store
 .env
@@ -26,3 +29,5 @@ yarn-error.log*
 
 */.env
 .env
+
+
