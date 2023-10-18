@@ -53,7 +53,6 @@ const BasicTable: React.FC = () => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setIsLoading(false);
       });
   };
 
