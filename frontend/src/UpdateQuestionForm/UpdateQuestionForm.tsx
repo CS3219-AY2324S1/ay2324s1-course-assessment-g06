@@ -93,8 +93,8 @@ export default function UpdateForm() {
           setQuestion(responseData);
           const { title, topics, difficulty, content } = responseData;
           setValue("title", title);
-          setValue("topics", topics.split(',').map((topic: string) => topic.trim()));
-          console.log(topics.split(',').map((topic: string) => topic.trim()));
+          setValue("topics", topics);
+          console.log(topics);
 
           setValue("difficulty", difficulty);
           setEditorContent(content);
