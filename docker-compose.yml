@@ -6,7 +6,7 @@ services:
       context: ./user-service
     # hosting this for other users
     environment:
-      # - USER_HOST=http://user-service:3003/api/auth
+      - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
       - USER_PORT=${USER_PORT}
       - SQL_PASSWORD=${SQL_PASSWORD}
       - SQL_USERNAME=${SQL_USERNAME}
@@ -21,7 +21,7 @@ services:
     build:
       context: ./question-service
     environment:
-      # - USER_HOST=http://user-service:3003/api/auth
+      - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
       # - QUESTION_HOST=http://question-backend:3000/api/questions
       - MONGO_USERNAME=${MONGO_USERNAME}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
@@ -39,10 +39,10 @@ services:
     ports: 
       - 3001:3001
     environment: 
-    #   - REACT_APP_USER_HOST=http://localhost:3003/api/users
-    #   - REACT_APP_QUESTION_HOST=http://localhost:3000/api/questions
-    #   - REACT_APP_MATCHING_HOST=http://localhost:3002
     - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
+    - QUESTION_HOST=http://localhost:3000/api/questions
+    - MATCHING_SERVICE_CORS=http://localhost:3002
+    - USER_HISTORY=http://localhost:3003/api/users
     depends_on:
       - user-service
       - question-service
@@ -55,9 +55,10 @@ services:
       context: ./matching-service
     environment:
     # shd put localhost here?
-      - FRONTEND_HOST=http://frontend:3001
-      - USER_HOST=http://user-service:3003/api/users
+      - FRONTEND_SERVICE_CORS=http://localhost:3001
+      - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
       - QUESTION_HOST=http://question-service:3000/api/questions
+      - MATCHING_PORT=${MATCHING_PORT}
     ports:
       - 3002:3002
     depends_on:
