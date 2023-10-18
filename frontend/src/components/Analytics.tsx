@@ -5,7 +5,10 @@ import {
   Typography,
   LinearProgress,
 } from "@mui/material";
-import { CircularProgressbarWithChildren } from "react-circular-progressbar";
+import {
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
@@ -143,28 +146,49 @@ const Analytics: React.FC = () => {
   }, []);
   return (
     <div className="container">
-      <Card sx={{ display: "flex" }}>
+      <Card
+        sx={{
+          display: "flex",
+          borderRadius: "20px",
+          backgroundColor: "#E6E6E6",
+        }}
+      >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <CardContent>
-            <h1
+            <header
               style={{
                 fontFamily: "Cascadia Code, Inter, sans-serif",
                 letterSpacing: "1px",
-                fontSize: "2rem",
+                fontSize: "120%",
+                fontWeight: "bold",
+                paddingLeft: "20px",
+                paddingTop: "10px",
               }}
             >
               Solved Problems
-            </h1>
+            </header>
           </CardContent>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <CardContent>
+          <CardContent style={{ marginTop: "15%" }}>
             <CircularProgressbarWithChildren
+              // number of questions user completed
               value={userDetails.Total}
+              // number of questions in our db
               maxValue={questionDetails.Total}
+              text={`${userDetails.Total}`}
+              strokeWidth={3}
+              background
+              styles={buildStyles({
+                trailColor: "transparent",
+                pathColor: "purple",
+                textColor: "black",
+                backgroundColor: "white",
+                textSize: "15px",
+              })}
             >
-              <h6>{userDetails.Total}</h6>
-              <h6>solved</h6>
+              {/* <h6>{userDetails.Total}</h6> */}
+              <p style={{ paddingTop: "33%" }}>solved</p>
             </CircularProgressbarWithChildren>
           </CardContent>
         </Box>
