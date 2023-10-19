@@ -189,3 +189,9 @@ exports.getProfile = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+exports.verifyToken = (req, res) => {
+  // If the middleware successfully verified the token, the user is authenticated.
+  // Return successful response to the client here.
+  res.status(200).send({ message: "Token is valid." });
+};

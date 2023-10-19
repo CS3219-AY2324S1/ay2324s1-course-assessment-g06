@@ -43,4 +43,6 @@ module.exports = function (app) {
   
   app.get('/api/auth/getuser', [authJwt.verifyToken], controller.getProfile);
 
+  app.post('/api/auth/verifytoken', [authJwt.verifyToken], controller.verifyToken);
+
 };
