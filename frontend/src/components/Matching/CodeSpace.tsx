@@ -47,7 +47,7 @@ const CodeSpace = () => {
   const [hasQuitRoom, setHasQuitRoom] = useState(false); 
   
   // Initilise timer for the collaboration session
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(10000);
   const [isTimerEnded, setIsTimerEnded] = useState(false);
   const [formattedTime, setformattedTime] = useState("");
   const MATCHING_SERVICE_CORS =
@@ -140,20 +140,32 @@ const CodeSpace = () => {
   // Update timer for session
   useEffect(() => {
     if (!isTimerEnded) {
-      const timerInterval = setInterval(() => {
-        if (timer > 0) {
-          setTimer(timer - 1);
-          const minutes = Math.floor((timer - 1) / 60);
-          const remainingSeconds = (timer - 1) % 60;
+      const startTime = performance.now(); // Get the current time when the timer starts
+      const tick = () => {
+        const currentTime = performance.now();
+        const elapsed = Math.floor((currentTime - startTime) / 1000); // Calculate elapsed seconds
+  
+        if (elapsed < timer) {
+          setTimer(timer - elapsed); // Update the timer
+          const minutes = Math.floor((timer - elapsed) / 60);
+          const remainingSeconds = (timer - elapsed) % 60;
           const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
           setformattedTime(formattedTime);
+          requestAnimationFrame(tick); // Schedule the next tick
         } else {
+          setTimer(0);
           setIsTimerEnded(true);
-          clearInterval(timerInterval); // Stop the timer when it reaches 0
         }
-      }, 1000); // Update the timer every 1000ms (1 second)
+      };
+  
+      const timerInterval = requestAnimationFrame(tick);
+      
+      return () => {
+        cancelAnimationFrame(timerInterval);
+      };
     }
   }, [timer, isTimerEnded]);
+  
 
   useEffect(() => {
     if (isTimerEnded && socket) {
