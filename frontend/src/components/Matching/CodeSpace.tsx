@@ -8,7 +8,11 @@ import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { savesession } from "../../services/save.service";
+import { styled } from '@mui/material/styles';
+import { Button, Container, Grid, Paper } from '@mui/material';
 import './CodeSpace.css'; 
+import logo from '../../images/peerPrepLogo.png';
+
 
 interface Question {
   _id: string;
@@ -139,6 +143,34 @@ const CodeSpace = () => {
   const closeSubmitRequestDialog = () => {
     setIsSubmitRequestDialogOpen(false);
   };
+
+  const QuestionWrapper = styled(Container)(({ theme }) => ({
+    backgroundColor: '#d8d8d8',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    borderRadius: '50px',
+    fontSize: '12px',
+    // Media query for smaller screens
+    '@media (max-width: 1200px)': {
+      fontSize: '10px', // Decrease font size for smaller screens
+    },
+  }));
+  
+  const CategoryWrapper = styled(Container)(({ theme }) => ({
+    backgroundColor: 'rgb(255, 192, 203)',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    borderRadius: '50px',
+    fontSize: '12px',
+    // Media query for smaller screens
+    '@media (max-width: 1200px)': {
+      fontSize: '10px', // Decrease font size for smaller screens
+    },
+  }));
 
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
@@ -337,6 +369,12 @@ const CodeSpace = () => {
     }
   };
 
+  function wrapPreTags(content: string) {
+    const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
+    return wrappedContent;
+  }
+
+
   // Set default code in space after match according to language
   useEffect(() => {
     if (language == 'python') {
@@ -511,7 +549,12 @@ const CodeSpace = () => {
   };
 
   return (
-    <div className="container mt-5" >
+    
+    <div>
+      <div className='p-2'>
+        <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
+      {/* The rest of your component content */}
+    </div>
       <h2>Welcome, {socketId || 'Loading...'}</h2>
       {/* Match Information */}
       <p>
@@ -523,33 +566,86 @@ const CodeSpace = () => {
 
       <br />
       <br />
+      
 
-      {/* Question */}
-      {question !== null ? (
-        <div>
-          <div>
-            <h1>{question.title}</h1>
-            <p>Category: {question.category}</p>
-            <p>Difficulty: {question.difficulty}</p>
-            <div dangerouslySetInnerHTML={{ __html: question.content }} />
-          </div>
-        </div>
-      ) : (
-        <p>Loading question...</p>
-      )}
+      <Grid container spacing={2}>
+        <Grid item xs={6} md={6}></Grid>
+        {/* Question */}
+        {question !== null ? (
+          <Container
+        maxWidth="lg"
+        style={{
+          margin: '40px auto 0 auto',
+          backgroundColor: '#E6E6E6',
+          borderRadius: '20px',
+          width: '80%',
+          padding: '20px',
+        }}
+      >
+        <Paper
+          style={{
+            padding: '20px',
+            borderRadius: '15px',
+          }}
+        >
+          <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+            <Grid item xs={12} container justifyContent="space-between">
+              <div>
+                <h1 style={{ fontSize: '25px', fontWeight: 'bold' }}>
+                  {question.title}
+                </h1>
+              </div>
+            </Grid>
+
+            <Grid item xs={1.5}>
+              <CategoryWrapper>{question.difficulty}</CategoryWrapper>
+            </Grid>
+
+            {question.topics.split(', ').map((topic, index) => (
+              <Grid
+                item
+                xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
+                key={index}
+              >
+                <QuestionWrapper>{topic}</QuestionWrapper>
+              </Grid>
+            ))}
+
+            <Container maxWidth="lg" style={{ marginTop: '25px' }}>
+              <Grid item xs={12}>
+                <div
+                  className="content-wrapper"
+                  style={{ overflow: 'auto', maxHeight: '350px' }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: wrapPreTags(question.content),
+                    }}
+                  />
+                </div>
+              </Grid>
+            </Container>
+          </Grid>
+        </Paper>
+      </Container>
+        ) : (
+          <p>Loading question...</p>
+        )}
 
       <br />
       <br />
+
+      <Grid item xs={6} md={6}>
 
       {/* Coding Space */}
-      <div>
         <CodeMirror
           value={code}
           height="200px"
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
         />
-
+      </Grid>
+      </Grid>
         <br/>
         <br/>
         <br/>
@@ -603,7 +699,6 @@ const CodeSpace = () => {
               Submit
           </button>
         </div>
-      </div>
 
       {/* Quit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
@@ -708,14 +803,14 @@ const CodeSpace = () => {
           <div className="modal-body">
             <p>{submissionRejectedMessage}</p>
           </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={() => setIsRejectedDialogOpen(false)}>
-              Close
-            </button>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setIsRejectedDialogOpen(false)}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
 
       {/* Timer End Prompt Submit Session Dialog/Modal */}
@@ -739,6 +834,13 @@ const CodeSpace = () => {
           </div>
         </div>
       </div>
+
+
+
+      
+
+
+
     </div>
   );
 };

@@ -119,7 +119,7 @@ const App: React.FC = () => {
       </nav>
       )}
 
-      <div className="container mt-3">
+      <div className={`${isCodeSpaceRoute ? '' : ' container mt-3'}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
