@@ -27,6 +27,7 @@
     "draft-js": "^0.11.7",
     "draft-js-export-html": "^1.4.1",
     "draftjs-to-html": "^0.9.1",
+    "env-cmd": "^10.1.0",
     "formik": "^2.4.4",
     "html-react-parser": "^4.2.2",
     "html-to-draftjs": "^1.5.0",
@@ -45,7 +46,7 @@
     "yup": "^1.2.0"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "PORT=3001 react-scripts start ",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

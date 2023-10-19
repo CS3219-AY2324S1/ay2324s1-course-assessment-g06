@@ -84,10 +84,11 @@ export default function UpdateForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const QUESTION_HOST = process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
 
   useEffect(() => {
     const fetchData = () => {
-      fetch(`http://localhost:3000/api/questions/${id}`)
+      fetch(QUESTION_HOST + `/${id}`)
         .then((response) => response.json())
         .then((responseData) => {
           setQuestion(responseData);
@@ -129,7 +130,7 @@ export default function UpdateForm() {
       }
     }
 
-    fetch(`http://localhost:3000/api/questions/${id}`, {
+    fetch(QUESTION_HOST + `/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {

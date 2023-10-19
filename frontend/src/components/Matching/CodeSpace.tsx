@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Location, useNavigate } from 'react-router-dom';
+import useHistory from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
+import { socket } from './socket';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { savesession } from "../../services/save.service";
 import './CodeSpace.css'; 
-
-import {Grid, Container, Card } from '@mui/material';
 
 interface Question {
   _id: string;
@@ -27,39 +28,59 @@ interface ChatMessage {
   time: string;
 }
 
-
 const CodeSpace = () => {
+  // Id of the current code space room
   const { roomId } = useParams();
+  // Get location/path of current page
   const location = useLocation();
-  const { socketId, difficulty, topic , language} = location.state || {};
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const navigate = useNavigate();
+
+  // To show user the match information
+  const { socketId, difficulty, topic, language} = location.state || {};
+
+  // To show the question allocated
   const [question, setQuestion] = useState<Question | null>(null);
-  const [value, setValue] = React.useState(() => {
-    // Retrieve the code value from localStorage or set a default value
-    return localStorage.getItem('code') || "console.log('hello world!')";
+  const [questionId, setQuestiondId] = useState("");
+  const [questionDifficulty, setQuestiondDifficulty] = useState("");
+
+  // To track if the user has quit the room
+  const [hasQuitRoom, setHasQuitRoom] = useState(false); 
+  
+  // Initilise timer for the collaboration session
+  const [timer, setTimer] = useState(10);
+  const [isTimerEnded, setIsTimerEnded] = useState(false);
+  const [formattedTime, setformattedTime] = useState("");
+  const MATCHING_SERVICE_CORS =
+    process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
+
+  // To track the code text input
+  const [code, setCode] = React.useState(() => {
+    // Set a default value
+    return "Start peer prepping together now!";
   });
 
-  // Function to fetch the language from the server
-  const fetchLanguageFromServer = async () => {
-    try {
-      // Make an HTTP request to your server to get the language
-      const response = await fetch('/api/language'); // Adjust the URL as needed
-      if (!response.ok) {
-        throw new Error(`Failed to fetch language. Status: ${response.status}`);
-      }
-      const data = await response.json();
-      return data.language; // Assuming the response contains the language
-    } catch (error) {
-      console.error('Error fetching language:', error);
-      return null;
-    }
-  };
+  // Check if the dialog to prompt confirmation of quit session is open
+  const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
 
+  // Check if the dialog to prompt confirmation of submit session is open
+  const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
+  const [message, setMessage] = useState<string>("");
+
+  // Check if the dialog to prompt confirmation of submit session upon timer end is open
+  const [isTimerEndSubmitDialogOpen, setIsTimerEndSubmitDialogOpen] = useState(false);
+
+  // To hide information if user is not authorised into code space
+  const [isAccessAllowed, setIsAccessAllowed] = useState(false);
+
+  // Initilaise the chat message with a connected prompt
   const messageData: ChatMessage = {
-    roomId: roomId !== undefined ? roomId : "0", 
-    author: 'System', 
+    roomId: roomId !== undefined ? roomId : '0',
+    author: 'System',
     message: 'You have connected',
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    time: new Date().toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
   };
 
   // Initialize the state with an empty array of ChatMessage objects
@@ -67,10 +88,86 @@ const CodeSpace = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
+  // To open of close the confirm quit session modal/dialog
+  const openQuitDialog = () => {
+    setIsQuitDialogOpen(true);
+  };
+
+  const closeQuitDialog = () => {
+    setIsQuitDialogOpen(false);
+  };
+
+  // Handle submit button click
+  const openSubmitDialog = () => {
+    setIsSubmitDialogOpen(true);
+  };
+
+  const closeSubmitDialog = () => {
+    setIsSubmitDialogOpen(false);
+  };
+
+  // Handle timer end dialog for submission
+  const openTimerEndSubmitDialog = () => {
+    setIsTimerEndSubmitDialogOpen(true);
+  };
+
+  const closeTimerEndSubmitDialog = () => {
+    setIsTimerEndSubmitDialogOpen(false);
+    navigate("/matching");
+    socket.emit('timerEnd', roomId);
+  };
+
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
-  ;
 
+  // To handle user changing path / disconnecting from match
+  useEffect(() => {
+    console.log('Route changed to', location.pathname);
+
+    function handleOnBeforeUnload(event: BeforeUnloadEvent) {
+      if (!hasQuitRoom) {
+        event.preventDefault();
+        return (event.returnValue = "");
+      }
+    }
+
+    window.addEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
+    return () => {
+      window.removeEventListener('beforeunload', handleOnBeforeUnload, { capture: true});
+    }
+  }, [location]);
+
+  // Update timer for session
+  useEffect(() => {
+    if (!isTimerEnded) {
+      const timerInterval = setInterval(() => {
+        if (timer > 0) {
+          setTimer(timer - 1);
+          const minutes = Math.floor((timer - 1) / 60);
+          const remainingSeconds = (timer - 1) % 60;
+          const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+          setformattedTime(formattedTime);
+        } else {
+          setIsTimerEnded(true);
+          clearInterval(timerInterval); // Stop the timer when it reaches 0
+        }
+      }, 1000); // Update the timer every 1000ms (1 second)
+    }
+  }, [timer, isTimerEnded]);
+
+  useEffect(() => {
+    if (isTimerEnded && socket) {
+      // console.log("emitting timer end");
+      // socket.emit('timerEnd', roomId);
+      // alert('The time is up');
+      // navigate("/matching");
+
+      // Open submission prompt dialog on timer end
+      openTimerEndSubmitDialog();
+    }
+  }, [isTimerEnded, roomId, socket]);
+
+  // On change handlers
   const handleNewMessageChange = (e: any) => {
     setNewMessage(e.target.value);
 
@@ -99,123 +196,214 @@ const CodeSpace = () => {
         roomId: roomId,
         author: socketId,
         message: newMessage,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-  
+        time: new Date().toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      };
+
       if (socket) {
         socket.emit('sendMessage', messageData);
       }
 
       // Clear the input field
       setNewMessage('');
-
     }
-
   };
 
-  const onChange = React.useCallback((val: string, viewUpdate: any) => {
-    console.log('val:', val);
-    setValue(val);
-    // Save the code value to localStorage
-    localStorage.setItem('code', val);
+  // Handle quit session logic
+  const handleQuitSession = () => {
+    if (socket) {
+      // Emit a "quitSession" event to the server
+      socket.emit('quitSession', roomId);
+    }
+    console.log("quitting session");
+
+    alert('You have quit the session');
+    navigate("/matching");
+  };
+
+  // Handle submit session logic
+  const handleSubmitSession = () => {
+    if (socket) {
+      // Emit a "submitSession" event to the server
+      socket.emit('submitSession', roomId, questionId, questionDifficulty);
+    }
+    console.log("submitting session");
+
+    saveSessionHistory(questionId, questionDifficulty);
+
+    alert("You have submitted the session.");
+    navigate("/matching");
+  };
+
+  // Handle submit session on timer end logic
+  const handleSubmitOnTimerEndSession = () => {
+    if (socket) {
+      // Emit a "submitSession" event to the server
+      socket.emit('submitIndividualSession', roomId, questionId, questionDifficulty);
+    }
+    console.log("submitting session");
+    saveSessionHistory(questionId, questionDifficulty);
+    alert("You have submitted the session.");
+    navigate("/matching");
+  };
+
+  // Handle code change events
+  const onChange = React.useCallback((code: string, viewUpdate: any) => {
+    setCode(code);
     // Emit the 'codeChange' event to the server only if it's a change by this client
     if (socket) {
-      socket.emit('codeChange', val, roomId); // Pass roomId or any identifier
-      console.log('emitting codeChange from client');
+      socket.emit('codeChange', code, roomId); // Pass roomId or any identifier
     }
   }, [socket, roomId]);
 
-  const fetchData = () => {
-    fetch(`http://localhost:3002/api/room/${roomId}`)
-      .then((response) => response.json())
-      .then((data) => {
+  const fetchData = async () => {
+    // Check if the room is active
+    try {
+      const response = await fetch(MATCHING_SERVICE_CORS + `/api/room/${roomId}`);
+      if (response.ok) {
+        const data = await response.json();
         setQuestion(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        setQuestion(null);
-      });
+        setQuestiondId(data._id);
+        setQuestiondDifficulty(data.difficulty);
+        console.log("question is ", data);
+      } else {
+        console.error('Error fetching room data:', response.status);
+        navigate("/404"); // Redirect to the 404 error page
+      }
+    } catch (error) {
+      // Room is not active and the 404 page is shown
+      console.error('Error fetching room data:', error);
+      navigate("/404"); // Redirect to the 404 error page
+    }
   };
 
+  // Set default code in space after match according to language
   useEffect(() => {
-    // Create a socket connection
-    const matchedSocket = io('http://localhost:3002', {
-      query: { roomId },
-    });
+    if (language == 'python') {
+      setCode("# " + code);
+    } else {
+      setCode("// " + code);
+    }
+  }, [language]);
 
-    matchedSocket.on('connect', () => {
-      console.log('Connected to matched socket');
+  useEffect(() => {
+    // Handle all socket events listened from server
+    if (socket) {
+      console.log("connected to socket", socket, socket.id);
+      const matchedSocket = socket;
 
-      // Emit the "userConnected" event when the socket connects
-      matchedSocket.emit('userConnected', socketId, roomId);
-      // Emit the "joinRoom" event when the socket connects
-      matchedSocket.emit('joinRoom', roomId);
-    });
+      // Below change then wont work properly
+      // const matchedSocket = io(MATCHING_SERVICE_CORS, {query: { roomId }});
 
-    // Handle disconnection event
-    matchedSocket.on('userDisconnected', () => {
-      console.log('user disconnected from client')
-      // Emit a custom event to inform the server or other clients
-      matchedSocket.emit('userDisconnected', roomId);
-    });
 
-    // Listen for 'codeChange' events from the server
-    matchedSocket.on('codeChange', (newCode: string) => {
-      setValue(newCode); // Update the value with the new code
-    });
+      // Handle for initial connection event from server
+      matchedSocket.on('connect', () => {
+        console.log('Connected to matched socket');
+        // Emit the "userConnected" event when the socket connects
+        matchedSocket.emit('userConnected', socketId, roomId);
+        // Emit the "joinRoom" event when the socket connects
+        matchedSocket.emit('joinRoom', roomId);
+      });
 
-    // Listen for 'receive message' events from the server
-    matchedSocket.on('receiveMessage', (data) => {
-      console.log('receiveMessage from server');
-      setMessageList((list) => [...list, data]); // Update the selected language
-    }); 
+      // Handle disconnection event
+      matchedSocket.on('userDisconnected', (roomId) => {
+        if (isTimerEndSubmitDialogOpen) {
+          alert('The other user has disconnected');
+          navigate("/matching");
+        }
+      });
 
-    // Listen for 'userTyping' events from the server
-    matchedSocket.on('userTyping', (isTyping) => {
-      setIsTyping(isTyping);
-    });
+      // Listen for 'codeChange' events from the server
+      matchedSocket.on('codeChange', (newCode: string) => {
+        setCode(newCode); // Update the value with the new code
+      });
 
-    // Listen for 'userConnected' and 'userDisconnected' events from the server
-    matchedSocket.on('userConnected', (connectedSocket) => {
-      console.log('receive userConnected from server');
-      console.log("current" + socketId)
-      console.log("connected" + connectedSocket)
+      // Listen for 'receive message' events from the server
+      matchedSocket.on('receiveMessage', (data) => {
+        console.log('receiveMessage from server');
+        setMessageList((list) => [...list, data]); // Update the selected language
+      }); 
 
-      if (connectedSocket !== socketId) {
-      // Send a message to the chat when another user connects
-      const messageData: ChatMessage = {
-        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
-        author: 'System', 
-        // message: `A user (${connectedSocket}) has connected`,
-        message: `A user has connected`,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      // Listen for 'userTyping' events from the server
+      matchedSocket.on('userTyping', (isTyping) => {
+        setIsTyping(isTyping);
+      });
+
+      // Listen for 'userConnected' and 'userDisconnected' events from the server
+      matchedSocket.on('userConnected', (connectedSocket) => {
+        console.log('receive userConnected from server');
+        console.log("current" + socketId)
+        console.log("connected" + connectedSocket)
+        setIsAccessAllowed(true);
+
+        if (connectedSocket !== socketId) {
+        // Send a message to the chat when another user connects
+        const messageData: ChatMessage = {
+          roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+          author: 'System', 
+          // message: `A user (${connectedSocket}) has connected`,
+          message: `A user has connected`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessageList((list) => [...list, messageData]);
+        }
+      });
+
+      matchedSocket.on('sessionEnded', () => {
+        alert('The session has ended');
+        setHasQuitRoom(true);
+        navigate("/matching");
+
+        return () => {
+          matchedSocket.off("sessionEnded");
+        };
+      })
+
+      matchedSocket.on('submitSession', (questionIdFromServer, questionDifficultyFromServer) => {
+        alert('The session has been submitted');
+        saveSessionHistory(questionIdFromServer, questionDifficultyFromServer);
+        setHasQuitRoom(true);
+        navigate("/matching");
+
+        return () => {
+          matchedSocket.off("submitSession");
+        };
+      })
+
+      matchedSocket.on('userDisconnected', (roomId) => {
+        // Send a message to the chat when a user disconnects
+        const messageData: ChatMessage = {
+          roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+          author: 'System', 
+          message: `A user has disconnected`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setHasQuitRoom(true);
+        setMessageList((list) => [...list, messageData]);
+        
+        return () => {
+          matchedSocket.off('userDisconnected', (roomId))
+        };
+      });
+
+      // Listen for 'accessDenied' events from server indicating an unauthorised (but logged in) user trying to access a room they are not matched/allowed in
+      matchedSocket.on('accessDenied', (message) => {
+        setIsAccessAllowed(false);
+        alert(message);
+        navigate("/matching");
+      });
+
+      fetchData();
+
+      return () => {
+        matchedSocket.disconnect();
       };
-      setMessageList((list) => [...list, messageData]);
-      }
-    });
-
-    // Might not be able to work due to current implementation and window closes terminates socket abruptly
-    matchedSocket.on('userDisconnected', () => {
-      // Send a message to the chat when a user disconnects
-      const messageData: ChatMessage = {
-        roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
-        author: 'System', 
-        message: `A user has disconnected`,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-
-      setMessageList((list) => [...list, messageData]);
-    });
-
-    setSocket(matchedSocket);
-    fetchData();
-
-    return () => {
-      matchedSocket.disconnect();
-    };
+    }
   }, [roomId]);
 
+  // Set the code syntax
   const getCodeMirrorExtensions = () => {
     switch (language) {
       case 'python':
@@ -227,16 +415,40 @@ const CodeSpace = () => {
     }
   };
 
+  const saveSessionHistory = (questionId : string, questionDifficulty : string) => {
+    console.log("submitting session");
+    savesession(questionId, questionDifficulty, code).then(
+      (response) => {
+        setMessage(response.data.message);
+        console.log("message:", message);
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          console.log("Error in submission: ", resMessage);
+      }
+    );
+  };
+
   return (
-    <div>
+    <div className="container mt-5" >
       <h2>Welcome, {socketId || 'Loading...'}</h2>
+      {/* Match Information */}
       <p>
-        You are matched with another user using difficulty: {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and language: {language || 'Not selected'}
+        You are matched with another user using difficulty:{' '}
+        {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and
+        language: {language || 'Not selected'}
       </p>
+      <div className="timer">Time left: {formattedTime} minutes</div>
 
       <br />
       <br />
 
+      {/* Question */}
       {question !== null ? (
         <div>
           <div>
@@ -253,54 +465,132 @@ const CodeSpace = () => {
       <br />
       <br />
 
+      {/* Coding Space */}
       <div>
         <CodeMirror
-          value={value}
+          value={code}
           height="200px"
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
         />
 
-            <br/>
-            <br/>
-            <br/>
+        <br/>
+        <br/>
+        <br/>
 
+        {/* Chat UI */}
+        <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
+          <h2>Chat</h2>
+          <div className="chat-messages">
+            <ScrollToBottom className='message-container'>
+            {messageList.map((messageContent, index) => (
+              <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
+                <div className='message-content'>
+                  {messageContent.message}
+                </div>
+                <div className='message-meta'>
+                  {messageContent.time}
+                </div>
+              </div>
+            ))}
+            </ScrollToBottom>
+          </div>
+          <div className="chat-input">
+            <input
+              type="text"
+              placeholder="Type your message..."
+              value={newMessage}
+              onChange={handleNewMessageChange}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleSendMessage();
+                } else {
+                  handleStartTyping(); 
+                }
+              }}
+            />
+            {isTyping && <div className="typing-indicator">Typing...</div>}
+            <button onClick={handleSendMessage}>Send</button>
+          </div>
+        </div>
 
-            {/* Chat UI */}
-            <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
-              <h2>Chat</h2>
-              <div className="chat-messages">
-                <ScrollToBottom className='message-container'>
-                {messageList.map((messageContent, index) => (
-                  <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
-                    <div className='message-content'>
-                      {messageContent.message}
-                    </div>
-                    <div className='message-meta'>
-                      {messageContent.time}
-                    </div>
-                  </div>
-                ))}
-                </ScrollToBottom>
-              </div>
-              <div className="chat-input">
-                <input
-                  type="text"
-                  placeholder="Type your message..."
-                  value={newMessage}
-                  onChange={handleNewMessageChange}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      handleSendMessage();
-                    } else {
-                      handleStartTyping(); 
-                    }
-                  }}
-                />
-                {isTyping && <div className="typing-indicator">Typing...</div>}
-                <button onClick={handleSendMessage}>Send</button>
-              </div>
+        {/* Quit Button */}
+        <div className = "col-md-5">
+          <button className="quit-button" onClick={openQuitDialog}>
+              Quit Session
+          </button>
+        </div>
+
+        {/* Submit Button */}
+        <div className = "col-md-5">
+          <button className="submit-button" onClick={openSubmitDialog}>
+              Submit
+          </button>
+        </div>
+      </div>
+
+      {/* Quit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Quit</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeQuitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
+            <div className="modal-body">
+              <p>Are you sure you want to quit this session?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={closeQuitDialog}>Cancel</button>
+              <button type="button" className="btn btn-danger" onClick={handleQuitSession}>Quit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Submit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Submission</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>Are you ready to submit this session?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={closeSubmitDialog}>Cancel</button>
+              <button type="button" className="btn btn-danger" onClick={handleSubmitSession}>Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Timer End Prompt Submit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isTimerEndSubmitDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Submission</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeTimerEndSubmitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>The time has ended. Do you want to submit your code?</p>
+              <p>Note: Your choice of no submission will not affect the other user's choice of submission.</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={handleSubmitOnTimerEndSession}>Yes</button>
+              <button type="button" className="btn btn-danger" onClick={closeTimerEndSubmitDialog}>No</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

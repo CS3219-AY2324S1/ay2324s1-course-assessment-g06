@@ -4,7 +4,6 @@ const controller = require('../controllers/auth.controller');
 const verifyExisting = require("../middleware/verifyExisting");
 
 module.exports = function (app) {
-
   app.use(function (req, res, next) {
     res.header(
       'Access-Control-Allow-Headers',
