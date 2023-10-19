@@ -207,15 +207,41 @@ io.on('connection', async (socket) => {
     console.log("A user clicked on quit session")
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
+      // Emit an event to inform the other user the other party has left the session
+      socket.to(roomId).emit('quitSession');
+      // Removed for now, we give user the choice to choose to leave or stay
       // Emit an event to inform the other user that the session is ending
-      socket.to(roomId).emit('sessionEnded');
-      // Leave the room
-      socket.leave(roomId);
+      // socket.to(roomId).emit('sessionEnded');
+      // // Leave the room
+      // socket.leave(roomId);
   
       // Remove the room from the 'rooms' map
       removeRoomSession(roomId);
     }
   });
+
+    // Request submission from other user
+    socket.on('requestSubmitSession', (roomId, questionId, questionDifficulty) => {
+      console.log("A user clicked on submit session")
+      
+      // Check if the user is in the specified room
+      if (socket.rooms.has(roomId)) {
+        // Emit an event to inform the other user that the session is being submitted
+        console.log("sharing id and difficulty: ", questionId, questionDifficulty);
+        socket.to(roomId).emit('requestSubmitSession', questionId, questionDifficulty);
+      }
+    });
+
+    // Reject submission request from other user
+    socket.on('rejectSubmitRequest', (roomId, questionId, questionDifficulty) => {
+      console.log("Other user has rejected the submit request")
+      
+      // Check if the user is in the specified room
+      if (socket.rooms.has(roomId)) {
+        // Emit an event to inform the other user that the submission request is rejected
+        socket.to(roomId).emit('rejectSubmitRequest', questionId, questionDifficulty);
+      }
+    });
 
   // Submit data to sql history
   socket.on('submitSession', (roomId, questionId, questionDifficulty) => {

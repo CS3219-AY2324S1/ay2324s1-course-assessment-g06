@@ -62,15 +62,30 @@ const CodeSpace = () => {
   // Check if the dialog to prompt confirmation of quit session is open
   const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
 
+  // Check if the other user is still in the session
+  const [otherUserQuit, setOtherUserQuit] = useState(false);
+
+  // Check if the dialog to prompt confirmation of submit session is open
+  const [isSubmitRequestDialogOpen, setIsSubmitRequestDialogOpen] = useState(false);
+
   // Check if the dialog to prompt confirmation of submit session is open
   const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
   const [message, setMessage] = useState<string>("");
+
+  // Check if the dialog to show rejected submission is open
+  const [isRejectedDialogOpen, setIsRejectedDialogOpen] = useState(false);
 
   // Check if the dialog to prompt confirmation of submit session upon timer end is open
   const [isTimerEndSubmitDialogOpen, setIsTimerEndSubmitDialogOpen] = useState(false);
 
   // To hide information if user is not authorised into code space
   const [isAccessAllowed, setIsAccessAllowed] = useState(false);
+
+  // Check if the submission request from one user is pending from other user
+  const [submissionRequestPending, setSubmissionRequestPending] = useState(false);
+  const [submissionRequestRejected, setSubmissionRequestRejected] = useState(false);
+  const [submissionRejectedMessage, setSubmissionRejectedMessage] = useState('');
+  
 
   // Initilaise the chat message with a connected prompt
   const messageData: ChatMessage = {
@@ -115,6 +130,14 @@ const CodeSpace = () => {
     setIsTimerEndSubmitDialogOpen(false);
     navigate("/matching");
     socket.emit('timerEnd', roomId);
+  };
+
+  const openSubmitRequestDialog = () => {
+    setIsSubmitRequestDialogOpen(true);
+  };
+  
+  const closeSubmitRequestDialog = () => {
+    setIsSubmitRequestDialogOpen(false);
   };
 
   // Debounce timer to control when to emit "user typing" event
@@ -241,12 +264,35 @@ const CodeSpace = () => {
       // Emit a "submitSession" event to the server
       socket.emit('submitSession', roomId, questionId, questionDifficulty);
     }
+
+    closeSubmitRequestDialog();
     console.log("submitting session");
 
     saveSessionHistory(questionId, questionDifficulty);
 
     alert("You have submitted the session.");
     navigate("/matching");
+  };
+
+  // Handle request submit session logic
+  const handleRequestSubmitSession = () => {
+    if (socket) {
+      // Emit a "submitSession" event to the server
+      socket.emit('requestSubmitSession', roomId, questionId, questionDifficulty);
+    }
+    setSubmissionRequestPending(true);
+  };
+
+  const handleRejectSubmitRequest = () => {
+    if (socket) {
+      // Emit a "rejectSubmitRequest" event to the server
+      socket.emit('rejectSubmitRequest', roomId);
+    }
+    setSubmissionRequestPending(false); // Set submission request as not pending
+    closeSubmitRequestDialog(); // Close the submission request dialog
+  
+    // Set the rejection message
+    setSubmissionRequestRejected(true);
   };
 
   // Handle submit session on timer end logic
@@ -257,7 +303,7 @@ const CodeSpace = () => {
     }
     console.log("submitting session");
     saveSessionHistory(questionId, questionDifficulty);
-    alert("You have submitted the session.");
+    // alert("You have submitted the session.");
     navigate("/matching");
   };
 
@@ -372,6 +418,24 @@ const CodeSpace = () => {
           matchedSocket.off("sessionEnded");
         };
       })
+
+      matchedSocket.on('quitSession', () => {
+        setOtherUserQuit(true);
+        openQuitDialog(); // Open the confirmation dialog
+      });
+
+      matchedSocket.on('requestSubmitSession', () => {
+        openSubmitRequestDialog();
+      });
+
+      // Handle submission request rejection
+      matchedSocket.on('rejectSubmitRequest', () => {
+        setSubmissionRequestPending(false); // Set submission request as not pending
+        closeSubmitDialog();
+        closeSubmitRequestDialog(); // Close the submission request dialog
+        setSubmissionRejectedMessage("The submission request has been rejected.");
+        setIsRejectedDialogOpen(true);
+      });
 
       matchedSocket.on('submitSession', (questionIdFromServer, questionDifficultyFromServer) => {
         alert('The session has been submitted');
@@ -546,42 +610,113 @@ const CodeSpace = () => {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Confirm Quit</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeQuitDialog}>
+              <h5 className="modal-title">{otherUserQuit ? "Continue Session" : "Confirm Quit"}</h5>
+              <button type="button" className="close" onClick={closeQuitDialog}>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
+            {/* Quit Session Message */}
             <div className="modal-body">
-              <p>Are you sure you want to quit this session?</p>
+              {otherUserQuit ? (
+                <p>The other user has left the session. Do you want to leave the session?</p>
+              ) : (
+                <p>Are you sure you want to quit this session?</p>
+              )}
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={closeQuitDialog}>Cancel</button>
-              <button type="button" className="btn btn-danger" onClick={handleQuitSession}>Quit</button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                if (otherUserQuit) {
+                  // Close dialog and set other user quit to false to reset the message when the remaining user click on quit session again
+                  closeQuitDialog();
+                  setOtherUserQuit(false);
+                } else {
+                  // Close the dialog
+                  closeQuitDialog();
+                }
+              }}
+              >
+                {otherUserQuit ? "Continue" : "Cancel"}
+              </button>
+              <button type="button" className="btn btn-danger" onClick={handleQuitSession}>
+                {otherUserQuit ? "Leave" : "Quit"}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Submit Session Dialog/Modal */}
-      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitDialogOpen ? 'block' : 'none' }}>
+      {/* Submit Request Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitRequestDialogOpen ? 'block' : 'none' }}>
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Confirm Submission</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmitDialog}>
+              <h5 className="modal-title">Submit Request</h5>
+              <button type="button" className="close" onClick={() => closeSubmitRequestDialog()}>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div className="modal-body">
-              <p>Are you ready to submit this session?</p>
+              <p>The other user has requested to submit the session. Do you accept?</p>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={closeSubmitDialog}>Cancel</button>
-              <button type="button" className="btn btn-danger" onClick={handleSubmitSession}>Submit</button>
+              <button type="button" className="btn btn-secondary" onClick={() => handleRejectSubmitRequest()}>Reject</button>
+              <button type="button" className="btn btn-danger" onClick={() => handleSubmitSession()}>Accept</button>
             </div>
           </div>
         </div>
       </div>
+
+
+      {/* Submit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitDialogOpen ? 'block' : 'none' }}>
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Confirm Submission</h5>
+            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmitDialog}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            {submissionRequestPending ? (
+              <p>Submission request is pending. Waiting for the other user's response...</p>
+            ) : (
+              <p>Are you sure you want to submit this session?</p>
+            )}
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={closeSubmitDialog}>Cancel</button>
+            <button type="button" className="btn btn-danger" onClick={() => handleRequestSubmitSession()}>Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      {/* Submit Request Rejected Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isRejectedDialogOpen ? 'block' : 'none' }}>
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Submission Request Rejected</h5>
+            <button type="button" className="close" onClick={() => setIsRejectedDialogOpen(false)}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <p>{submissionRejectedMessage}</p>
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-secondary" onClick={() => setIsRejectedDialogOpen(false)}>
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
       {/* Timer End Prompt Submit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isTimerEndSubmitDialogOpen ? 'block' : 'none' }}>
