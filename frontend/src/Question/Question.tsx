@@ -106,7 +106,7 @@ export default function Question() {
     const fetchDataWithDelay = () => {
       fetch(`http://localhost:3000/api/questions/${id}`, {
         headers: {
-          "x-access-token": currentUser.accessToken, // Add this line
+          "x-access-token": currentUser.accessToken,
         },
       })
         .then((response) => response.json())
