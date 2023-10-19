@@ -1,3 +1,4 @@
+const { authJwt } = require("../middleware");
 const controller = require('../controllers/history.controller');
 
 module.exports = function (app) {
@@ -9,7 +10,7 @@ module.exports = function (app) {
     next();
   });
 
-  app.post('/api/user/history', controller.addHistory);
+  app.post('/api/user/history', [authJwt.verifyToken], controller.addHistory);
   app.post('/api/user/customhistory', controller.addCustomHistory);
   app.get('/api/user/history/:userId', controller.getAllUniqueQuestions);
   app.get(

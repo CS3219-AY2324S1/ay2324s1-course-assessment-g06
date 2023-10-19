@@ -7,7 +7,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { savesession } from "../../services/save.service";
+import { addHistory } from "../../services/user-history.service";
 import './CodeSpace.css'; 
 
 interface Question {
@@ -220,7 +220,7 @@ const CodeSpace = () => {
     console.log("quitting session");
 
     alert('You have quit the session');
-    navigate("/matching");
+    // navigate("/matching");
   };
 
   // Handle submit session logic
@@ -234,7 +234,7 @@ const CodeSpace = () => {
     saveSessionHistory(questionId, questionDifficulty);
 
     alert("You have submitted the session.");
-    navigate("/matching");
+    // navigate("/matching");
   };
 
   // Handle submit session on timer end logic
@@ -417,7 +417,7 @@ const CodeSpace = () => {
 
   const saveSessionHistory = (questionId : string, questionDifficulty : string) => {
     console.log("submitting session");
-    savesession(questionId, questionDifficulty, code).then(
+    addHistory(questionId, questionDifficulty, code).then(
       (response) => {
         setMessage(response.data.message);
         console.log("message:", message);
