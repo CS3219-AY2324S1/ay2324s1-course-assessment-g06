@@ -12,6 +12,9 @@ import { FormInputDropdown } from "../form_components/FormInputDropdown";
 import { FormMultipleInputDropdown } from "../form_components/FormMultipleInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
+// Import current user for authentication
+import { getCurrentUser } from "../services/auth.service";
+
 // To instantiate form components
 interface IFormInput {
   title: string;
@@ -74,6 +77,7 @@ export default function QuestionForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const currentUser = getCurrentUser();
 
   // console.log(control._formValues.topics);
 
@@ -108,6 +112,7 @@ export default function QuestionForm() {
       mode: 'cors',
       headers: {
         "Content-Type": "application/json", // Set the content type to JSON
+        "x-access-token": currentUser.accessToken, // Send the JWT along with the request in the header
       },
       body: JSON.stringify(formDataWithEditorContent), // Send the modified data
     })

@@ -104,7 +104,11 @@ export default function Question() {
 
   useEffect(() => {
     const fetchDataWithDelay = () => {
-      fetch(`http://localhost:3000/api/questions/${id}`)
+      fetch(`http://localhost:3000/api/questions/${id}`, {
+        headers: {
+          "x-access-token": currentUser.accessToken, // Add this line
+        },
+      })
         .then((response) => response.json())
         .then((responseData) => {
           setQuestion(responseData);
@@ -118,7 +122,7 @@ export default function Question() {
     };
 
     fetchDataWithDelay();
-  }, [id]);
+  }, [id, currentUser.accessToken]);
 
   function wrapPreTags(content: string) {
     const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
@@ -149,6 +153,7 @@ export default function Question() {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "x-access-token": currentUser.accessToken,
       },
     })
       .then((response) => {
