@@ -3,6 +3,8 @@ const config = require('../config/save.config');
 const SessionHistory = db.save;
 const Op = db.Sequelize.Op;
 
+// Controller function to save a user collaboration session attempt to history
+// Usage: Post request to http://localhost:3002/api/save/savesession
 exports.save = async (req, res) => {
   console.log("controller.save req.body:", req.body);
   console.log("controller.save req.userId:", req.userId);
