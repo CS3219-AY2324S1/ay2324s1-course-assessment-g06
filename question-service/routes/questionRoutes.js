@@ -1,23 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const questionController = require("../controllers/questionController");
+const verifyUserToken = require('../middleware/verifyUserToken');  // Import the middleware
 
 // Route for retrieving questions
-router.get("/", questionController.getAllQuestions);
-router.get("/pagination/first", questionController.getFirstPaginatedQuestions);
-router.get("/pagination/remaining", questionController.getRemainingPaginatedQuestions);
+router.get("/", verifyUserToken, questionController.getAllQuestions);
+router.get("/pagination/first", verifyUserToken, questionController.getFirstPaginatedQuestions);
+router.get("/pagination/remaining", verifyUserToken, questionController.getRemainingPaginatedQuestions);
 
-router.get("/matched", questionController.getRandomQuestionByFilter);
-router.get("/:id", questionController.getQuestionById);
+router.get("/matched", verifyUserToken, questionController.getRandomQuestionByFilter);
+router.get("/:id", verifyUserToken, questionController.getQuestionById);
 
 // Create a new question
-router.post("/", questionController.createQuestion);
+router.post("/", verifyUserToken, questionController.createQuestion);
 
 // Update an existing question by frontendQuestionId
-router.put("/:id", questionController.updateQuestion);
+router.put("/:id", verifyUserToken, questionController.updateQuestion);
 
 // Delete a question by frontendQuestionId
-router.delete("/:id", questionController.deleteQuestion);
+router.delete("/:id", verifyUserToken, questionController.deleteQuestion);
 
 // No difference if i add the below
 // router.get("/", "add-question");
