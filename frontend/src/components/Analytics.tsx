@@ -13,6 +13,7 @@ import "react-circular-progressbar/dist/styles.css";
 import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
 import axios from "axios";
+import authHeader from "../services/auth-header";
 
 const USER_HOST = process.env.USER_HOST || "http://localhost:3003/api/auth";
 const USER_HISTORY =
@@ -80,11 +81,9 @@ const Analytics: React.FC = () => {
   // 4 API calls
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
-    const userId = userData.id || 1;
-
     // get all user details
     axios
-      .get(USER_HISTORY + "/history/" + userId)
+      .get(USER_HISTORY + "/history", { headers: authHeader() })
       .then((res) => {
         // Assuming res.data is an array of solved questions
         const solvedQuestions = res.data;
@@ -112,7 +111,7 @@ const Analytics: React.FC = () => {
       .catch((err) => console.log(err));
 
     axios
-      .get(QUESTION_HOST + "/total")
+      .get(QUESTION_HOST + "/total", { headers: authHeader() })
       .then((response) => {
         // console.log(response.data);
         const data = response.data; // Assuming your data is an array of objects
@@ -135,7 +134,7 @@ const Analytics: React.FC = () => {
         console.log(err);
       });
     axios
-      .get(USER_HISTORY + "/attempts/" + userId)
+      .get(USER_HISTORY + "/attempts", { headers: authHeader() })
       .then((response) => {
         console.log(response.data);
         setHeatData(response.data);

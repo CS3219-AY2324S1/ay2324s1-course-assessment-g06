@@ -220,7 +220,7 @@ const CodeSpace = () => {
     console.log("quitting session");
 
     alert('You have quit the session');
-    // navigate("/matching");
+    navigate("/matching");
   };
 
   // Handle submit session logic
@@ -234,7 +234,7 @@ const CodeSpace = () => {
     saveSessionHistory(questionId, questionDifficulty);
 
     alert("You have submitted the session.");
-    // navigate("/matching");
+    navigate("/matching");
   };
 
   // Handle submit session on timer end logic

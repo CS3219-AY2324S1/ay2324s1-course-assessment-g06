@@ -11,12 +11,13 @@ module.exports = function (app) {
   });
 
   app.post('/api/user/history', [authJwt.verifyToken], controller.addHistory);
-  app.post('/api/user/customhistory', controller.addCustomHistory);
-  app.get('/api/user/history/:userId', controller.getAllUniqueQuestions);
+  app.post('/api/user/customhistory', [authJwt.verifyToken], controller.addCustomHistory);
+  app.get('/api/user/history', [authJwt.verifyToken], controller.getAllUniqueQuestions);
   app.get(
-    '/api/user/history/:userId/:difficulty',
+    '/api/user/history/:difficulty',
+    [authJwt.verifyToken],
     controller.getAllUniqueQuestionsByDifficulty
   );
-  app.get('/api/user/attempts/:userId', controller.getAttemptedDates);
-  app.get('/api/user/allhistory/:userId', controller.getAllQuestions);
+  app.get('/api/user/attempts', [authJwt.verifyToken], controller.getAttemptedDates);
+  app.get('/api/user/allhistory', [authJwt.verifyToken], controller.getAllQuestions);
 };

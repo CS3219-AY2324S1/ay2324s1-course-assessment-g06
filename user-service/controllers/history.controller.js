@@ -20,6 +20,7 @@ exports.addHistory = async (req, res) => {
     if (!question_id || !difficulty || !attempt) {
       // Handle the case where 'attempt' is missing
       console.log("Input arguments invalid in save controller");
+      console.log(req.body);
       return res.status(400).send({ message: 'Invalid request data. Check if there are missing parameters or empty user ids.'});
     }
 
@@ -74,7 +75,8 @@ exports.addHistory = async (req, res) => {
 // Controller function to create a user history with custom date
 // Usage: Post request to http://localhost:3003/api/user/customhistory
 exports.addCustomHistory = (req, res) => {
-  const { userId, questionId, difficulty, attempt, date } = req.body;
+  const userId = req.userId;
+  const { questionId, difficulty, attempt, date } = req.body;
 
   UserQuestions.create({
     userId: userId,
@@ -94,7 +96,8 @@ exports.addCustomHistory = (req, res) => {
 // Controller function to get all unique questions id
 // Usage: Get request to http://localhost:3003/api/user/history/:id
 exports.getAllUniqueQuestions = (req, res) => {
-  const { userId } = req.params;
+  const userId = req.userId;
+
   UserQuestions.findAll({
     where: { userId: userId },
     attributes: [
@@ -119,7 +122,9 @@ exports.getAllUniqueQuestions = (req, res) => {
 // Controller function to get all questions id
 // Usage: Get request to http://localhost:3003/api/user/history/:id/Medium
 exports.getAllUniqueQuestionsByDifficulty = (req, res) => {
-  const { userId, difficulty } = req.params;
+  const userId = req.userId;
+  const { difficulty } = req.params;
+
   UserQuestions.findAll({
     where: { userId: userId, difficulty: difficulty },
     attributes: [
@@ -143,7 +148,8 @@ exports.getAllUniqueQuestionsByDifficulty = (req, res) => {
 // Controller function to get all questions id for one user
 // Usage: Get request to http://localhost:3003/api/user/allhistory/:id
 exports.getAllQuestions = (req, res) => {
-  const { userId } = req.params;
+  const userId = req.userId;
+
   UserQuestions.findAll({
     where: { userId: userId },
     order: [['attemptedAt', 'ASC']],
@@ -166,7 +172,8 @@ exports.getAllQuestions = (req, res) => {
 // Controller function to get all questions id for one user
 // Usage: Get request to http://localhost:3003/api/user/allhistory/:id
 exports.getAttemptedDates = (req, res) => {
-  const { userId } = req.params;
+  const userId = req.userId;
+
   UserQuestions.findAll({
     where: { userId: userId },
     order: [['attemptedAt', 'ASC']],
