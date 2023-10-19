@@ -221,14 +221,22 @@ io.on('connection', async (socket) => {
   });
 
     // Request submission from other user
-    socket.on('requestSubmitSession', (roomId, questionId, questionDifficulty) => {
+    socket.on('requestSubmitSession', (roomId, questionId, questionDifficulty, otherUserQuit) => {
       console.log("A user clicked on submit session")
+      console.log("is user still with a peer? ", !otherUserQuit);
       
       // Check if the user is in the specified room
       if (socket.rooms.has(roomId)) {
         // Emit an event to inform the other user that the session is being submitted
-        console.log("sharing id and difficulty: ", questionId, questionDifficulty);
-        socket.to(roomId).emit('requestSubmitSession', questionId, questionDifficulty);
+        // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
+
+        // If user is alone in the room (other user has quit)
+        if (otherUserQuit) {
+          socket.to(roomId).emit('submitSession', questionId, questionDifficulty);
+        } else {
+          // Other user is still in the room, to request submission
+          socket.to(roomId).emit('requestSubmitSession', questionId, questionDifficulty);
+        }
       }
     });
 
@@ -250,7 +258,7 @@ io.on('connection', async (socket) => {
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
-      console.log("sharing id and difficulty: ", questionId, questionDifficulty);
+      // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
       socket.to(roomId).emit('submitSession', questionId, questionDifficulty);
       // Leave the room
       socket.leave(roomId);

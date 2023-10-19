@@ -145,8 +145,6 @@ const CodeSpace = () => {
 
   // To handle user changing path / disconnecting from match
   useEffect(() => {
-    console.log('Route changed to', location.pathname);
-
     function handleOnBeforeUnload(event: BeforeUnloadEvent) {
       if (!hasQuitRoom) {
         event.preventDefault();
@@ -196,7 +194,7 @@ const CodeSpace = () => {
       // socket.emit('timerEnd', roomId);
       // alert('The time is up');
       // navigate("/matching");
-
+      
       // Open submission prompt dialog on timer end
       openTimerEndSubmitDialog();
     }
@@ -278,7 +276,7 @@ const CodeSpace = () => {
   const handleRequestSubmitSession = () => {
     if (socket) {
       // Emit a "submitSession" event to the server
-      socket.emit('requestSubmitSession', roomId, questionId, questionDifficulty);
+      socket.emit('requestSubmitSession', roomId, questionId, questionDifficulty, otherUserQuit);
     }
     setSubmissionRequestPending(true);
   };
@@ -610,7 +608,7 @@ const CodeSpace = () => {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">{otherUserQuit ? "Continue Session" : "Confirm Quit"}</h5>
+              <h5 className="modal-title">{"Confirm Quit"}</h5>
               <button type="button" className="close" onClick={closeQuitDialog}>
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -631,7 +629,8 @@ const CodeSpace = () => {
                 if (otherUserQuit) {
                   // Close dialog and set other user quit to false to reset the message when the remaining user click on quit session again
                   closeQuitDialog();
-                  setOtherUserQuit(false);
+                  // Removing logic as it prevents the other user from submitting the sessino if their peer has quit
+                  // setOtherUserQuit(false);
                 } else {
                   // Close the dialog
                   closeQuitDialog();
@@ -689,7 +688,14 @@ const CodeSpace = () => {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={closeSubmitDialog}>Cancel</button>
-            <button type="button" className="btn btn-danger" onClick={() => handleRequestSubmitSession()}>Submit</button>
+            <button type="button" className="btn btn-danger" 
+            onClick={() => {
+              if (otherUserQuit) {
+                handleSubmitSession();
+              } else {
+                handleRequestSubmitSession();
+              }
+            }}>Submit</button>
           </div>
         </div>
       </div>
