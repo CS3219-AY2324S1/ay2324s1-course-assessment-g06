@@ -195,3 +195,9 @@ exports.verifyToken = (req, res) => {
   // Return successful response to the client here.
   res.status(200).send({ message: "Token is valid." });
 };
+
+exports.verifyAdmin = (req, res) => {
+  // If the middleware successfully verified the token, and is admin.
+  // Return successful response to the client here.
+  res.status(200).send({ message: "User is admin." });
+};
