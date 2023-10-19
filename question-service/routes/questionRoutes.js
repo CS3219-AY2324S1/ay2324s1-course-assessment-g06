@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const questionController = require("../controllers/questionController");
 const verifyUserToken = require('../middleware/verifyUserToken');  // Import the middleware
+const verifyUserAdmin = require('../middleware/verifyUserAdmin');  // Import the middleware
 
 // Route for retrieving questions
 router.get("/", verifyUserToken, questionController.getAllQuestions);
@@ -12,13 +13,13 @@ router.get("/matched", verifyUserToken, questionController.getRandomQuestionByFi
 router.get("/:id", verifyUserToken, questionController.getQuestionById);
 
 // Create a new question
-router.post("/", verifyUserToken, questionController.createQuestion);
+router.post("/", verifyUserAdmin, questionController.createQuestion);
 
 // Update an existing question by frontendQuestionId
-router.put("/:id", verifyUserToken, questionController.updateQuestion);
+router.put("/:id", verifyUserAdmin, questionController.updateQuestion);
 
 // Delete a question by frontendQuestionId
-router.delete("/:id", verifyUserToken, questionController.deleteQuestion);
+router.delete("/:id", verifyUserAdmin, questionController.deleteQuestion);
 
 // No difference if i add the below
 // router.get("/", "add-question");
