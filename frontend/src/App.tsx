@@ -18,6 +18,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Protected from "./components/Protected";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 import GuestRoute from "./components/GuestRoute";
 // import BoardUser from "./components/BoardUser";
 // import BoardModerator from "./components/BoardModerator";
@@ -33,6 +34,7 @@ const App: React.FC = () => {
     localStorage.getItem("user") ? true : false
   );
   const location = useLocation(); // Get the current location
+  const isCodeSpaceRoute = location.pathname.startsWith('/match/');
 
   function generateActiveStyle(path: string) {
     return {
@@ -65,6 +67,7 @@ const App: React.FC = () => {
 
   return (
     <div>
+      {isCodeSpaceRoute ? null : (
   <nav className="navbar navbar-expand navbar-light bg-white p-3"> 
         <Link to={"/"} className="navbar-brand">
           <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
@@ -114,6 +117,7 @@ const App: React.FC = () => {
           </div>
         )}
       </nav>
+      )}
 
       <div className="container mt-3">
         <Routes>
@@ -182,15 +186,13 @@ const App: React.FC = () => {
               </Protected>
             }
           />
-          <Route
-            path="/questions/add-question"
-            element={
-              <Protected isLoggedIn={currentUser}>
-                <AddQuestionForm />
-              </Protected>
-            }
-          />
+          <Route path="/questions/add-question" element={<AddQuestionForm />} />
+
+          <Route path="*" element={<PageNotFound />} />
+        
         </Routes>
+
+        
       </div>
     </div>
   );
