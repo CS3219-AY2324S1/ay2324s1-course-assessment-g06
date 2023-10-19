@@ -87,10 +87,11 @@ export default function UpdateForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const currentUser = getCurrentUser();
+  const QUESTION_HOST = process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
 
   useEffect(() => {
     const fetchData = () => {
-      fetch(`http://localhost:3000/api/questions/${id}`, {
+      fetch(QUESTION_HOST + `/${id}`, {
         headers: {
           "x-access-token": currentUser.accessToken,
         },
@@ -136,7 +137,7 @@ export default function UpdateForm() {
       }
     }
 
-    fetch(`http://localhost:3000/api/questions/${id}`, {
+    fetch(QUESTION_HOST + `/${id}`, {
       method: "PUT",
       mode: "cors",
       headers: {

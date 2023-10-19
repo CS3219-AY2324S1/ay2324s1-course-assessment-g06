@@ -32,19 +32,16 @@ const Matchmaking: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    function onConnect() {
-      if (isMatching) {
-        setIsMatching(false);
+    // Establish connection if there is none
+    const checkConnectionStatus = () => {
+      if (!socket.connected) {
+        // Connection is lost, refresh the page
+        window.location.reload();
       }
-      setIsConnected(true);
-    }
+    };
 
-    function onDisconnect() {
-      if (isMatching) {
-        setIsMatching(false);
-      }
-      setIsConnected(false);
-    }
+    // Schedule the connection check after a delay
+    const connectionCheckTimeout = setTimeout(checkConnectionStatus, 1000);
 
     function matchFound(roomId: string, msg: string) {
       setIsMatchFound(true); // Set match found to true
@@ -76,18 +73,42 @@ const Matchmaking: React.FC = () => {
       }
     }
 
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
     socket.on('match found', matchFound);
     socket.on('match canceled', matchCanceled); // Listen for match canceled event
 
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
+      clearTimeout(connectionCheckTimeout);
       socket.off('match found', matchFound);
       socket.off('match canceled', matchCanceled); // Remove the event listener
     };
   }, [selectedDifficulty, selectedTopic, selectedLanguage]);
+
+  useEffect(() => {
+    function onConnect() {
+      if (isMatching) {
+        setIsMatching(false);
+      }
+      setIsConnected(true);
+    }
+  
+    function onDisconnect() {
+      if (isMatching) {
+        setIsMatching(false);
+      }
+      setIsConnected(false);
+    }
+  
+    // Listen for the 'connect' event to check the connection status
+    socket.on('connect', onConnect);
+    // Listen for the 'disconnect' event to detect disconnection
+    socket.on('disconnect', onDisconnect);
+  
+    // Unsubscribe from the events when the component unmounts
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+    };
+  }, [isMatching]);
 
   const startTimer = () => {
     if (timerInterval === null) {

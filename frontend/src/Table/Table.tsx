@@ -46,11 +46,13 @@ const BasicTable: React.FC = () => {
   const currentUser = getCurrentUser();
   const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
 
+  const QUESTION_HOST = process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
+
 
   const fetchFirstPageData = () => {
     const token = getCurrentUser().token;  // Assuming you get the token like this
   
-    fetch(`http://localhost:3000/api/questions/pagination/first`, {
+    fetch(QUESTION_HOST + `/pagination/first`, {
       headers: {
         "Content-Type": "application/json",
         "x-access-token": currentUser.accessToken,  // Set the x-access-token header
@@ -65,13 +67,12 @@ const BasicTable: React.FC = () => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setIsLoading(false);
       });
   };
   
 
   const fetchRemainingData = () => {
-    fetch(`http://localhost:3000/api/questions/pagination/remaining`, {
+    fetch(QUESTION_HOST + `/pagination/remaining`, {
       headers: {
         "Content-Type": "application/json",
         "x-access-token": currentUser.accessToken,  // Set the x-access-token header
