@@ -160,7 +160,7 @@ const Analytics: React.FC = () => {
               style={{
                 fontFamily: "Cascadia Code, Inter, sans-serif",
                 letterSpacing: "1px",
-                fontSize: "120%",
+                fontSize: "110%",
                 fontWeight: "bold",
                 paddingLeft: "20px",
                 paddingTop: "10px",
@@ -172,25 +172,27 @@ const Analytics: React.FC = () => {
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <CardContent style={{ marginTop: "15%" }}>
-            <CircularProgressbarWithChildren
-              // number of questions user completed
-              value={userDetails.Total}
-              // number of questions in our db
-              maxValue={questionDetails.Total}
-              text={`${userDetails.Total}`}
-              strokeWidth={3}
-              background
-              styles={buildStyles({
-                trailColor: "transparent",
-                pathColor: "purple",
-                textColor: "black",
-                backgroundColor: "white",
-                textSize: "15px",
-              })}
-            >
-              {/* <h6>{userDetails.Total}</h6> */}
-              <p style={{ paddingTop: "30%" }}>solved</p>
-            </CircularProgressbarWithChildren>
+            <div style={{ width: "80%", height: "80%" }}>
+              <CircularProgressbarWithChildren
+                // number of questions user completed
+                value={userDetails.Total}
+                // number of questions in our db
+                maxValue={questionDetails.Total}
+                text={`${userDetails.Total}`}
+                strokeWidth={3}
+                background
+                styles={buildStyles({
+                  trailColor: "transparent",
+                  pathColor: "purple",
+                  textColor: "black",
+                  backgroundColor: "white",
+                  textSize: "15px",
+                })}
+              >
+                {/* <h6>{userDetails.Total}</h6> */}
+                <p style={{ paddingTop: "30%", fontSize: "90%" }}>solved</p>
+              </CircularProgressbarWithChildren>
+            </div>
           </CardContent>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -243,7 +245,7 @@ const Analytics: React.FC = () => {
                 style={{
                   fontFamily: "Cascadia Code, Inter, sans-serif",
                   letterSpacing: "1px",
-                  fontSize: "90%",
+                  fontSize: "100%",
                   paddingLeft: "20px",
                   paddingTop: "10px",
                 }}
@@ -278,8 +280,29 @@ const Analytics: React.FC = () => {
         </Card>
       </Box>
 
-      <Card sx={{ display: "flex", margin: "10" }}>
-        <CardContent>History of Questions Attempted</CardContent>
+      <Card
+        sx={{
+          display: "flex",
+          backgroundColor: "#E6E6E6",
+          borderRadius: "15px",
+          marginTop: "20px",
+          boxShadow: "none",
+        }}
+      >
+        <CardContent>
+          <header
+            style={{
+              fontFamily: "Cascadia Code, Inter, sans-serif",
+              letterSpacing: "1px",
+              fontSize: "100%",
+              paddingLeft: "20px",
+              paddingTop: "10px",
+              fontWeight: "bold",
+            }}
+          >
+            History of Questions Attempted
+          </header>
+        </CardContent>
       </Card>
     </div>
   );
