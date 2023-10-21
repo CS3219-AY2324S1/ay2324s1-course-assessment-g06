@@ -17,11 +17,16 @@ const verifyUser2Token = (req, res, next) => {
         if (response.status === 200) {
             next();
         } else {
+            console.log(response);
             res.status(401).send({ message: "Failed user verification!" });
         }
     })
     .catch(error => {
-        res.status(401).send({ message: "Something went wrong with the auth service!" });
+        if (error.response.status === 401) {
+            res.status(401).send({ message: "Token 2 Failed Authentication!" });
+        } else {
+            res.status(500).send({ message: "Something went wrong with the auth service" });
+        }
     });
 };
 
