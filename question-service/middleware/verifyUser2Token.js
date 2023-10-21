@@ -17,11 +17,11 @@ const verifyUser2Token = (req, res, next) => {
         if (response.status === 200) {
             next();
         } else {
-            res.status(401).send({ message: "Unauthorized by qnssvc!" });
+            res.status(401).send({ message: "Failed user verification!" });
         }
     })
     .catch(error => {
-        res.status(401).send({ message: "Unauthorized! by qns svc" });
+        res.status(401).send({ message: "Something went wrong with the auth service!" });
     });
 };
 
