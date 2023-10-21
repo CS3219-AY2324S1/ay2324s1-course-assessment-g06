@@ -7,7 +7,7 @@ const verifyUser2Token = (req, res, next) => {
     const token = req.headers['x-access-token2'];
 
     if (!token) {
-        return res.status(403).send({ message: "No token provided!" });
+        return res.status(403).send({ message: "Token 2 not provided!" });
     }
 
     axios.get(`${userSvcApi}/verifyToken`, { 
