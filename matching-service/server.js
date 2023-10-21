@@ -295,6 +295,7 @@ async function generateQuestion(difficulty, topic, accessToken1, accessToken2) {
       QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`, {
         headers: {
           "x-access-token": accessToken1,
+          "x-access-token2": accessToken2,
         },
       }
     );
