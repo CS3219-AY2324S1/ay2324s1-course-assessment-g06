@@ -19,7 +19,9 @@ const FRONTEND_SERVICE_CORS =
 const MATCHING_PORT = process.env.MATCHING_PORT || 3002;
 const io = socketIo(server, {
   cors: {
-    origin: [FRONTEND_SERVICE_CORS, MATCHING_SERVICE_CORS],
+    // origin: [FRONTEND_SERVICE_CORS, MATCHING_SERVICE_CORS],
+    // Should change to "*"??
+    origin: "*",
   },
 });
 

@@ -1,4 +1,4 @@
-FROM node:latest as build
+FROM node:alpine as build
 WORKDIR /src/app
 # Install app dependencies
 

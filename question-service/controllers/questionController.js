@@ -4,7 +4,7 @@ module.exports = {
   // Controller function to get all questions
   // Usage: Get request to http://localhost:3000/api/questions/
   getAllQuestions: (req, res) => {
-    Question.find()
+    Question.find().lean()
       .then((questions) => {
         res.json(questions);
       })
