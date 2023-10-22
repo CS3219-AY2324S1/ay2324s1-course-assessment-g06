@@ -595,12 +595,14 @@ const CodeSpace = () => {
         {question !== null ? (
           <Container
         maxWidth="lg"
+        className='mt-4'
         style={{
-          margin: '40px auto 0 auto',
+          margin: '0 auto',
           backgroundColor: '#E6E6E6',
           borderRadius: '20px',
-          width: '80%',
+          width: '100%',
           padding: '20px',
+          maxWidth: '100%'
         }}
       >
         <Paper
@@ -618,20 +620,25 @@ const CodeSpace = () => {
               </div>
             </Grid>
 
-            <Grid item xs={1.5}>
-              <CategoryWrapper>{question.difficulty}</CategoryWrapper>
-            </Grid>
-
-            {question.topics.split(', ').map((topic, index) => (
-              <Grid
-                item
-                xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
-                key={index}
-              >
-                <QuestionWrapper>{topic}</QuestionWrapper>
+            {/* Hide these tags when the width of the screen is smal */}
+            {window.innerWidth > 940 && (
+              <>
+              <Grid item xs={1.5}>
+                <CategoryWrapper>{question.difficulty}</CategoryWrapper>
               </Grid>
-            ))}
 
+              {question.topics.split(', ').map((topic, index) => (
+                <Grid
+                  item
+                  xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
+                  key={index}
+                >
+                  <QuestionWrapper>{topic}</QuestionWrapper>
+                </Grid>
+              ))}
+              </>
+            )}
+          
             <Container maxWidth="lg" style={{ marginTop: '25px' }}>
               <Grid item xs={12}>
                 <div
@@ -672,7 +679,7 @@ const CodeSpace = () => {
         <br/>
 
         {/* Chat UI */}
-        <div className="chat-container mx-5" style={{ backgroundColor: 'white' }}> 
+        <div className="chat-container mx-1" style={{ backgroundColor: 'white' }}> 
           <h2>Chat</h2>
           <div className="chat-messages">
             <ScrollToBottom className='message-container'>
