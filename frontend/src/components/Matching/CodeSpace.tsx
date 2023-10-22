@@ -200,28 +200,29 @@ const CodeSpace = () => {
       const tick = () => {
         const currentTime = performance.now();
         const elapsed = Math.floor((currentTime - startTime) / 1000); // Calculate elapsed seconds
-  
+
         if (elapsed < timer) {
-          setTimer(timer - elapsed); // Update the timer
-          const minutes = Math.floor((timer - elapsed) / 60);
+          const hours = Math.floor((timer - elapsed) / 3600);
+          const minutes = Math.floor(((timer - elapsed) % 3600) / 60);
           const remainingSeconds = (timer - elapsed) % 60;
-          const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+          const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
           setformattedTime(formattedTime);
           requestAnimationFrame(tick); // Schedule the next tick
         } else {
+          setformattedTime('00:00:00');
           setTimer(0);
           setIsTimerEnded(true);
         }
       };
-  
+
       const timerInterval = requestAnimationFrame(tick);
-      
+
       return () => {
         cancelAnimationFrame(timerInterval);
       };
     }
   }, [timer, isTimerEnded]);
-  
+
 
   useEffect(() => {
     if (isTimerEnded && socket) {
@@ -551,13 +552,18 @@ const CodeSpace = () => {
 
   return (
     
-    <div style={{ backgroundColor: '#d8d8d8', paddingTop: '15px', paddingLeft: '15px' }}>
+    <div style={{ backgroundColor: '#d8d8d8', padding: '15px' }}>
       <div className='p-2 row'>
-        <div className="col-md-6 col-sm d-flex align-items-center">
+        <div className="col-md-4 col-sm d-flex align-items-center">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
           <span style={{ fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', borderRadius: '20px', padding: '10px', fontSize: '16px' }}>{topic || 'Not selected'}</span>
         </div>
-        <div className="col-md-6 col-sm">
+
+        <div className="col-md-4 col-sm">
+          <span className="timer">{formattedTime}</span> 
+        </div>
+
+        <div className="col-md-4 col-sm">
           <div className="d-flex justify-content-end">
             {/* Submit Button */}
             <button className="submit-button mx-2" onClick={openSubmitDialog}>
@@ -574,20 +580,16 @@ const CodeSpace = () => {
         </div>
       </div>
 
-      <h2>Welcome, {socketId || 'Loading...'}</h2>
+    
+      {/* <h2>Welcome, {socketId || 'Loading...'}</h2> */}
       {/* Match Information */}
-      <p>
+      {/* <p>
         You are matched with another user using difficulty:{' '}
         {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and
         language: {language || 'Not selected'}
       </p>
-      <div className="timer">Time left: {formattedTime} minutes</div>
+      <div className="timer">Time left: {formattedTime} minutes</div> */}      
 
-      <br />
-      <br />
-      
-
-      <Grid container spacing={2}>
         <Grid item xs={6} md={6}></Grid>
         {/* Question */}
         {question !== null ? (
@@ -659,18 +661,18 @@ const CodeSpace = () => {
       {/* Coding Space */}
         <CodeMirror
           value={code}
-          height="200px"
+          height="400px"
+          style={{ width: '100%' }}  // Set the width to 100% to fill the grid item
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
         />
-      </Grid>
       </Grid>
         <br/>
         <br/>
         <br/>
 
         {/* Chat UI */}
-        <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
+        <div className="chat-container mx-5" style={{ backgroundColor: 'white' }}> 
           <h2>Chat</h2>
           <div className="chat-messages">
             <ScrollToBottom className='message-container'>

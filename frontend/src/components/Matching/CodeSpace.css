@@ -116,7 +116,19 @@ button.quit-button:hover {
   background-color: #ff6464;
   color: white;
 }
-  
+
+.timer {
+  font-weight: bold;
+  font-size: 25px;
+  text-align: center;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  line-height: 40px;
+  padding-top: 10px;
+  padding-right: 7px;
+}
+
   /* Style for 'own' messages */
   #own {
     justify-content: flex-start;
