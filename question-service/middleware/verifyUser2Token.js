@@ -1,6 +1,8 @@
 const axios = require('axios');
 
-const userSvcApi = "http://localhost:3003/api/auth";
+const USER_SERVICE = process.env.USER_SERVICE || "http://localhost:3003";
+const userSvcApi = `${USER_SERVICE}/api/auth`;
+
 
 const verifyUser2Token = (req, res, next) => {
 
