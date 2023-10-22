@@ -16,6 +16,7 @@ verifyToken = (req, res, next) => {
             config.secret,
             (err, decoded) => {
               if (err) {
+                console.log(err);
                 return res.status(401).send({
                   message: "Unauthorized!",
                 });
@@ -36,7 +37,7 @@ isAdmin = (req, res, next) => {
       }
 
       res.status(403).send({
-        message: "Require Admin Role!"
+        message: "Not Admin!"
       });
       return;
     });

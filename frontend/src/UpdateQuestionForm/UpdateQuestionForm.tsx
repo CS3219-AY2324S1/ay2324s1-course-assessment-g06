@@ -11,6 +11,8 @@ import { FormInputDropdown } from "../form_components/FormInputDropdown";
 import { FormMultipleInputDropdown } from "../form_components/FormMultipleInputDropdown";
 import FormInputTextEditor from "../form_components/FormInputTextEditor";
 
+import { getCurrentUser } from "../services/auth.service";
+
 interface Question {
   _id: string;
   title: string;
@@ -84,11 +86,16 @@ export default function UpdateForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const currentUser = getCurrentUser();
   const QUESTION_HOST = process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
 
   useEffect(() => {
     const fetchData = () => {
-      fetch(QUESTION_HOST + `/${id}`)
+      fetch(QUESTION_HOST + `/${id}`, {
+        headers: {
+          "x-access-token": currentUser.accessToken,
+        },
+      })
         .then((response) => response.json())
         .then((responseData) => {
           setQuestion(responseData);
@@ -135,6 +142,7 @@ export default function UpdateForm() {
       mode: "cors",
       headers: {
         "Content-Type": "application/json",
+        "x-access-token": currentUser.accessToken,
       },
       body: JSON.stringify(formDataWithEditorContent),
     })

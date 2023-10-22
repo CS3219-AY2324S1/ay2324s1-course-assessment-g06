@@ -32,6 +32,21 @@ const db = require('./models');
 const SessionHistory = db.SessionHistory;
 db.sequelize.sync();
 
+// Verification
+const axios = require('axios');
+const USER_SERVICE = process.env.USER_SERVICE || "http://localhost:3003";
+
+async function isTokenValid(accessToken) {
+  try {
+    const response = await axios.get(`${USER_SERVICE}/api/auth/verifyToken`, {
+      headers: { "x-access-token":accessToken}
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    return false;
+  }
+}
 
 app.use(cors());
 app.use(express.json());
@@ -53,17 +68,39 @@ server.listen(MATCHING_PORT, () => {
   console.log(`Server is listening on port ${MATCHING_PORT}`);
 });
 
-app.get('/api/room/:roomId', (req, res) => {
+app.get('/api/room/:roomId', async (req, res) => {
   console.log('Received GET request for /api/room/:roomId');
   const roomId = req.params.roomId;
   const roomInfo = rooms.get(roomId);
   console.log("rooms data: ", rooms);
 
+  // Access the access token from the room's data
+  // @Sean, these are the 2 access token to use for verification
+  const accessToken1 = roomInfo.accessToken1;
+  const accessToken2 = roomInfo.accessToken2;
+
+  // Do the checks here
+  const user1Valid = await isTokenValid(accessToken1);
+  const user2Valid = await isTokenValid(accessToken2);
+
+  // Display status of both users
+  console.log("User 1 get room validity: ", user1Valid);
+  console.log("User 2 get room validity: ", user2Valid);
+
+  if (!user1Valid || !user2Valid) {
+    console.log("User not authorized to join room.");
+    return res.status(401).send("One of the user's token is invalid.");
+  }
+
   // Check if the room is still active
   if (rooms.has(roomId)) {
     // Check if user belongs in this room
     const questionId = roomInfo.questionId;
-    fetch(QUESTION_HOST + `/${questionId}`)
+    fetch(QUESTION_HOST + `/${questionId}`, {
+      headers: {
+        "x-access-token": accessToken1,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
@@ -99,7 +136,7 @@ io.on('connection', async (socket) => {
   console.log('A user connected');
   console.log('User Token:', socket.decoded_token, "connected");
   
-  socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage) => {
+  socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage, accessToken) => {
     const userId = socket.decoded_token.id;
 
     if (waitingQueue.find(user => user.userId === userId)) {
@@ -113,13 +150,14 @@ io.on('connection', async (socket) => {
       if (matchingUserIndex !== -1) {
         console.log('User match!');
         const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
-        startMatch(user1, socket, selectedDifficulty, selectedTopic, selectedLanguage);
+        startMatch(user1, socket, selectedDifficulty, selectedTopic, accessToken);
       } else {
         console.log('No user found');
         socket.userId = userId;
         socket.selectedDifficulty = selectedDifficulty;
         socket.selectedTopic = selectedTopic;
         socket.selectedLanguage = selectedLanguage;
+        socket.accessToken = accessToken;
         waitingQueue.push(socket);
       }
     }
@@ -246,13 +284,37 @@ function removeRoomSession(roomId) {
   }
 }
 
-function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic) {
+async function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic, accessToken) {
   const roomId = uuidv4();
+  // console.log("This is the accesstoken1: " + user1Socket.accessToken);
+  // console.log("This is the accesstoken2: " + accessToken);
 
-  generateQuestion(selectedDifficulty, selectedTopic)
+  const accessToken1 = user1Socket.accessToken;
+  const accessToken2 = accessToken;
+
+  const user1Valid = await isTokenValid(accessToken1);
+  const user2Valid = await isTokenValid(accessToken2);
+
+  // Display status of both users
+  console.log("User 1 start match validity: ", user1Valid);
+  console.log("User 2 start match validity: ", user2Valid);
+
+  if (!user1Valid) {
+    user1Socket.emit('error', 'Authentication failed.');
+    console.log("User 1 is not valid")
+    return;  // end the function
+  }
+
+  if (!user2Valid) {
+    user2Socket.emit('error', 'Authentication failed.');
+    console.log("User 2 is not valid")
+    return;  // end the function
+  }
+
+  generateQuestion(selectedDifficulty, selectedTopic, accessToken1, accessToken2)
     .then((question) => {
       if (question) {
-        rooms.set(roomId, { questionId: question._id, user1Id: user1Socket.id, user2Id: user2Socket.id });
+        rooms.set(roomId, { questionId: question._id, user1Id: user1Socket.id, user2Id: user2Socket.id, accessToken1: user1Socket.accessToken, accessToken2: accessToken });
 
         user1Socket.emit('match found', roomId, 'You are matched with another user!');
         user2Socket.emit('match found', roomId, 'You are matched with another user!');
@@ -271,10 +333,16 @@ function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic)
     });
 }
 
-async function generateQuestion(difficulty, topic) {
+async function generateQuestion(difficulty, topic, accessToken1, accessToken2) {
+  // console.log("This is the accesstoken: " + accessToken);
   try {
     const response = await fetch(
-      QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`
+      QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`, {
+        headers: {
+          "x-access-token": accessToken1,
+          "x-access-token2": accessToken2,
+        },
+      }
     );
     console.log(QUESTION_HOST);
     if (!response.ok) {
