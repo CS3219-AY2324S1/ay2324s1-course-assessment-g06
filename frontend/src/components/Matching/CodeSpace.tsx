@@ -625,7 +625,7 @@ const CodeSpace = () => {
           borderRadius: '20px',
           width: '100%',
           padding: '20px',
-          maxWidth: '100%'
+          maxWidth: '100%',
         }}
       >
         <Paper
@@ -691,14 +691,13 @@ const CodeSpace = () => {
       {/* Coding Space */}
         <CodeMirror
           value={code}
-          height="400px"
+          height="700px"
           style={{ width: '100%' }}  // Set the width to 100% to fill the grid item
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
         />
       </Grid>
-        <br/>
-        <br/>
+      
         <br/>
 
         {/* Chat UI */}
