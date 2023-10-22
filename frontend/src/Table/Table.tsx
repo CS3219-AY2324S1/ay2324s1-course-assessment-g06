@@ -43,13 +43,25 @@ const BasicTable: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
+  const currentUser = getCurrentUser();
+  const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
+
   const QUESTION_HOST = process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
 
 
   const fetchFirstPageData = () => {
-    fetch(QUESTION_HOST + `/pagination/first`)
+    const token = getCurrentUser().token;  // Assuming you get the token like this
+  
+    fetch(QUESTION_HOST + `/pagination/first`, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": currentUser.accessToken,  // Set the x-access-token header
+      },
+    })
       .then((response) => response.json())
       .then((responseData) => {
+        console.log(currentUser.accessToken);
+        console.log(responseData);
         setData(responseData);
         setIsLoading(false);
       })
@@ -57,11 +69,19 @@ const BasicTable: React.FC = () => {
         console.error("Error fetching data:", error);
       });
   };
+  
 
   const fetchRemainingData = () => {
-    fetch(QUESTION_HOST + `/pagination/remaining`)
+    fetch(QUESTION_HOST + `/pagination/remaining`, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": currentUser.accessToken,  // Set the x-access-token header
+      },
+    })
       .then((response) => response.json())
       .then((responseData) => {
+        console.log(currentUser.accessToken);
+        console.log(responseData);
         setData((prevData) => [...prevData, ...responseData]);
       })
       .catch((error) => {
@@ -69,8 +89,6 @@ const BasicTable: React.FC = () => {
       });
   };
 
-  const currentUser = getCurrentUser();
-  const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
 
   useEffect(() => {
     const fetchData = async () => {
