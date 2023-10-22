@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Link, Navigate, unstable_usePrompt as usePrompt } from "react-router-dom";
 import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
@@ -25,7 +25,6 @@ import GuestRoute from "./components/GuestRoute";
 // import BoardAdmin from "./components/BoardAdmin";
 import EventBus from "./common/EventBus";
 import logo from './images/peerPrepLogo.png';
-
 
 const App: React.FC = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
