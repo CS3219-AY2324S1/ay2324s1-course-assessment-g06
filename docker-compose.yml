@@ -59,6 +59,9 @@ services:
       - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
       - QUESTION_HOST=http://question-service:3000/api/questions
       - MATCHING_PORT=${MATCHING_PORT}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SQL_USERNAME=${SQL_USERNAME}
+      - SQL_HOST=${SQL_HOST}
     ports:
       - 3002:3002
     depends_on:
