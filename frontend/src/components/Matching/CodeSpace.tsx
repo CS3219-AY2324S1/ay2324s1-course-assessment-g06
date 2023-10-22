@@ -98,6 +98,9 @@ const CodeSpace = () => {
   // Check if user is disconnected from the code space
   const [isDisconnectionDialogOpen, setIsDisconnectionDialogOpen] = useState(false);
 
+  // Show user code is submitted
+  const [isSubmitteDialogOpen, setIsSubmitteDialogOpen] = useState(false);
+
   // To hide information if user is not authorised into code space
   const [isAccessAllowed, setIsAccessAllowed] = useState(false);
 
@@ -111,28 +114,6 @@ const CodeSpace = () => {
   const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-
-  // // To show a confirmation dialog before leaving the session
-
-
-// useEffect(() => {
-  // const unblock = navigate(location.pathname);
-
-//   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-//     if (true) {
-//       e.preventDefault();
-//       e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-//     }
-//   };
-
-//   window.addEventListener('beforeunload', handleBeforeUnload);
-
-//   return () => {
-//     window.removeEventListener('beforeunload', handleBeforeUnload);
-//     navigate("/matching");
-//   };
-// }, [navigate, location]);
-
 
   /////////////////// HANDLE DIALOG OPEN OR CLOSE  ///////////////////
   // To open of close the confirm quit session modal/dialog
@@ -179,6 +160,15 @@ const CodeSpace = () => {
   };
   
   const closeDisconnectionDialog = () => {
+    setIsDisconnectionDialogOpen(false);
+  };
+
+  // Show user code submitted
+  const openSubmittedDialog = () => {
+    setIsDisconnectionDialogOpen(true);
+  };
+  
+  const closeSubmittedDialog = () => {
     setIsDisconnectionDialogOpen(false);
   };
 
@@ -335,7 +325,7 @@ const CodeSpace = () => {
       });
 
       matchedSocket.on('submitSession', (questionIdFromServer, questionDifficultyFromServer) => {
-        alert('The session has been submitted');
+        // alert('The session has been submitted');
         saveSessionHistory(questionIdFromServer, questionDifficultyFromServer);
         setHasQuitRoom(true);
         navigate("/matching");
@@ -440,7 +430,7 @@ const CodeSpace = () => {
     }
     console.log("quitting session");
 
-    alert('You have quit the session');
+    // alert('You have quit the session');
     navigate("/matching");
   };
 
@@ -456,7 +446,7 @@ const CodeSpace = () => {
 
     saveSessionHistory(questionId, questionDifficulty);
 
-    alert("You have submitted the session.");
+    // alert("You have submitted the session.");
     navigate("/matching");
   };
 
@@ -739,8 +729,9 @@ const CodeSpace = () => {
               <p>Are you sure you want to submit this session?</p>
             )}
           </div>
+          {!submissionRequestPending ? (
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={closeSubmitDialog}>Cancel</button>
+            
             <button type="button" className="btn btn-danger" 
             onClick={() => {
               if (otherUserQuit) {
@@ -750,6 +741,9 @@ const CodeSpace = () => {
               }
             }}>Submit</button>
           </div>
+            ) : (
+              <p></p>
+            )}
         </div>
       </div>
     </div>
@@ -793,6 +787,28 @@ const CodeSpace = () => {
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={handleSubmitOnTimerEndSession}>Yes</button>
               <button type="button" className="btn btn-danger" onClick={closeTimerEndSubmitDialog}>No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Confirmed Submit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitteDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Submitted</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmittedDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>You have submitted the code</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setIsSubmitteDialogOpen(false)}>
+                Close
+              </button>
             </div>
           </div>
         </div>
