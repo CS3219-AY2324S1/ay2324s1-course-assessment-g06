@@ -185,9 +185,8 @@ io.on('connection', async (socket) => {
     for (const [roomId, roomInfo] of rooms.entries()) {
       // Compare socketid with user1Id and user2Id
       if (socket.id === roomInfo.user1Id || socket.id === roomInfo.user2Id) {
-        socket.to(roomId).emit('userDisconnected');
+        socket.to(roomId).emit('userDisconnected', roomId);
         socket.leave(roomId);
-        
         removeRoomSession(roomId);
         break; // Guard clause
       }
