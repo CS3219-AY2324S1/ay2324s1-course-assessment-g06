@@ -626,12 +626,14 @@ const CodeSpace = () => {
           width: '100%',
           padding: '20px',
           maxWidth: '100%',
+          maxHeight: '800px'
         }}
       >
         <Paper
           style={{
             padding: '20px',
             borderRadius: '15px',
+            maxHeight: '725px'
           }}
         >
           <Grid sx={{ flexGrow: 1 }} container spacing={1}>
@@ -666,7 +668,7 @@ const CodeSpace = () => {
               <Grid item xs={12}>
                 <div
                   className="content-wrapper"
-                  style={{ overflow: 'auto', maxHeight: '350px' }}
+                  style={{ overflow: 'auto', maxHeight: '600px' }}
                 >
                   <div
                     dangerouslySetInnerHTML={{
