@@ -32,6 +32,21 @@ const db = require('./models');
 const SessionHistory = db.SessionHistory;
 db.sequelize.sync();
 
+// Verification
+const axios = require('axios');
+const USER_SERVICE = process.env.USER_SERVICE || "http://localhost:3003";
+
+async function isTokenValid(accessToken) {
+  try {
+    const response = await axios.get(`${USER_SERVICE}/api/auth/verifyToken`, {
+      headers: { "x-access-token":accessToken}
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    return false;
+  }
+}
 
 app.use(cors());
 app.use(express.json());
@@ -53,7 +68,7 @@ server.listen(MATCHING_PORT, () => {
   console.log(`Server is listening on port ${MATCHING_PORT}`);
 });
 
-app.get('/api/room/:roomId', (req, res) => {
+app.get('/api/room/:roomId', async (req, res) => {
   console.log('Received GET request for /api/room/:roomId');
   const roomId = req.params.roomId;
   const roomInfo = rooms.get(roomId);
@@ -63,6 +78,19 @@ app.get('/api/room/:roomId', (req, res) => {
   // @Sean, these are the 2 access token to use for verification
   const accessToken1 = roomInfo.accessToken1;
   const accessToken2 = roomInfo.accessToken2;
+
+  // Do the checks here
+  const user1Valid = await isTokenValid(accessToken1);
+  const user2Valid = await isTokenValid(accessToken2);
+
+  // Display status of both users
+  console.log("User 1 get room validity: ", user1Valid);
+  console.log("User 2 get room validity: ", user2Valid);
+
+  if (!user1Valid || !user2Valid) {
+    console.log("User not authorized to join room.");
+    return res.status(401).send("One of the user's token is invalid.");
+  }
 
   // Check if the room is still active
   if (rooms.has(roomId)) {
@@ -256,16 +284,33 @@ function removeRoomSession(roomId) {
   }
 }
 
-function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic, accessToken) {
+async function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic, accessToken) {
   const roomId = uuidv4();
   // console.log("This is the accesstoken1: " + user1Socket.accessToken);
   // console.log("This is the accesstoken2: " + accessToken);
 
-  // @Sean, these are the 2 access token to use for verification
   const accessToken1 = user1Socket.accessToken;
   const accessToken2 = accessToken;
 
-  //
+  const user1Valid = await isTokenValid(accessToken1);
+  const user2Valid = await isTokenValid(accessToken2);
+
+  // Display status of both users
+  console.log("User 1 start match validity: ", user1Valid);
+  console.log("User 2 start match validity: ", user2Valid);
+
+  if (!user1Valid) {
+    user1Socket.emit('error', 'Authentication failed.');
+    console.log("User 1 is not valid")
+    return;  // end the function
+  }
+
+  if (!user2Valid) {
+    user2Socket.emit('error', 'Authentication failed.');
+    console.log("User 2 is not valid")
+    return;  // end the function
+  }
+
   generateQuestion(selectedDifficulty, selectedTopic, accessToken1, accessToken2)
     .then((question) => {
       if (question) {
