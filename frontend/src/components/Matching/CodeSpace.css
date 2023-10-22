@@ -83,11 +83,14 @@
 
 /* Quit button */
 button.quit-button {
-  background-color: #6C63FF;
+  background-color: #ff4646;
   color: white;
   font-weight: bold;
-  border-radius: 15px;
-  padding: 12px 24px;
+  text-align: center;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
   transition: background-color 0.3s;
 }
 
@@ -96,9 +99,22 @@ button.submit-button {
   background-color: #6C63FF;
   color: white;
   font-weight: bold;
-  border-radius: 15px;
-  padding: 12px 24px;
+  text-align: center;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
   transition: background-color 0.3s;
+}
+
+button.submit-button:hover {
+  background-color: #9792f9;
+  color: white;
+}
+
+button.quit-button:hover {
+  background-color: #ff6464;
+  color: white;
 }
   
   /* Style for 'own' messages */

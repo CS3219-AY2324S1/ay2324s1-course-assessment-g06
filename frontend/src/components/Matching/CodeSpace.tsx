@@ -12,7 +12,8 @@ import { styled } from '@mui/material/styles';
 import { Button, Container, Grid, Paper } from '@mui/material';
 import './CodeSpace.css'; 
 import logo from '../../images/peerPrepLogo.png';
-
+import PublishIcon from '@mui/icons-material/Publish';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 interface Question {
   _id: string;
@@ -550,11 +551,29 @@ const CodeSpace = () => {
 
   return (
     
-    <div>
-      <div className='p-2'>
-        <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
-      {/* The rest of your component content */}
-    </div>
+    <div style={{ backgroundColor: '#d8d8d8', paddingTop: '15px', paddingLeft: '15px' }}>
+      <div className='p-2 row'>
+        <div className="col-md-6 col-sm d-flex align-items-center">
+          <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
+          <span style={{ fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', borderRadius: '20px', padding: '10px', fontSize: '16px' }}>{topic || 'Not selected'}</span>
+        </div>
+        <div className="col-md-6 col-sm">
+          <div className="d-flex justify-content-end">
+            {/* Submit Button */}
+            <button className="submit-button mx-2" onClick={openSubmitDialog}>
+              <PublishIcon/> 
+              <span className="pr-1">Submit</span> 
+            </button>
+
+            {/* Quit Button */}
+            <button className="quit-button mx-2" onClick={openQuitDialog}>
+              <LogoutIcon/>
+              <span className="pr-1">Quit Session</span> 
+            </button>
+          </div>
+        </div>
+      </div>
+
       <h2>Welcome, {socketId || 'Loading...'}</h2>
       {/* Match Information */}
       <p>
@@ -686,19 +705,6 @@ const CodeSpace = () => {
           </div>
         </div>
 
-        {/* Quit Button */}
-        <div className = "col-md-5">
-          <button className="quit-button" onClick={openQuitDialog}>
-              Quit Session
-          </button>
-        </div>
-
-        {/* Submit Button */}
-        <div className = "col-md-5">
-          <button className="submit-button" onClick={openSubmitDialog}>
-              Submit
-          </button>
-        </div>
 
       {/* Quit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
