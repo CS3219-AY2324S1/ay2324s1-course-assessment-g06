@@ -652,7 +652,7 @@ const CodeSpace = () => {
                     </>
                   )} */}
 
-                  <Container maxWidth="lg" style={{ marginTop: '25px' }}>
+                  <Container className='pr-3' maxWidth="lg" style={{ marginTop: '25px' }}>
                     <Grid item xs={12}>
                       <div
                         className="content-wrapper"
