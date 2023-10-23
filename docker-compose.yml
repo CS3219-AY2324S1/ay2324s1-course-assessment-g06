@@ -6,8 +6,7 @@ services:
       context: ./user-service
     # hosting this for other users
     environment:
-      - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
-      - USER_PORT=${USER_PORT}
+      - USR_SVC_PORT=${USER_PORT}
       - SQL_PASSWORD=${SQL_PASSWORD}
       - SQL_USERNAME=${SQL_USERNAME}
       - SQL_HOST=${SQL_HOST}
@@ -21,9 +20,7 @@ services:
     build:
       context: ./question-service
     environment:
-      - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
-      - USER_SERVICE=http://user-service:3003
-      # - QUESTION_HOST=http://question-backend:3000/api/questions
+      - USR_SVC_AUTH=http://user-service:3003/api/auth
       - MONGO_USERNAME=${MONGO_USERNAME}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
       - MONGO_CLUSTER_URL=${MONGO_CLUSTER_URL}
@@ -40,10 +37,12 @@ services:
     ports: 
       - 3001:3001
     environment: 
-    - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
-    - QUESTION_HOST=http://localhost:3000/api/questions
-    - MATCHING_SERVICE_CORS=http://localhost:3002
-    - USER_HISTORY=http://localhost:3003/api/users
+      - REACT_APP_USER_SVC=http://localhost:3003/api/auth
+      - REACT_APP_QNS_SVC=http://localhost:3000/api/questions
+      - REACT_APP_MTC_SVC=http://localhost:3002
+      - REACT_APP_USR_SVC_HIST=http://localhost:3003/api/hist
+      - REACT_APP_USR_SVC_AUTH=http://localhost:3003/api/auth
+      - USER_HISTORY=http://localhost:3003/api/users
     depends_on:
       - user-service
       - question-service
@@ -57,9 +56,11 @@ services:
     environment:
     # shd put localhost here?
       - FRONTEND_SERVICE_CORS=http://localhost:3001
-      - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
-      - QUESTION_HOST=http://question-service:3000/api/questions
-      - USER_SERVICE=http://user-service:3003
+      - FEN_SVC=http://localhost:3001
+      - QNS_SVC=http://question-service:3000/api/questions
+      - MTC_SVC=http://matching-service:3002
+      - USR_SVC_HIST=http://user-service:3003/api/hist
+      - USR_SVC_AUTH=http://user-service:3003/api/auth
       - MATCHING_PORT=${MATCHING_PORT}
       - SQL_PASSWORD=${SQL_PASSWORD}
       - SQL_USERNAME=${SQL_USERNAME}
