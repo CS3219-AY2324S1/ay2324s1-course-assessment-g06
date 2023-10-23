@@ -136,6 +136,15 @@ button.quit-button:hover {
   color: white;
 }
 
+hr {
+  margin: 0 auto !important;
+  margin-top: 10px;
+  display:block;
+  width: 95%;   
+  background-color:black;
+  height: 1px;
+}
+
 .timer {
   font-weight: bold;
   font-size: 25px;

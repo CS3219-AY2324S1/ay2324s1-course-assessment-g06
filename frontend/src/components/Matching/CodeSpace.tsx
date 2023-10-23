@@ -624,10 +624,14 @@ const CodeSpace = () => {
                     </div>
                   </Grid>
 
-                  <div className='container ml-0' style={{ maxWidth: '100%', padding: '10px 28px 0px' }}>
+
+                  <div className='container ml-0 mb-3' style={{ maxWidth: '100%', padding: '10px 28px 0px' }}>
                     <div className='difficulty-tag'>{difficulty}</div>
                     <div className='topic-tag'>{topic}</div>
                   </div>
+
+                  <hr/>
+
 
                   {/* Hide these tags when the width of the screen is smal */}
                   {/* {window.innerWidth > 940 && (
