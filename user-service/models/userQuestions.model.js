@@ -11,10 +11,11 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
     difficulty: {
-      type: Sequelize.ENUM('Hard', 'Medium', 'Easy'),
+      type: Sequelize.ENUM("Hard", "Medium", "Easy"),
     },
     attemptedAt: {
       type: Sequelize.DATE,
+      primaryKey: true,
     },
     attempt: {
       type: Sequelize.TEXT,

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@uiw/react-tooltip": "^4.22.0",
     "enoent": "^1.0.0"
   }
 }

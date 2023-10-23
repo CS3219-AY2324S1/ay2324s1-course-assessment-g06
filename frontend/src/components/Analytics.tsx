@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
 import axios from "axios";
 import authHeader from "../services/auth-header";
+import Tooltip from "@uiw/react-tooltip";
 
 const USER_HOST = process.env.USER_HOST || "http://localhost:3003/api/auth";
 const USER_HISTORY =
@@ -45,23 +46,8 @@ type HeatMapValue = {
 
 type questionData = {};
 const Analytics: React.FC = () => {
-  // dummy values
-  const heatvalue = [
-    { date: "2022-01-11T16:00:00.000Z", count: 2 },
-    { date: "2022-01-12T16:00:00.000Z", count: 20 },
-    { date: "2022-01-13T16:00:00.000Z", count: 10 },
-    ...[...Array(17)].map((_, idx) => ({
-      date: `2022/02/${idx + 10}T16:00:00.000Z`,
-      count: idx,
-      content: "",
-    })),
-    { date: "2022/04/11T16:00:00.000Z", count: 2 },
-    { date: "2022/05/01T16:00:00.000Z", count: 5 },
-    { date: "2022/05/02T16:00:00.000Z", count: 5 },
-    { date: "2022/05/04T16:00:00.000Z", count: 11 },
-  ];
   // all unique values
-  const [heatData, setHeatData] = useState<Array<HeatMapValue>>(heatvalue);
+  const [heatData, setHeatData] = useState<Array<HeatMapValue>>([]);
 
   const [userDetails, setUserDetails] = useState<UserDetails>({
     Easy: 0,
@@ -78,10 +64,14 @@ const Analytics: React.FC = () => {
     Total: 3,
   });
 
-  // 4 API calls
+  const [allQuestionIds, setAllQuestionIds] = useState<string[]>([]);
+  const [allQuestionTitles, setAllQuestionTitles] = useState<
+    { title: string; difficulty: string }[]
+  >([]);
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
-    // get all user details
+    // fetch user history
     axios
       .get(USER_HISTORY + "/history", { headers: authHeader() })
       .then((res) => {
@@ -98,7 +88,8 @@ const Analytics: React.FC = () => {
         const hardCount = solvedQuestions.filter(
           (q: any) => q.difficulty === "Hard"
         ).length;
-        // console.log(res.data);
+
+        // update user details state
         setUserDetails({
           ...userDetails,
           Easy: easyCount,
@@ -107,13 +98,46 @@ const Analytics: React.FC = () => {
           Total: solvedQuestions.length,
           Questions: solvedQuestions,
         });
+
+        // consolidate all question Ids in user history
+        const questionIds = solvedQuestions.map(
+          (item: any) => item.question_id
+        );
+        setAllQuestionIds(questionIds);
       })
       .catch((err) => console.log(err));
+  }, []);
 
+  useEffect(() => {
+    console.log("all question ids in history: ", allQuestionIds);
+    if (allQuestionIds.length > 0) {
+      const requestBody = {
+        ids: allQuestionIds,
+      };
+      axios
+        .post(QUESTION_HOST + "/questionbyid", requestBody, {
+          headers: authHeader(),
+        })
+        .then((response) => {
+          const data = response.data;
+          const titleAndDifficulty = data.map((item: any) => ({
+            title: item.title,
+            difficulty: item.difficulty,
+          }));
+
+          setAllQuestionTitles(titleAndDifficulty);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [allQuestionIds]);
+
+  useEffect(() => {
+    // fetch total question data
     axios
       .get(QUESTION_HOST + "/total", { headers: authHeader() })
       .then((response) => {
-        // console.log(response.data);
         const data = response.data; // Assuming your data is an array of objects
         let total = 0;
         data.forEach((item: any) => {
@@ -123,8 +147,9 @@ const Analytics: React.FC = () => {
             [item.difficulty]: item.count,
           }));
         });
-        console.log(total);
-        // Update the Total count
+        // console.log(total);
+
+        // Update the total count
         setQuestionDetails((prevQuestionDetails) => ({
           ...prevQuestionDetails,
           Total: total || 1,
@@ -133,10 +158,15 @@ const Analytics: React.FC = () => {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  useEffect(() => {
+    // fetch user attempts data
     axios
       .get(USER_HISTORY + "/attempts", { headers: authHeader() })
       .then((response) => {
         console.log(response.data);
+        // update heat data state
         setHeatData(response.data);
       })
       .catch((err) => {
@@ -157,7 +187,7 @@ const Analytics: React.FC = () => {
           <CardContent>
             <header
               style={{
-                fontFamily: "Cascadia Code, Inter, sans-serif",
+                // fontFamily: "Cascadia Code, Inter, sans-serif",
                 letterSpacing: "1px",
                 fontSize: "110%",
                 fontWeight: "bold",
@@ -169,9 +199,9 @@ const Analytics: React.FC = () => {
             </header>
           </CardContent>
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <CardContent style={{ marginTop: "15%" }}>
-            <div style={{ width: "80%", height: "80%" }}>
+        <Box sx={{ display: "flex", flexDirection: "row", width: "80%" }}>
+          <CardContent style={{ marginTop: "5%" }}>
+            <div style={{ width: "78%", height: "78%" }}>
               <CircularProgressbarWithChildren
                 // number of questions user completed
                 value={userDetails.Total}
@@ -188,43 +218,99 @@ const Analytics: React.FC = () => {
                   textSize: "15px",
                 })}
               >
-                {/* <h6>{userDetails.Total}</h6> */}
                 <p style={{ paddingTop: "30%", fontSize: "90%" }}>solved</p>
               </CircularProgressbarWithChildren>
             </div>
           </CardContent>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <CardContent>
-            <Box>
-              <Typography variant="h6" align="center">
+          <CardContent style={{ width: "100%", marginTop: "5%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                paddingBottom: "10px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "14px",
+                  marginTop: "2px",
+                  paddingBottom: "3px",
+                }}
+              >
                 Easy
-              </Typography>
+              </div>
               <LinearProgress
                 variant="determinate"
                 value={100 * (userDetails.Easy / (questionDetails.Easy || 1))}
+                style={{
+                  height: "9px",
+                  lineHeight: "5px",
+                  width: "100%",
+                  borderRadius: "20px",
+                  backgroundColor: "#BCDEB6",
+                }}
               />
-            </Box>
-            <Box>
-              <Typography variant="h6" align="center">
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                paddingBottom: "10px",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "14px",
+                  marginTop: "2px",
+                  paddingBottom: "3px",
+                }}
+              >
                 Medium
-              </Typography>
+              </div>
               <LinearProgress
                 variant="determinate"
                 value={
                   100 * (userDetails.Medium / (questionDetails.Medium || 1))
                 }
+                style={{
+                  height: "9px",
+                  lineHeight: "5px",
+                  width: "100%",
+                  borderRadius: "20px",
+                  backgroundColor: "#BCDEB6",
+                }}
               />
-            </Box>
-            <Box>
-              <Typography variant="h6" align="center">
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "14px",
+                  marginTop: "2px",
+                  paddingBottom: "3px",
+                }}
+              >
                 Hard
-              </Typography>
+              </div>
               <LinearProgress
                 variant="determinate"
                 value={100 * (userDetails.Hard / (questionDetails.Hard || 1))}
+                style={{
+                  height: "9px",
+                  lineHeight: "5px",
+                  width: "100%",
+                  borderRadius: "20px",
+                  backgroundColor: "#BCDEB6",
+                }}
               />
-            </Box>
+            </div>
           </CardContent>
         </Box>
       </Card>
@@ -242,36 +328,54 @@ const Analytics: React.FC = () => {
             <CardContent>
               <header
                 style={{
-                  fontFamily: "Cascadia Code, Inter, sans-serif",
+                  // fontFamily: "Cascadia Code, Inter, sans-serif",
                   letterSpacing: "1px",
                   fontSize: "100%",
                   paddingLeft: "20px",
                   paddingTop: "10px",
                 }}
               >
-                0 submissions in the last year
+                <strong>{userDetails.Total}</strong> submissions in the last
+                year
               </header>
             </CardContent>
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row" }}>
-            <CardContent>
+            {/* </Box> */}
+            {/* <Box sx={{ display: "flex", flexDirection: "row" }}> */}
+            <CardContent
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: "10px",
+              }}
+            >
               <HeatMap
                 value={heatData}
-                width={800}
-                rectSize={20}
+                width={1200}
+                rectSize={13}
                 weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
-                startDate={new Date("2022/01/01")}
+                startDate={new Date("2023/01/01")}
+                // rectRender={(props, data) => {
+                //   return (
+                //     <Tooltip
+                //       key={props.key}
+                //       placement="top"
+                //       content={`count: ${data.count || 0}`}
+                //     >
+                //       <rect {...props} />
+                //     </Tooltip>
+                //   );
+                // }}
                 // endDate={new Date('2022/12/31')}
                 //legendCellSize?
                 //rectProps?
                 // go see props for css in the future
                 panelColors={{
-                  0: "#f4decd",
-                  2: "#e4b293",
-                  4: "#d48462",
-                  10: "#c2533a",
-                  20: "#ad001d",
-                  30: "#000",
+                  0: "white", // lightest purple
+                  2: "#9C96FF", // light purple
+                  4: "#6C63FF", // medium purple
+                  20: "#493FE9", // dark purple
+                  30: "#322BA9", // darkest purple
                 }}
               />
             </CardContent>
@@ -288,7 +392,7 @@ const Analytics: React.FC = () => {
           boxShadow: "none",
         }}
       >
-        <CardContent>
+        <CardContent style={{ width: "100%" }}>
           <header
             style={{
               fontFamily: "Cascadia Code, Inter, sans-serif",
@@ -296,11 +400,54 @@ const Analytics: React.FC = () => {
               fontSize: "100%",
               paddingLeft: "20px",
               paddingTop: "10px",
+              paddingBottom: "10px",
               fontWeight: "bold",
             }}
           >
             History of Questions Attempted
           </header>
+          {allQuestionTitles.map((item, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                border: "1px solid white",
+                borderRadius: "5px",
+                backgroundColor: "white",
+                width: "97%",
+                marginLeft: "1.5%",
+                marginBottom: "15px",
+                padding: "7px",
+              }}
+            >
+              <span style={{ fontWeight: "bold", paddingLeft: "1%" }}>
+                {item.title}
+              </span>
+              <span
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginRight: "3%",
+                  padding: "0.7%",
+                  width: "7%",
+                  borderRadius: "20px",
+                  backgroundColor:
+                    item.difficulty === "Easy"
+                      ? "#BCDEB6" // Background color for "Easy" difficulty
+                      : item.difficulty === "Medium"
+                      ? "#F2CE6F" // Background color for "Medium" difficulty
+                      : item.difficulty === "Hard"
+                      ? "#F14949" // Background color for "Hard" difficulty
+                      : "transparent", // Default background color if none of the conditions match
+                }}
+              >
+                {item.difficulty}
+              </span>
+            </div>
+          ))}
         </CardContent>
       </Card>
     </div>
