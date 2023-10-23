@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_USER_SVC_URL || "http://localhost:3003/api/auth/";
-// const API_URL = "http://localhost:3003/api/auth/";
+const API_URL = process.env.REACT_APP_USR_SVC_AUTH || "http://localhost:3003/api/auth";
+// const API_URL = "http://localhost:3003/api/auth";
 
 export const register = (username: string, email: string, password: string) => {
-  return axios.post(API_URL + "signup", {
+  return axios.post(API_URL + "/signup", {
     username,
     email,
     password,
@@ -13,7 +13,7 @@ export const register = (username: string, email: string, password: string) => {
 
 export const login = (username: string, password: string) => {
   return axios
-    .post(API_URL + "signin", {
+    .post(API_URL + "/signin", {
       username,
       password,
     })
@@ -45,7 +45,7 @@ export const deleteUser = () => {
 
   // Axios DELETE request with JWT token in the header
   return axios
-    .delete(API_URL + "removeuser", {
+    .delete(API_URL + "/removeuser", {
       headers: {
         "x-access-token": user.accessToken,
       },

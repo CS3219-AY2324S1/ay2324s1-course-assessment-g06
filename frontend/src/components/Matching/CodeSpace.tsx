@@ -38,7 +38,7 @@ interface ChatMessage {
 const CodeSpace = () => {
   /////////////////// PARAMETER INITIALISATION  ///////////////////
   const MATCHING_SERVICE_CORS =
-  process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
+  process.env.REACT_APP_MTC_SVC || 'http://localhost:3002';
   
   // Id of the current code space room
   const { roomId } = useParams();
