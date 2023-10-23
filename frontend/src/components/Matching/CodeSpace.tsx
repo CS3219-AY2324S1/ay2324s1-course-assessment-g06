@@ -15,6 +15,7 @@ import './CodeSpace.css';
 import logo from '../../images/peerPrepLogo.png';
 import PublishIcon from '@mui/icons-material/Publish';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CircularProgress from "@mui/material/CircularProgress";
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -664,14 +665,12 @@ const CodeSpace = () => {
                 </Grid>
               </Container>
             ) : (
-              <p>Loading question...</p>
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+                <CircularProgress color="inherit" />
+              </div>
             )}
 
           </div>
-
-
-
-
 
           <br />
 
