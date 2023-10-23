@@ -730,7 +730,6 @@ const CodeSpace = () => {
                   }}
                 />
                 {isTyping && <div className="typing-indicator">Typing...</div>}
-                <button onClick={handleSendMessage}>Send</button>
               </div>
             </div>
           </div>
