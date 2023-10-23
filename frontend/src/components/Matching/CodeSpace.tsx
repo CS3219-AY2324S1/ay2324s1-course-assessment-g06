@@ -561,7 +561,7 @@ const CodeSpace = () => {
         </div>
 
         {/* Buttons */}
-        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-end">
+        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
           {/* Submit Button */}
           <button className="submit-button mx-2" onClick={openSubmitDialog}>
             <PublishIcon />
