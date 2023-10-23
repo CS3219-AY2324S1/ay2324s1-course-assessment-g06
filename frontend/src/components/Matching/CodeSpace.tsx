@@ -656,7 +656,7 @@ const CodeSpace = () => {
                     <Grid item xs={12}>
                       <div
                         className="content-wrapper"
-                        style={{ overflow: 'auto', maxHeight: '800px' }}
+                        style={{ overflow: 'auto', maxHeight: '775px' }}
                       >
                         <div
                           dangerouslySetInnerHTML={{
