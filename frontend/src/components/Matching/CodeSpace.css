@@ -67,9 +67,8 @@
   /* Make the input field transparent */
 }
 
-.chat-input button:hover {
-  background-color: rgb(216, 216, 216);
-  border-radius: 15px;
+.chat-input input:focus {
+  outline: none; /* Disable the focus outline */
 }
 
 .chat-message {
