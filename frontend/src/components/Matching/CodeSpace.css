@@ -168,6 +168,8 @@ button.quit-button:hover {
   max-width: 100%;
   max-height: 800px;
   background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Style for 'own' messages */

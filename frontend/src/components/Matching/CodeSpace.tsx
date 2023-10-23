@@ -575,7 +575,7 @@ const CodeSpace = () => {
 
   return (
 
-    <div style={{ backgroundColor: '#d8d8d8', padding: '15px' }}>
+    <div style={{ backgroundColor: '#white', padding: '15px' }}>
       <div className='p-2 row'>
         <div className="col-md-4 col-sm d-flex align-items-center">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
@@ -614,43 +614,44 @@ const CodeSpace = () => {
       <div className="timer">Time left: {formattedTime} minutes</div> */}
 
 
-      <div className='container row' style={{ maxWidth: '100%', margin: '0 auto', padding: '0' }}>
+      <div className='container' style={{ maxWidth: '100%', margin: '0 auto', padding: '0' }}>
+        <div className='row'>
+          <div className='col-12 col-md-5'>
+            {/* Question */}
+            {question !== null ? (
+              <Container
+                maxWidth="lg"
+                className='mt-5'
+                style={{
+                  margin: '0 auto',
+                  backgroundColor: 'white',
+                  borderRadius: '15px',
+                  width: '100%',
+                  maxWidth: '100%',
+                  minHeight: '950px',
+                  height: '950px',
+                  maxHeight: '950px',
+                  padding: '0',
+                  border: '1px solid #ccc',
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                {/* Header */}
+                <div className="card-header">
+                  Question
+                </div>
 
-        <div className='col-12 col-md-5'>
+                <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+                  <Grid item xs={12} container justifyContent="space-between">
+                    <div>
+                      <h1 style={{ fontSize: '25px', fontWeight: 'bold', padding: '10px 20px 0px 20px' }}>
+                        {question.title}
+                      </h1>
+                    </div>
+                  </Grid>
 
-          {/* Question */}
-          {question !== null ? (
-            <Container
-              maxWidth="lg"
-              className='mt-5'
-              style={{
-                margin: '0 auto',
-                backgroundColor: 'white',
-                borderRadius: '15px',
-                width: '100%',
-                maxWidth: '100%',
-                minHeight: '950px',
-                height: '950px',
-                maxHeight: '950px',
-                padding: '0',
-              }}
-            >
-              {/* Header */}
-              <div className="card-header">
-                Question
-              </div>
-
-              <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-                <Grid item xs={12} container justifyContent="space-between">
-                  <div>
-                    <h1 style={{ fontSize: '25px', fontWeight: 'bold', padding: '10px 20px 0px 20px' }}>
-                      {question.title}
-                    </h1>
-                  </div>
-                </Grid>
-
-                {/* Hide these tags when the width of the screen is smal */}
-                {/* {window.innerWidth > 940 && (
+                  {/* Hide these tags when the width of the screen is smal */}
+                  {/* {window.innerWidth > 940 && (
                     <>
                       <Grid item xs={1.5}>
                         <CategoryWrapper>{question.difficulty}</CategoryWrapper>
@@ -668,133 +669,132 @@ const CodeSpace = () => {
                     </>
                   )} */}
 
-                <Container maxWidth="lg" style={{ marginTop: '25px' }}>
-                  <Grid item xs={12}>
-                    <div
-                      className="content-wrapper"
-                      style={{ overflow: 'auto', maxHeight: '800px' }}
-                    >
+                  <Container maxWidth="lg" style={{ marginTop: '25px' }}>
+                    <Grid item xs={12}>
                       <div
-                        dangerouslySetInnerHTML={{
-                          __html: wrapPreTags(question.content),
-                        }}
-                      />
-                    </div>
-                  </Grid>
-                </Container>
-              </Grid>
-            </Container>
-          ) : (
-            <p>Loading question...</p>
-          )}
+                        className="content-wrapper"
+                        style={{ overflow: 'auto', maxHeight: '800px' }}
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: wrapPreTags(question.content),
+                          }}
+                        />
+                      </div>
+                    </Grid>
+                  </Container>
+                </Grid>
+              </Container>
+            ) : (
+              <p>Loading question...</p>
+            )}
 
-        </div>
-
-
-
-
-
-        <br />
-
-        <div className='col-12 col-md-7'>
-          <div className='codespace mt-5'>
-            <div className="card-header">
-              Code
-            </div>
-            <CodeMirror
-              value={code}
-              height="500px"
-              style={{
-              }}
-              onChange={onChange}
-              extensions={getCodeMirrorExtensions()}
-            />
           </div>
-          {/* Coding Space */}
+
+
+
 
 
           <br />
 
-
-          {/* Chat UI */}
-          <div className="chat-container" style={{ backgroundColor: 'white' }}>
-            <div className="card-header">
-              Chat
-            </div>
-            <div className="chat-messages">
-              <ScrollToBottom className='message-container'>
-                {messageList.map((messageContent, index) => (
-                  <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
-                    <div className='message-content'>
-                      {messageContent.message}
-                    </div>
-                    <div className='message-meta'>
-                      {messageContent.time}
-                    </div>
-                  </div>
-                ))}
-              </ScrollToBottom>
-            </div>
-            <div className="chat-input">
-              <input
-                type="text"
-                placeholder="Type your message..."
-                value={newMessage}
-                onChange={handleNewMessageChange}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    handleSendMessage();
-                  } else {
-                    handleStartTyping();
-                  }
-                }}
+          <div className='col-12 col-md-7'>
+            <div className='codespace mt-5'>
+              <div className="card-header">
+                Code
+              </div>
+              <CodeMirror
+                value={code}
+                height="500px"
+                onChange={onChange}
+                extensions={getCodeMirrorExtensions()}
               />
-              {isTyping && <div className="typing-indicator">Typing...</div>}
-              <button onClick={handleSendMessage}>Send</button>
+            </div>
+            {/* Coding Space */}
+
+
+            <br />
+
+
+            {/* Chat UI */}
+            <div className="chat-container" style={{ backgroundColor: 'white' }}>
+              <div className="card-header">
+                Chat
+              </div>
+              <div className="chat-messages">
+                <ScrollToBottom className='message-container'>
+                  {messageList.map((messageContent, index) => (
+                    <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
+                      <div className='message-content'>
+                        {messageContent.message}
+                      </div>
+                      <div className='message-meta'>
+                        {messageContent.time}
+                      </div>
+                    </div>
+                  ))}
+                </ScrollToBottom>
+              </div>
+              <div className="chat-input">
+                <input
+                  type="text"
+                  placeholder="Type your message..."
+                  value={newMessage}
+                  onChange={handleNewMessageChange}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      handleSendMessage();
+                    } else {
+                      handleStartTyping();
+                    }
+                  }}
+                />
+                {isTyping && <div className="typing-indicator">Typing...</div>}
+                <button onClick={handleSendMessage}>Send</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Quit Session Dialog/Modal */}
-      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">{"Confirm Quit"}</h5>
-              <button type="button" className="close" onClick={closeQuitDialog}>
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            {/* Quit Session Message */}
-            <div className="modal-body">
-              {otherUserQuit ? (
-                <p>The other user has left the session. Do you want to leave the session?</p>
-              ) : (
-                <p>Are you sure you want to quit this session?</p>
-              )}
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => {
-                  if (otherUserQuit) {
-                    // Close dialog and set other user quit to false to reset the message when the remaining user click on quit session again
-                    closeQuitDialog();
-                    // Removing logic as it prevents the other user from submitting the sessino if their peer has quit
-                    // setOtherUserQuit(false);
-                  } else {
-                    // Close the dialog
-                    closeQuitDialog();
-                  }
-                }}
-              >
-                {otherUserQuit ? "Continue" : "Cancel"}
-              </button>
-              <button type="button" className="btn btn-danger" onClick={handleQuitSession}>
-                {otherUserQuit ? "Leave" : "Quit"}
-              </button>
+        {/* Quit Session Dialog/Modal */}
+        <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">{"Confirm Quit"}</h5>
+                <button type="button" className="close" onClick={closeQuitDialog}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {/* Quit Session Message */}
+              <div className="modal-body">
+                {otherUserQuit ? (
+                  <p>The other user has left the session. Do you want to leave the session?</p>
+                ) : (
+                  <p>Are you sure you want to quit this session?</p>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    if (otherUserQuit) {
+                      // Close dialog and set other user quit to false to reset the message when the remaining user click on quit session again
+                      closeQuitDialog();
+                      // Removing logic as it prevents the other user from submitting the sessino if their peer has quit
+                      // setOtherUserQuit(false);
+                    } else {
+                      // Close the dialog
+                      closeQuitDialog();
+                    }
+                  }}
+                >
+                  {otherUserQuit ? "Continue" : "Cancel"}
+                </button>
+                <button type="button" className="btn btn-danger" onClick={handleQuitSession}>
+                  {otherUserQuit ? "Leave" : "Quit"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -901,9 +901,6 @@ const CodeSpace = () => {
           </div>
         </div>
       </div>
-
-
-
 
     </div>
   );
