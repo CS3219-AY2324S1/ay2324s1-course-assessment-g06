@@ -9,7 +9,12 @@ import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { savesession } from "../../services/save.service";
+import { styled } from '@mui/material/styles';
+import { Button, Container, Grid, Paper } from '@mui/material';
 import './CodeSpace.css'; 
+import logo from '../../images/peerPrepLogo.png';
+import PublishIcon from '@mui/icons-material/Publish';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -154,23 +159,33 @@ const CodeSpace = () => {
     setIsSubmitRequestDialogOpen(false);
   };
 
-  // Handle prompt for disconnection/redirection
-  const openDisconnectionDialog = () => {
-    setIsDisconnectionDialogOpen(true);
-  };
+  const QuestionWrapper = styled(Container)(({ theme }) => ({
+    backgroundColor: '#d8d8d8',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    borderRadius: '50px',
+    fontSize: '12px',
+    // Media query for smaller screens
+    '@media (max-width: 1200px)': {
+      fontSize: '10px', // Decrease font size for smaller screens
+    },
+  }));
   
-  const closeDisconnectionDialog = () => {
-    setIsDisconnectionDialogOpen(false);
-  };
-
-  // Show user code submitted
-  const openSubmittedDialog = () => {
-    setIsDisconnectionDialogOpen(true);
-  };
-  
-  const closeSubmittedDialog = () => {
-    setIsDisconnectionDialogOpen(false);
-  };
+  const CategoryWrapper = styled(Container)(({ theme }) => ({
+    backgroundColor: 'rgb(255, 192, 203)',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    borderRadius: '50px',
+    fontSize: '12px',
+    // Media query for smaller screens
+    '@media (max-width: 1200px)': {
+      fontSize: '10px', // Decrease font size for smaller screens
+    },
+  }));
 
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
@@ -204,28 +219,29 @@ const CodeSpace = () => {
       const tick = () => {
         const currentTime = performance.now();
         const elapsed = Math.floor((currentTime - startTime) / 1000); // Calculate elapsed seconds
-  
+
         if (elapsed < timer) {
-          setTimer(timer - elapsed); // Update the timer
-          const minutes = Math.floor((timer - elapsed) / 60);
+          const hours = Math.floor((timer - elapsed) / 3600);
+          const minutes = Math.floor(((timer - elapsed) % 3600) / 60);
           const remainingSeconds = (timer - elapsed) % 60;
-          const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+          const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
           setformattedTime(formattedTime);
           requestAnimationFrame(tick); // Schedule the next tick
         } else {
+          setformattedTime('00:00:00');
           setTimer(0);
           setIsTimerEnded(true);
         }
       };
-  
+
       const timerInterval = requestAnimationFrame(tick);
-      
+
       return () => {
         cancelAnimationFrame(timerInterval);
       };
     }
   }, [timer, isTimerEnded]);
-  
+
 
   useEffect(() => {
     if (isTimerEnded && socket) {
@@ -233,6 +249,12 @@ const CodeSpace = () => {
       openTimerEndSubmitDialog();
     }
   }, [isTimerEnded, roomId, socket]);
+
+  function wrapPreTags(content: string) {
+    const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
+    return wrappedContent;
+  }
+
 
   // Set default code in space after match according to language
   useEffect(() => {
@@ -552,51 +574,136 @@ const CodeSpace = () => {
   /////////////////// HANDLE FRONTEND COMPONENTS  ///////////////////
 
   return (
-    <div className="container mt-5" >
-      <h2>Welcome, {socketId || 'Loading...'}</h2>
+    
+    <div style={{ backgroundColor: '#d8d8d8', padding: '15px' }}>
+      <div className='p-2 row'>
+        <div className="col-md-4 col-sm d-flex align-items-center">
+          <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
+          <span style={{ fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', borderRadius: '20px', padding: '10px', fontSize: '16px' }}>{topic || 'Not selected'}</span>
+        </div>
+
+        <div className="col-md-4 col-sm">
+          <span className="timer">{formattedTime}</span> 
+        </div>
+
+        <div className="col-md-4 col-sm">
+          <div className="d-flex justify-content-end">
+            {/* Submit Button */}
+            <button className="submit-button mx-2" onClick={openSubmitDialog}>
+              <PublishIcon/> 
+              <span className="pr-1">Submit</span> 
+            </button>
+
+            {/* Quit Button */}
+            <button className="quit-button mx-2" onClick={openQuitDialog}>
+              <LogoutIcon/>
+              <span className="pr-1">Quit Session</span> 
+            </button>
+          </div>
+        </div>
+      </div>
+
+    
+      {/* <h2>Welcome, {socketId || 'Loading...'}</h2> */}
       {/* Match Information */}
-      <p>
+      {/* <p>
         You are matched with another user using difficulty:{' '}
         {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and
         language: {language || 'Not selected'}
       </p>
-      <div className="timer">Time left: {formattedTime} minutes</div>
+      <div className="timer">Time left: {formattedTime} minutes</div> */}      
+
+        <Grid item xs={6} md={6}></Grid>
+        {/* Question */}
+        {question !== null ? (
+          <Container
+        maxWidth="lg"
+        className='mt-4'
+        style={{
+          margin: '0 auto',
+          backgroundColor: '#E6E6E6',
+          borderRadius: '20px',
+          width: '100%',
+          padding: '20px',
+          maxWidth: '100%',
+          maxHeight: '800px'
+        }}
+      >
+        <Paper
+          style={{
+            padding: '20px',
+            borderRadius: '15px',
+            maxHeight: '725px'
+          }}
+        >
+          <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+            <Grid item xs={12} container justifyContent="space-between">
+              <div>
+                <h1 style={{ fontSize: '25px', fontWeight: 'bold' }}>
+                  {question.title}
+                </h1>
+              </div>
+            </Grid>
+
+            {/* Hide these tags when the width of the screen is smal */}
+            {window.innerWidth > 940 && (
+              <>
+              <Grid item xs={1.5}>
+                <CategoryWrapper>{question.difficulty}</CategoryWrapper>
+              </Grid>
+
+              {question.topics.split(', ').map((topic, index) => (
+                <Grid
+                  item
+                  xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
+                  key={index}
+                >
+                  <QuestionWrapper>{topic}</QuestionWrapper>
+                </Grid>
+              ))}
+              </>
+            )}
+          
+            <Container maxWidth="lg" style={{ marginTop: '25px' }}>
+              <Grid item xs={12}>
+                <div
+                  className="content-wrapper"
+                  style={{ overflow: 'auto', maxHeight: '600px' }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: wrapPreTags(question.content),
+                    }}
+                  />
+                </div>
+              </Grid>
+            </Container>
+          </Grid>
+        </Paper>
+      </Container>
+        ) : (
+          <p>Loading question...</p>
+        )}
 
       <br />
       <br />
 
-      {/* Question */}
-      {question !== null ? (
-        <div>
-          <div>
-            <h1>{question.title}</h1>
-            <p>Category: {question.category}</p>
-            <p>Difficulty: {question.difficulty}</p>
-            <div dangerouslySetInnerHTML={{ __html: question.content }} />
-          </div>
-        </div>
-      ) : (
-        <p>Loading question...</p>
-      )}
-
-      <br />
-      <br />
+      <Grid item xs={6} md={6}>
 
       {/* Coding Space */}
-      <div>
         <CodeMirror
           value={code}
-          height="200px"
+          height="700px"
+          style={{ width: '100%' }}  // Set the width to 100% to fill the grid item
           onChange={onChange}
           extensions={getCodeMirrorExtensions()}
         />
-
-        <br/>
-        <br/>
+      </Grid>
+      
         <br/>
 
         {/* Chat UI */}
-        <div className="chat-container mb-5" style={{ backgroundColor: 'white' }}> 
+        <div className="chat-container mx-1" style={{ backgroundColor: 'white' }}> 
           <h2>Chat</h2>
           <div className="chat-messages">
             <ScrollToBottom className='message-container'>
@@ -631,20 +738,6 @@ const CodeSpace = () => {
           </div>
         </div>
 
-        {/* Quit Button */}
-        <div className = "col-md-5">
-          <button className="quit-button" onClick={openQuitDialog}>
-              Quit Session
-          </button>
-        </div>
-
-        {/* Submit Button */}
-        <div className = "col-md-5">
-          <button className="submit-button" onClick={openSubmitDialog}>
-              Submit
-          </button>
-        </div>
-      </div>
 
       {/* Quit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
@@ -761,14 +854,14 @@ const CodeSpace = () => {
           <div className="modal-body">
             <p>{submissionRejectedMessage}</p>
           </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={() => setIsRejectedDialogOpen(false)}>
-              Close
-            </button>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setIsRejectedDialogOpen(false)}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       {/* Timer End Prompt Submit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isTimerEndSubmitDialogOpen ? 'block' : 'none' }}>
@@ -792,53 +885,8 @@ const CodeSpace = () => {
         </div>
       </div>
 
-      {/* Confirmed Submit Session Dialog/Modal */}
-      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitteDialogOpen ? 'block' : 'none' }}>
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Submitted</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmittedDialog}>
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <p>You have submitted the code</p>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={() => setIsSubmitteDialogOpen(false)}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Disconnect Dialog/Modal - NOT WORKING need to downgrade dom version to 5 */}
-      {/* <ReactRouterPrompt when={true}>
-      {() => ( */}
-        <div className="modal" tabIndex={-1} role="dialog">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Confirm Disconnection from Session</h5>
-              {/* <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeDisconnectionDialog}>
-                <span aria-hidden="true">&times;</span>
-              </button> */}
-            </div>
-            <div className="modal-body">
-              <p>You are redirecting away from the session. Are you sure you want to leave the session?</p>
-              <p>Note: If you leave the session now, this attempt will not be saved in your history.</p>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={handleDisconnection}>Yes</button>
-              <button type="button" className="btn btn-danger" onClick={closeDisconnectionDialog}>No</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* )}
-    </ReactRouterPrompt> */}
+
       
     </div>
   );

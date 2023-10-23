@@ -74,6 +74,18 @@ app.get('/api/room/:roomId', async (req, res) => {
   const roomInfo = rooms.get(roomId);
   console.log("rooms data: ", rooms);
 
+  // Check if roomInfo is defined
+  if (!roomInfo) {
+    console.log("Room not found.");
+    return res.status(404).send('Room not found');
+  }
+
+  // Check if accessToken1 or accessToken2 is undefined
+  if (roomInfo.accessToken1 === undefined || roomInfo.accessToken2 === undefined) {
+    console.log("One of the user's token is missing.");
+    return res.status(400).send("One of the user's token is missing");
+  }
+
   // Access the access token from the room's data
   // @Sean, these are the 2 access token to use for verification
   const accessToken1 = roomInfo.accessToken1;
@@ -347,6 +359,7 @@ async function startMatch(user1Socket, user2Socket, selectedDifficulty, selected
   generateQuestion(selectedDifficulty, selectedTopic, accessToken1, accessToken2)
     .then((question) => {
       if (question) {
+        console.log("Generate question")
         rooms.set(roomId, { questionId: question._id, user1Id: user1Socket.id, user2Id: user2Socket.id, accessToken1: user1Socket.accessToken, accessToken2: accessToken });
 
         user1Socket.emit('match found', roomId, 'You are matched with another user!');
