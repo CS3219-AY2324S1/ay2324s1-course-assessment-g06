@@ -579,7 +579,7 @@ const CodeSpace = () => {
       <div className='p-2 row'>
         <div className="col-md-4 col-sm d-flex align-items-center">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
-          <span style={{ fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', borderRadius: '20px', padding: '10px', fontSize: '16px' }}>{topic || 'Not selected'}</span>
+          <span style={{ fontWeight: 'bold', textAlign: 'center', borderRadius: '20px', padding: '10px', fontSize: '16px', border: '1px solid #ccc', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>{topic || 'Not selected'}</span>
         </div>
 
         <div className="col-md-4 col-sm">
@@ -621,7 +621,7 @@ const CodeSpace = () => {
             {question !== null ? (
               <Container
                 maxWidth="lg"
-                className='mt-5'
+                className='mt-3'
                 style={{
                   margin: '0 auto',
                   backgroundColor: 'white',
@@ -698,7 +698,7 @@ const CodeSpace = () => {
           <br />
 
           <div className='col-12 col-md-7'>
-            <div className='codespace mt-5'>
+            <div className='codespace mt-3'>
               <div className="card-header">
                 Code
               </div>
