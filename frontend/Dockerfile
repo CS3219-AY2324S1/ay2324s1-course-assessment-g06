@@ -39,9 +39,9 @@ RUN npm install --silent
 # Copy the rest of the application code
 COPY . .
 
-ENV REACT_APP_USER_SVC_URL=https://cs3219-ay2324s1-user-service-a2rwifv3ta-an.a.run.app:3003/api/auth/
-ENV QUESTION_HOST=https://cs3219-ay2324s1-question-service-a2rwifv3ta-an.a.run.app:3000/api/questions
-ENV MATCHING_SERVICE_CORS=https://cs3219-ay2324s1-matching-service-a2rwifv3ta-an.a.run.app:3002
+ENV REACT_APP_USER_SVC_URL=https://cs3219-ay2324s1-user-service-a2rwifv3ta-an.a.run.app/api/auth/
+ENV REACT_APP_QUESTION_HOST=https://cs3219-ay2324s1-question-service-a2rwifv3ta-an.a.run.app/api/questions
+ENV REACT_APP_MATCHING_SERVICE_CORS=https://cs3219-ay2324s1-matching-service-a2rwifv3ta-an.a.run.app
 
 # Build the app
 RUN npm run build
@@ -50,7 +50,7 @@ RUN npm i -g serve
 
 EXPOSE 3001
 
-CMD ["serve", "-s", "build"]
+CMD ["serve", "-s", "build","-l","3001"]
 
 # # prod build v1
 # # Stage 1: Build docker image of react app

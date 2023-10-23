@@ -74,7 +74,7 @@ export default function QuestionForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const QUESTION_HOST= process.env.QUESTION_HOST || 'http://localhost:3000/api/questions';
+  const QUESTION_HOST= process.env.REACT_APP_QUESTION_HOST || 'http://localhost:3000/api/questions';
 
   // console.log(control._formValues.topics);
 

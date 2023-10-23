@@ -43,7 +43,7 @@ const BasicTable: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
-  const QUESTION_HOST = process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
+  const QUESTION_HOST = process.env.REACT_APP_QUESTION_HOST || "http://localhost:3000/api/questions";
 
 
   const fetchFirstPageData = () => {

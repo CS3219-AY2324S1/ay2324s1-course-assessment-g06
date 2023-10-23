@@ -38,7 +38,7 @@ const CodeSpace = () => {
     return localStorage.getItem('code') || "console.log('hello world!')";
   });
   const MATCHING_SERVICE_CORS =
-    process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
+    process.env.REACT_APP_MATCHING_SERVICE_CORS || 'http://localhost:3002';
 
   // Function to fetch the language from the server
   const fetchLanguageFromServer = async () => {
