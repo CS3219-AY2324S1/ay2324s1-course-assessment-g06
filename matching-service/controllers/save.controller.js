@@ -3,6 +3,9 @@ const config = require('../config/save.config');
 const SessionHistory = db.save;
 const Op = db.Sequelize.Op;
 
+// For calling OneCompiler for code run
+const axios = require('axios');
+
 // Controller function to save a user collaboration session attempt to history
 // Usage: Post request to http://localhost:3002/api/save/savesession
 exports.save = async (req, res) => {
@@ -66,5 +69,54 @@ exports.save = async (req, res) => {
     // Handle any unexpected errors that occur outside of the Promise chain
     console.log("Save Controller Error => " + error);
     res.status(500).send({ message: `Error outside of promise chain, req.body value is ${JSON.stringify(req.body)}` });
+  }
+};
+
+// NOTE: To refactor code after merging of branch-Analytics with updated services of saving of history at user-service instead of matching-service
+
+// Controller function to post a code execution/run attempt to OneCompiler
+// Usage: Post request to /api/save/runcode or directly to https://onecompiler-apis.p.rapidapi.com/api/v1/run
+exports.runcode = async (req, res) => {
+  console.log("controller.runcode req.body:", req.body);
+  
+  try {
+    const code = req.body.code;
+    const input = req.body.input;
+    const language = req.body.language;
+    const fileName = req.body.fileName;
+    const XApiKey = process.env.XApiKey
+    const XApiHost = process.env.XApiHost
+
+    // Code retrieved from OneCompiler connected via RapidAPI
+    const options = {
+      method: 'POST',
+      url: 'https://onecompiler-apis.p.rapidapi.com/api/v1/run',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': XApiKey,
+        'X-RapidAPI-Host': XApiHost,
+      },
+      data: {
+        language: language,
+        stdin: input,
+        files: [
+          {
+            name: fileName,
+            content: code
+          }
+        ]
+      }
+    };
+    
+    try {
+      const response = await axios.request(options);
+      console.log("result of execution:", response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  } catch (error) {
+    // Handle any unexpected errors that occur outside of the Promise chain
+    console.log("Run Code Controller Error => " + error);
+    res.status(500).send({ message: `req.body value is ${JSON.stringify(req.body)}` });
   }
 };

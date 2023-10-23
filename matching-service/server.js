@@ -68,6 +68,24 @@ server.listen(MATCHING_PORT, () => {
   console.log(`Server is listening on port ${MATCHING_PORT}`);
 });
 
+// Note: Unsure if this will mess up server so not implementing yet
+
+// Define a proxy for /save/runexec to forward requests to the desired endpoint
+// const apiProxy = createProxyMiddleware('/save/runexec', {
+//   target: 'https://onecompiler-apis.p.rapidapi.com',
+//   changeOrigin: true, // Change the host to the target's host
+//   pathRewrite: {
+//     '^/save/runexec': '/api/v1/run', // Rewrite the path
+//   },
+//   // You can also add any headers required for your API request
+//   onProxyReq: (proxyReq) => {
+//     proxyReq.setHeader('X-RapidAPI-Key', 'YOUR_API_KEY'); // Add your RapidAPI key
+//   },
+// });
+
+// Use the proxy middleware
+// app.use(apiProxy);
+
 app.get('/api/room/:roomId', async (req, res) => {
   console.log('Received GET request for /api/room/:roomId');
   const roomId = req.params.roomId;
