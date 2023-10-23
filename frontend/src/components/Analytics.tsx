@@ -212,7 +212,7 @@ const Analytics: React.FC = () => {
                 background
                 styles={buildStyles({
                   trailColor: "transparent",
-                  pathColor: "purple",
+                  pathColor: "#6C63FF",
                   textColor: "black",
                   backgroundColor: "white",
                   textSize: "15px",
@@ -241,15 +241,17 @@ const Analytics: React.FC = () => {
                 Easy
               </div>
               <LinearProgress
+                sx={{
+                  backgroundColor: "#D5E8D2",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#BCDEB6",
+                  },
+                  height: "9px",
+                  borderRadius: "20px",
+                }}
                 variant="determinate"
                 value={100 * (userDetails.Easy / (questionDetails.Easy || 1))}
-                style={{
-                  height: "9px",
-                  lineHeight: "5px",
-                  width: "100%",
-                  borderRadius: "20px",
-                  backgroundColor: "#BCDEB6",
-                }}
+                className="MuiLinearProgress-colorPrimary"
               />
             </div>
             <div
@@ -270,17 +272,18 @@ const Analytics: React.FC = () => {
                 Medium
               </div>
               <LinearProgress
+                sx={{
+                  backgroundColor: "#F9E7B8",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#F2CE6F",
+                  },
+                  height: "9px",
+                  borderRadius: "20px",
+                }}
                 variant="determinate"
                 value={
                   100 * (userDetails.Medium / (questionDetails.Medium || 1))
                 }
-                style={{
-                  height: "9px",
-                  lineHeight: "5px",
-                  width: "100%",
-                  borderRadius: "20px",
-                  backgroundColor: "#BCDEB6",
-                }}
               />
             </div>
             <div
@@ -300,15 +303,16 @@ const Analytics: React.FC = () => {
                 Hard
               </div>
               <LinearProgress
+                sx={{
+                  backgroundColor: "#F9A2A2",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#F14949",
+                  },
+                  height: "9px",
+                  borderRadius: "20px",
+                }}
                 variant="determinate"
                 value={100 * (userDetails.Hard / (questionDetails.Hard || 1))}
-                style={{
-                  height: "9px",
-                  lineHeight: "5px",
-                  width: "100%",
-                  borderRadius: "20px",
-                  backgroundColor: "#BCDEB6",
-                }}
               />
             </div>
           </CardContent>
