@@ -549,31 +549,32 @@ const CodeSpace = () => {
 
     <div style={{ backgroundColor: '#white', padding: '15px' }}>
       <div className='p-2 row'>
-        <div className="col-md-4 col-sm d-flex align-items-center">
+        {/* Logo */}
+        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-start">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
-          <span style={{ fontWeight: 'bold', textAlign: 'center', borderRadius: '20px', padding: '10px', fontSize: '16px', border: '1px solid #ccc', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>{topic || 'Not selected'}</span>
         </div>
 
-        <div className="col-md-4 col-sm">
+        {/* Timer */}
+        <div className="col-12 col-md-2 d-flex justify-content-center">
           <span className="timer">{formattedTime}</span>
         </div>
 
-        <div className="col-md-4 col-sm">
-          <div className="d-flex justify-content-end">
-            {/* Submit Button */}
-            <button className="submit-button mx-2" onClick={openSubmitDialog}>
-              <PublishIcon />
-              <span className="pr-1">Submit</span>
-            </button>
+        {/* Buttons */}
+        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-end">
+          {/* Submit Button */}
+          <button className="submit-button mx-2" onClick={openSubmitDialog}>
+            <PublishIcon />
+            <span className="pr-1">Submit</span>
+          </button>
 
-            {/* Quit Button */}
-            <button className="quit-button mx-2" onClick={openQuitDialog}>
-              <LogoutIcon />
-              <span className="pr-1">Quit Session</span>
-            </button>
-          </div>
+          {/* Quit Button */}
+          <button className="quit-button mx-2" onClick={openQuitDialog}>
+            <LogoutIcon />
+            <span className="pr-1">Quit Session</span>
+          </button>
         </div>
       </div>
+
 
 
       {/* <h2>Welcome, {socketId || 'Loading...'}</h2> */}
@@ -622,7 +623,7 @@ const CodeSpace = () => {
                     </div>
                   </Grid>
 
-                  <div className='container ml-0' style={{maxWidth: '100%', padding: '10px 28px 0px'}}>
+                  <div className='container ml-0' style={{ maxWidth: '100%', padding: '10px 28px 0px' }}>
                     <div className='difficulty-tag'>{difficulty}</div>
                     <div className='topic-tag'>{topic}</div>
                   </div>
