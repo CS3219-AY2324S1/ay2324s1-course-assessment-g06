@@ -87,6 +87,8 @@ exports.runcode = async (req, res) => {
     const XApiKey = process.env.XApiKey
     const XApiHost = process.env.XApiHost
 
+    const upsertPromises = [];
+
     // Code retrieved from OneCompiler connected via RapidAPI
     const options = {
       method: 'POST',
@@ -110,10 +112,23 @@ exports.runcode = async (req, res) => {
     
     try {
       const response = await axios.request(options);
+      upsertPromises.push(Promise.resolve("Code executed successfully."));
+      // console.log(response)
       console.log("result of execution:", response.data);
     } catch (error) {
-      console.error("error in controller:", error);
+      upsertPromises.push(Promise.reject(error));
+      console.error("error in controller:", error.response.data.message);
     }
+
+    Promise.all(upsertPromises)
+      .then((saves) => {
+        // Code successfully ran
+        res.status(200).send({ message: saves });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+
   } catch (error) {
     // Handle any unexpected errors that occur outside of the Promise chain
     console.log("Run Code Controller Error => " + error);

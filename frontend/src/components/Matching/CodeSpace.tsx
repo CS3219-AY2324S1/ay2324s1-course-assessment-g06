@@ -518,7 +518,7 @@ const CodeSpace = () => {
   const handleRunCode = () => {
     console.log("Code run button clicked");
     // For testing
-    const input = "";
+    const input = "hi";
     const fileName = "index.py";
     runCode(code, input, language, fileName);
   };
@@ -556,26 +556,25 @@ const CodeSpace = () => {
   // Call api to run code
   const runCode = (code : string, input : string, language : string, fileName : string) => {
     console.log("running session");
-    if (roomId) {
-      runcode(code, input, language, fileName, roomId).then(
-      (response) => {
-        console.log("status", response.data.status)
-        console.log("exception", response.data.exception)
-        console.log("stdout", response.data.stdout)
-        console.log("stderr", response.data.stderr)
-        console.log("stdin", response.data.stdin)
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-          console.log("Error in execution/run: ", resMessage);
-      }
-      );
-    } 
+    runcode(code, input, language, fileName).then(
+    (response) => {
+      console.log("response received for run code");
+      console.log("status", response.data.status)
+      console.log("exception", response.data.exception)
+      console.log("stdout", response.data.stdout)
+      console.log("stderr", response.data.stderr)
+      console.log("stdin", response.data.stdin)
+    },
+    (error) => {
+      const resMessage =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      console.log("Error in execution/run: ", resMessage);
+    }
+    );
   };
 
 

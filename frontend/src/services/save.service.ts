@@ -15,7 +15,7 @@ export const savesession = (questionId: string, difficulty: string, code: string
   { headers: header });
 };
 
-export const runcode = (code : string, input : string, language : string, fileName : string, roomId : string) => {
+export const runcode = (code : string, input : string, language : string, fileName : string) => {
   const header = authHeader();
 
   console.log(header);
