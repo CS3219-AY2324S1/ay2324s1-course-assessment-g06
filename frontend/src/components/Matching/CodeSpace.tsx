@@ -159,34 +159,6 @@ const CodeSpace = () => {
     setIsSubmitRequestDialogOpen(false);
   };
 
-  const QuestionWrapper = styled(Container)(({ theme }) => ({
-    backgroundColor: '#d8d8d8',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    fontWeight: 'bold',
-    textAlign: 'center',
-    borderRadius: '50px',
-    fontSize: '12px',
-    // Media query for smaller screens
-    '@media (max-width: 1200px)': {
-      fontSize: '10px', // Decrease font size for smaller screens
-    },
-  }));
-
-  const CategoryWrapper = styled(Container)(({ theme }) => ({
-    backgroundColor: 'rgb(255, 192, 203)',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    fontWeight: 'bold',
-    textAlign: 'center',
-    borderRadius: '50px',
-    fontSize: '12px',
-    // Media query for smaller screens
-    '@media (max-width: 1200px)': {
-      fontSize: '10px', // Decrease font size for smaller screens
-    },
-  }));
-
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
 
@@ -649,6 +621,11 @@ const CodeSpace = () => {
                       </h1>
                     </div>
                   </Grid>
+
+                  <div className='container ml-0' style={{maxWidth: '100%', padding: '10px 28px 0px'}}>
+                    <div className='difficulty-tag'>{difficulty}</div>
+                    <div className='topic-tag'>{topic}</div>
+                  </div>
 
                   {/* Hide these tags when the width of the screen is smal */}
                   {/* {window.innerWidth > 940 && (

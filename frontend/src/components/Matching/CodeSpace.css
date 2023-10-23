@@ -161,6 +161,30 @@ button.quit-button:hover {
   font-weight: bold;
 }
 
+/* Style for question tags */
+.topic-tag {
+  background-color: #d8d8d8;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50px;
+  font-size: 12px;
+  float: left;
+  padding: 5px 15px;
+  margin-right: 5px;
+}
+
+.difficulty-tag {
+  background-color: rgb(255, 192, 203);
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50px;
+  font-size: 12px;
+  float: left;
+  padding: 5px 15px;
+  margin-right: 5px;
+}
+
+/* Style for codespace */
 .codespace {
   margin: 0 auto;
   border-radius: 15px !important;
