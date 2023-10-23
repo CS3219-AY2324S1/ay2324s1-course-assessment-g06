@@ -8,7 +8,11 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
+
+// To refactor after merging with branch-Analytics
 import { savesession } from "../../services/save.service";
+import { runcode } from "../../services/save.service";
+
 import { styled } from '@mui/material/styles';
 import { Button, Container, Grid, Paper } from '@mui/material';
 import './CodeSpace.css'; 
@@ -513,6 +517,10 @@ const CodeSpace = () => {
 
   const handleRunCode = () => {
     console.log("Code run button clicked");
+    // For testing
+    const input = "";
+    const fileName = "index.py";
+    runCode(code, input, language, fileName);
   };
 
   // Handle code change events
@@ -544,6 +552,32 @@ const CodeSpace = () => {
       navigate("/404"); // Redirect to the 404 error page
     }
   };
+
+  // Call api to run code
+  const runCode = (code : string, input : string, language : string, fileName : string) => {
+    console.log("running session");
+    if (roomId) {
+      runcode(code, input, language, fileName, roomId).then(
+      (response) => {
+        console.log("status", response.data.status)
+        console.log("exception", response.data.exception)
+        console.log("stdout", response.data.stdout)
+        console.log("stderr", response.data.stderr)
+        console.log("stdin", response.data.stdin)
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+          console.log("Error in execution/run: ", resMessage);
+      }
+      );
+    } 
+  };
+
 
   // Set the code syntax
   const getCodeMirrorExtensions = () => {

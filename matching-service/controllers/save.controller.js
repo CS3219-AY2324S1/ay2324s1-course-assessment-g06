@@ -112,7 +112,7 @@ exports.runcode = async (req, res) => {
       const response = await axios.request(options);
       console.log("result of execution:", response.data);
     } catch (error) {
-      console.error(error);
+      console.error("error in controller:", error);
     }
   } catch (error) {
     // Handle any unexpected errors that occur outside of the Promise chain
