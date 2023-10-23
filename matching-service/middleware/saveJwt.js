@@ -32,7 +32,7 @@
 // };
 // module.exports = saveJwt;
 
-const USER_SERVICE = process.env.USER_SERVICE || "http://localhost:3003";
+const USER_SERVICE = process.env.USR_SVC_AUTH || "http://localhost:3003/api/auth";
 const axios = require('axios');
 const config = require("../config/save.config.js");
 const jwt = require("jsonwebtoken");
@@ -51,7 +51,7 @@ verifyToken = async (req, res, next) => {
 
   try {
     // Make a request to user-service to verify the token
-    let response = await axios.get(`${USER_SERVICE}/api/auth/verifyToken`, {
+    let response = await axios.get(`${USER_SERVICE}/verifyToken`, {
       headers: { 'x-access-token': token }
     });
     

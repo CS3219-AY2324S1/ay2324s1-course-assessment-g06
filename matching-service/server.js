@@ -11,16 +11,27 @@ const users = new Map();
 
 const app = express();
 const server = http.createServer(app);
-const QUESTION_HOST = process.env.QUESTION_HOST
-  ? process.env.QUESTION_HOST
-  : 'http://localhost:3000/api/questions';
-// JK need change
-const MATCHING_SERVICE_CORS =
-  process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
 
-const FRONTEND_SERVICE_CORS =
-  process.env.FRONTEND_SERVICE_CORS || 'http://localhost:3001';
-const MATCHING_PORT = process.env.MATCHING_PORT || 3002;
+const QUESTION_HOST = process.env.QNS_SVC
+  ? process.env.QNS_SVC
+  : 'http://localhost:3000/api/questions';
+
+const MATCHING_SERVICE_CORS = process.env.MTC_SVC
+  ? process.env.MTC_SVC
+  : 'http://localhost:3002';
+
+const FRONTEND_SERVICE_CORS = process.env.FEN_SVC
+  ? process.env.FEN_SVC
+  : 'http://localhost:3001';
+
+const MATCHING_PORT = process.env.MTC_SVC_PORT 
+  ? process.env.MTC_SVC_PORT
+  : 3002;
+
+const USER_SERVICE = process.env.USR_SVC_AUTH
+  ? process.env.USR_SVC_AUTH
+  : "http://localhost:3003/api/auth";
+
 const io = socketIo(server, {
   cors: {
     origin: [FRONTEND_SERVICE_CORS, MATCHING_SERVICE_CORS],
@@ -34,11 +45,11 @@ db.sequelize.sync();
 
 // Verification
 const axios = require('axios');
-const USER_SERVICE = process.env.USER_SERVICE || "http://localhost:3003";
+
 
 async function isTokenValid(accessToken) {
   try {
-    const response = await axios.get(`${USER_SERVICE}/api/auth/verifyToken`, {
+    const response = await axios.get(`${USER_SERVICE}/verifyToken`, {
       headers: { "x-access-token":accessToken}
     });
     return response.status === 200;
@@ -139,6 +150,7 @@ const waitingQueue = [];
 
 // Middleware to authenticate users using JWT token
 // Can check token validity here
+// ?????????????
 io.use(socketioJwt.authorize({
   secret: 'secret',
   handshake: true,
