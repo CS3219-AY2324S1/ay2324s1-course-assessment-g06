@@ -614,7 +614,7 @@ const CodeSpace = () => {
       <div className="timer">Time left: {formattedTime} minutes</div> */}
 
 
-      <div className='container row' style={{ maxWidth: '100%', margin: '0 auto' }}>
+      <div className='container row' style={{ maxWidth: '100%', margin: '0 auto', padding: '0' }}>
 
         <div className='col-12 col-md-5'>
 
@@ -629,7 +629,9 @@ const CodeSpace = () => {
                 borderRadius: '15px',
                 width: '100%',
                 maxWidth: '100%',
-                maxHeight: '1000px',
+                minHeight: '950px',
+                height: '950px',
+                maxHeight: '950px',
                 padding: '0',
               }}
             >
@@ -670,7 +672,7 @@ const CodeSpace = () => {
                   <Grid item xs={12}>
                     <div
                       className="content-wrapper"
-                      style={{ overflow: 'auto', maxHeight: '900px' }}
+                      style={{ overflow: 'auto', maxHeight: '800px' }}
                     >
                       <div
                         dangerouslySetInnerHTML={{
@@ -701,7 +703,7 @@ const CodeSpace = () => {
             </div>
             <CodeMirror
               value={code}
-              height="600px"
+              height="500px"
               style={{
               }}
               onChange={onChange}
