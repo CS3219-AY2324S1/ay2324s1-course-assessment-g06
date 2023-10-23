@@ -16,6 +16,10 @@ import logo from '../../images/peerPrepLogo.png';
 import PublishIcon from '@mui/icons-material/Publish';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CircularProgress from "@mui/material/CircularProgress";
+import Sender from "../../images/chatPicture1.png";
+import Receiver from "../../images/chatPicture2.png";
+
+
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -120,6 +124,7 @@ const CodeSpace = () => {
   const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  
 
   /////////////////// HANDLE DIALOG OPEN OR CLOSE  ///////////////////
   // To open of close the confirm quit session modal/dialog
@@ -630,7 +635,7 @@ const CodeSpace = () => {
                     <div className='topic-tag'>{topic}</div>
                   </div>
 
-                  <hr/>
+                  <hr />
 
 
                   {/* Hide these tags when the width of the screen is smal */}
@@ -704,20 +709,35 @@ const CodeSpace = () => {
               <div className="chat-messages">
                 <ScrollToBottom className='message-container'>
                   {messageList.map((messageContent, index) => (
-                    <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
-                      <div className='message-content'>
-                        {messageContent.message}
-                      </div>
-                      <div className='message-meta'>
-                        {messageContent.time}
+                    <div key={index} className="chat-message-container">
+                      <div className="chat-avatar-message">
+                        {socketId === messageContent.author ? (
+                          <img src={Receiver} alt="Receiver Avatar" className='receiver-avatar' />
+                        ) : "System" === messageContent.author ? (
+                          <></>
+                        ) : (
+                          <img src={Sender} alt="Sender Avatar" className='sender-avatar' />
+                        )}
+                        <div className={`chat-message ${socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}`}>
+                          <div className='message-content'>
+                            <div className='message-text'>
+                              {messageContent.message}
+                            </div>
+                          </div>
+                          <div className='message-meta'>
+                            {messageContent.time}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </ScrollToBottom>
               </div>
+
               <div className="chat-input">
                 <input
                   type="text"
+                  // maxLength={50}
                   placeholder="Type your message..."
                   value={newMessage}
                   onChange={handleNewMessageChange}

@@ -28,9 +28,10 @@
 /* Style for individual chat messages */
 .chat-message {
   margin-bottom: 5px;
-  padding: 5px;
+  padding: 10px 15px;
   background-color: #f5f5f5;
   border-radius: 15px;
+  word-wrap: break-word;
 }
 
 /* Style for code mirror */
@@ -197,23 +198,44 @@ hr {
 }
 
 /* Style for 'own' messages */
-#own {
+.own {
   justify-content: flex-start;
-  background-color: #53d769;
+  background-color: rgb(240, 240, 240);
   float: right;
   margin-right: 15px;
-  clear: both;
 }
 
 /* Style for 'other' messages */
-#other {
+.other {
   justify-content: flex-end;
-  background-color: #3f95f7;
+  background-color: rgb(240, 240, 240);
   float: left;
   margin-left: 15px;
-  clear: both;
 }
 
+.chat-avatar-message {
+  height: 60px;
+}
+
+/* Style for 'own' messages avatar */
+.sender-avatar {
+  clear: both;
+  float: left;
+  height: 45px;
+  width: 45px;
+  margin-left: 10px;
+}
+
+/* Style for 'other' messages avatar */
+.receiver-avatar {
+  clear: both;
+  float: right;
+  height: 45px;
+  width: 45px;
+  margin-right: 10px;
+}
+
+/* Style for typing indicator */
 .typing-indicator {
   font-size: 12px;
   color: #999;
@@ -222,7 +244,7 @@ hr {
 }
 
 /* CSS for System Messages */
-#system {
+.system {
   font-weight: bold;
   text-align: center;
   /* Center-align the system message */
