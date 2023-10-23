@@ -1,6 +1,30 @@
-# development build
+# # development build
+# # Stage 1: Build docker image of react app
+# FROM node:latest as build
+
+# # Create an app directory to hold the application code inside the image
+# WORKDIR /src/app
+
+# # Copy app dependencies (package.json, package-lock.json, tsconfig.json, etc)
+# COPY package*.json ./
+
+# # Install app dependencies
+# RUN npm install --silent
+
+
+# # Copy the rest of the application code
+# COPY . .
+
+# EXPOSE 3001
+
+# CMD ["npm", "start"]
+
+
+# docker run -d -p 127.0.0.1:3001:3001  --env-file ../.env cs3219-frontend-v1
+
+# prod build v2
 # Stage 1: Build docker image of react app
-FROM node:latest as build
+FROM node:alpine as build
 
 # Create an app directory to hold the application code inside the image
 WORKDIR /src/app
@@ -15,15 +39,20 @@ RUN npm install --silent
 # Copy the rest of the application code
 COPY . .
 
+ENV REACT_APP_USER_SVC_URL=https://cs3219-ay2324s1-user-service-a2rwifv3ta-an.a.run.app:3003/api/auth/
+ENV QUESTION_HOST=https://cs3219-ay2324s1-question-service-a2rwifv3ta-an.a.run.app:3000/api/questions
+ENV MATCHING_SERVICE_CORS=https://cs3219-ay2324s1-matching-service-a2rwifv3ta-an.a.run.app:3002
+
+# Build the app
+RUN npm run build
+
+RUN npm i -g serve
+
 EXPOSE 3001
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build"]
 
-
-# docker run -d -p 127.0.0.1:3001:3001  --env-file ../.env cs3219-frontend-v1
-
-
-# # prod build
+# # prod build v1
 # # Stage 1: Build docker image of react app
 # FROM node:alpine as build
 
