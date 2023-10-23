@@ -15,6 +15,7 @@ import './CodeSpace.css';
 import logo from '../../images/peerPrepLogo.png';
 import PublishIcon from '@mui/icons-material/Publish';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PlayIcon from '@mui/icons-material/PlayArrow';
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -510,6 +511,10 @@ const CodeSpace = () => {
     // TO ADD IN
   };
 
+  const handleRunCode = () => {
+    console.log("Code run button clicked");
+  };
+
   // Handle code change events
   const onChange = React.useCallback((code: string, viewUpdate: any) => {
     setCode(code);
@@ -598,6 +603,12 @@ const CodeSpace = () => {
             <button className="quit-button mx-2" onClick={openQuitDialog}>
               <LogoutIcon/>
               <span className="pr-1">Quit Session</span> 
+            </button>
+
+            {/* Run Button */}
+            <button className="run-button mx-2" onClick={handleRunCode}>
+              <PlayIcon/>
+              <span className="pr-1">Run</span> 
             </button>
           </div>
         </div>
@@ -884,10 +895,6 @@ const CodeSpace = () => {
           </div>
         </div>
       </div>
-
-
-
-      
     </div>
   );
 };
