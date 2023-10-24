@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './Matching.css';
 import { iconCategories } from './IconMatching'; 
 import { langNames } from '@uiw/codemirror-extensions-langs';
+import { getCurrentUser } from '../../services/auth.service';
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
@@ -30,6 +31,8 @@ const Matchmaking: React.FC = () => {
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer | null>(null);
   const [isMatchFound, setIsMatchFound] = useState<boolean>(false); // Track if a match is found
   const navigate = useNavigate();
+
+  const currentUser = getCurrentUser();
 
   useEffect(() => {
     // Establish connection if there is none
@@ -153,7 +156,7 @@ const Matchmaking: React.FC = () => {
       startTimer();
       setMatchStatus('Matching...');
       console.log("matching with", selectedDifficulty, selectedTopic, selectedLanguage)
-      socket.emit('match me', selectedDifficulty, selectedTopic, selectedLanguage);
+      socket.emit('match me', selectedDifficulty, selectedTopic, selectedLanguage, currentUser.accessToken);
 
       // Automatically cancel the match after 20 seconds
       setTimeout(() => {

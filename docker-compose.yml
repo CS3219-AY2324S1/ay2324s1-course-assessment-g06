@@ -6,7 +6,7 @@ services:
       context: ./user-service
     # hosting this for other users
     environment:
-      - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
+      - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
       - USER_PORT=${USER_PORT}
       - SQL_PASSWORD=${SQL_PASSWORD}
       - SQL_USERNAME=${SQL_USERNAME}
@@ -22,6 +22,7 @@ services:
       context: ./question-service
     environment:
       - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
+      - USER_SERVICE=http://user-service:3003
       # - QUESTION_HOST=http://question-backend:3000/api/questions
       - MONGO_USERNAME=${MONGO_USERNAME}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
@@ -58,7 +59,11 @@ services:
       - FRONTEND_SERVICE_CORS=http://localhost:3001
       - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
       - QUESTION_HOST=http://question-service:3000/api/questions
+      - USER_SERVICE=http://user-service:3003
       - MATCHING_PORT=${MATCHING_PORT}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SQL_USERNAME=${SQL_USERNAME}
+      - SQL_HOST=${SQL_HOST}
     ports:
       - 3002:3002
     depends_on:

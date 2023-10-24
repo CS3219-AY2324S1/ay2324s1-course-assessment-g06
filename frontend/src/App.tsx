@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Link, Navigate, unstable_usePrompt as usePrompt } from "react-router-dom";
 import "./App.css";
 import "./Table/Table";
 import BasicTable from "./Table/Table";
@@ -134,7 +134,6 @@ const App: React.FC = () => {
               </li>
             </div>
           ) : (
-            
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link
@@ -160,7 +159,7 @@ const App: React.FC = () => {
         </nav>
       )}
 
-      <div className="container mt-3">
+      <div className={`${isCodeSpaceRoute ? '' : ' container mt-3'}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
