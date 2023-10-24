@@ -34,6 +34,7 @@
     "fraction.js": "^4.3.7",
     "html-react-parser": "^4.2.2",
     "html-to-draftjs": "^1.5.0",
+    "jquery": "^3.7.1",
     "react": "^18.2.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
@@ -77,6 +78,7 @@
     "@types/draft-js": "^0.11.12",
     "@types/draftjs-to-html": "^0.8.1",
     "@types/html-to-draftjs": "^1.4.1",
+    "@types/jquery": "^3.5.25",
     "@types/react-draft-wysiwyg": "^1.13.4",
     "@types/react-scroll-to-bottom": "^4.2.2",
     "@types/webpack-env": "^1.18.2"

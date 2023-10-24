@@ -45,7 +45,20 @@ label {
 }
 
 body {
-  background-color: #f1f6f9;
+  background-color: #ffffff;
   min-height: 100vh; /* Ensures the background color covers the entire viewport height */
 }
 
+@media (max-width: 992px) {
+  .hidden-link {
+    display: none !important; /* Show the element when the window width is above 920px */
+  }
+}
+
+.hidden-link {
+  display: block ; /* Show the element when the window width is above 920px */
+}
+
+.navbar-toggler {
+  margin: 25px;
+}
