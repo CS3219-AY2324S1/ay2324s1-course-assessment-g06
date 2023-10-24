@@ -20,7 +20,8 @@ import Protected from "./components/Protected";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
 import GuestRoute from "./components/GuestRoute";
 import EventBus from "./common/EventBus";
-import logo from './images/peerPrepLogo.png';
+import logo from "./images/peerPrepLogo.png";
+import Analytics from "./components/Analytics";
 
 
 import "./App.css";
@@ -82,7 +83,6 @@ const App: React.FC = () => {
 
           {currentUser ? (
             <>
-
               <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
@@ -133,8 +133,6 @@ const App: React.FC = () => {
           )}
         </nav>
       )}
-
-      {/* */}
 
       <div className={`${isCodeSpaceRoute ? '' : ' container mt-3'}`}>
         <Routes>
@@ -188,6 +186,14 @@ const App: React.FC = () => {
             }
           />
           <Route
+            path="/analytics"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Analytics />
+              </Protected>
+            }
+          />
+          <Route
             path="/match/:roomId"
             element={
               <Protected isLoggedIn={currentUser}>
@@ -213,4 +219,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

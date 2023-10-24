@@ -8,7 +8,10 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { savesession } from "../../services/save.service";
+import { addHistory } from "../../services/user-history.service";
+import './CodeSpace.css'; 
+
+// import { savesession } from "../../services/save.service";
 import { styled } from '@mui/material/styles';
 import { Button, Container, Grid, Paper } from '@mui/material';
 import './CodeSpace.css';
@@ -18,8 +21,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CircularProgress from "@mui/material/CircularProgress";
 import Sender from "../../images/chatPicture1.png";
 import Receiver from "../../images/chatPicture2.png";
-
-
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -532,7 +533,7 @@ const CodeSpace = () => {
 
   const saveSessionHistory = (questionId: string, questionDifficulty: string) => {
     console.log("submitting session");
-    savesession(questionId, questionDifficulty, code).then(
+    addHistory(questionId, questionDifficulty, code).then(
       (response) => {
         setMessage(response.data.message);
         console.log("message:", message);

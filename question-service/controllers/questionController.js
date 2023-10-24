@@ -1,4 +1,7 @@
-const Question = require("../models/question");
+const Question = require('../models/question');
+const mongoose = require('mongoose');
+const USER_HOST =
+  process.env.REACT_APP_USER_SVC_URL || 'http://localhost:3003/api/auth';
 
 module.exports = {
   // Controller function to get all questions
@@ -9,12 +12,12 @@ module.exports = {
         res.json(questions);
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error fetching questions" });
+        res.status(500).json({ error: 'Error fetching questions' });
       });
   },
   // Controller function to get first page paginated questions
   // Usage: Get request to http://localhost:3000/api/questions/pagination/first
-  getFirstPaginatedQuestions : (req, res) => {
+  getFirstPaginatedQuestions: (req, res) => {
     const perPage = 20;
 
     Question.find()
@@ -23,43 +26,43 @@ module.exports = {
         res.json(questions);
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error fetching questions" });
+        res.status(500).json({ error: 'Error fetching questions' });
       });
   },
   // Controller function to get remaining paginated questions
   // Usage: Get request to http://localhost:3000/api/questions/pagination/remaining
   getRemainingPaginatedQuestions: (req, res) => {
-    const perPage = 20; 
+    const perPage = 20;
     Question.find()
       .skip(perPage)
       .then((questions) => {
         res.json(questions);
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error fetching questions" });
+        res.status(500).json({ error: 'Error fetching questions' });
       });
   },
   // Controller function to get a question by its _id
   // Usage: Get request to http://localhost:3000/api/questions/:id
   getQuestionById: (req, res) => {
     const { id } = req.params; // Get the _id from the request params
-    console.log("Getting Qn with ID:", id);
+    console.log('Getting Qn with ID:', id);
     Question.findById(id)
       .then((question) => {
         if (!question) {
-          return res.status(404).json({ error: "Question not found" });
+          return res.status(404).json({ error: 'Question not found' });
         }
         res.json(question);
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error fetching question" });
+        res.status(500).json({ error: 'Error fetching question' });
       });
   },
   // Controller function to create a new question
   // Usage: Post request to http://localhost:3000/api/questions
   createQuestion: (req, res) => {
     console.log(
-      "Mongo posting question to http://localhost:3000/api/questions"
+      'Mongo posting question to http://localhost:3000/api/questions'
     );
     const { title, frontendQuestionId, difficulty, content, category, topics } =
       req.body;
@@ -70,7 +73,7 @@ module.exports = {
         if (existingQuestion) {
           return res
             .status(400)
-            .json({ error: "Question with this title already exists" });
+            .json({ error: 'Question with this title already exists' });
         }
 
         const newQuestion = new Question({
@@ -88,11 +91,11 @@ module.exports = {
             res.json(question);
           })
           .catch((error) => {
-            res.status(500).json({ error: "Error creating question" });
+            res.status(500).json({ error: 'Error creating question' });
           });
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error checking for existing question" });
+        res.status(500).json({ error: 'Error checking for existing question' });
       });
   },
   // Controller function to update an existing question by ID
@@ -113,7 +116,7 @@ module.exports = {
         if (existingQuestion && existingQuestion.id != id) {
           return res
             .status(400)
-            .json({ error: "Question with this title already exists" });
+            .json({ error: 'Question with this title already exists' });
         }
 
         // Update the question
@@ -130,13 +133,13 @@ module.exports = {
           { new: true } // Return the updated document
         ).then((question) => {
           if (!question) {
-            return res.status(404).json({ error: "Question not found" });
+            return res.status(404).json({ error: 'Question not found' });
           }
           res.json(question);
         });
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error updating question" });
+        res.status(500).json({ error: 'Error updating question' });
       });
   },
   // Controller function to delete a question by ID
@@ -147,12 +150,12 @@ module.exports = {
     Question.findByIdAndRemove(id)
       .then((question) => {
         if (!question) {
-          return res.status(404).json({ error: "Question not found" });
+          return res.status(404).json({ error: 'Question not found' });
         }
-        res.json({ message: "Question deleted successfully" });
+        res.json({ message: 'Question deleted successfully' });
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error deleting question" });
+        res.status(500).json({ error: 'Error deleting question' });
       });
   },
   // Controller function to get a random question via given filters
@@ -168,7 +171,7 @@ module.exports = {
     }
 
     if (topics) {
-      filter.topics = { $regex: `.*${topics}.*`, $options: "i" }; // Match topics containing <topics> (case-insensitive)
+      filter.topics = { $regex: `.*${topics}.*`, $options: 'i' }; // Match topics containing <topics> (case-insensitive)
     }
 
     // Use the aggregate function to select a random question based on the filter
@@ -180,12 +183,55 @@ module.exports = {
         if (questions.length === 0) {
           return res
             .status(404)
-            .json({ error: "No questions found for the given filter" });
+            .json({ error: 'No questions found for the given filter' });
         }
         res.json(questions[0]); // Return the random question
       })
       .catch((error) => {
-        res.status(500).json({ error: "Error fetching random question" });
+        res.status(500).json({ error: 'Error fetching random question' });
+      });
+  },
+  // Controller function to get all question information for one user
+  // Usage: POST request to http://localhost:3000/api/questions/questionbyid
+  getQuestionsByIds: (req, res) => {
+    const { ids } = req.body; // Get an array of _ids from the request body
+
+    console.log('Getting Questions with IDs:', ids);
+
+    Question.find({ _id: { $in: ids } })
+      .then((questions) => {
+        if (!questions || questions.length === 0) {
+          return res.status(404).json({ error: 'No questions found' });
+        }
+        res.json(questions);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: 'Error fetching questions' });
+      });
+  },
+  // controller function to separate the total number of questions
+  // Usage: GET request to http://localhost:3000/api/questions/total
+  getQuestionTotal: (req, res) => {
+    Question.aggregate([
+      {
+        $group: {
+          _id: '$difficulty',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          difficulty: '$_id',
+          count: 1,
+        },
+      },
+    ])
+      .then((question) => {
+        res.status(200).json(question);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   },
 };

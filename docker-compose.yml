@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   user-service:
@@ -12,11 +12,11 @@ services:
       - SQL_USERNAME=${SQL_USERNAME}
       - SQL_HOST=${SQL_HOST}
       - secret_key=${secret_key}
-    ports: 
+    ports:
       - 3003:3003
     networks:
       - service
-  
+
   question-service:
     build:
       context: ./question-service
@@ -27,7 +27,7 @@ services:
       - MONGO_USERNAME=${MONGO_USERNAME}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
       - MONGO_CLUSTER_URL=${MONGO_CLUSTER_URL}
-    ports: 
+    ports:
       - 3000:3000
     depends_on:
       - user-service
@@ -37,13 +37,13 @@ services:
   frontend:
     build:
       context: ./frontend
-    ports: 
+    ports:
       - 3001:3001
-    environment: 
-    - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
-    - QUESTION_HOST=http://localhost:3000/api/questions
-    - MATCHING_SERVICE_CORS=http://localhost:3002
-    - USER_HISTORY=http://localhost:3003/api/users
+    environment:
+      - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
+      - QUESTION_HOST=http://localhost:3000/api/questions
+      - MATCHING_SERVICE_CORS=http://localhost:3002
+      - USER_HISTORY=http://localhost:3003/api/users
     depends_on:
       - user-service
       - question-service
@@ -55,7 +55,7 @@ services:
     build:
       context: ./matching-service
     environment:
-    # shd put localhost here?
+      # shd put localhost here?
       - FRONTEND_SERVICE_CORS=http://localhost:3001
       - REACT_APP_USER_SVC_URL=http://user-service:3003/api/auth/
       - QUESTION_HOST=http://question-service:3000/api/questions
@@ -74,4 +74,3 @@ services:
 networks:
   service:
     driver: bridge
-

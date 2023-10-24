@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const questionController = require("../controllers/questionController");
 const verifyUserToken = require('../middleware/verifyUserToken');  // Import the middleware
@@ -12,6 +12,12 @@ router.get("/pagination/remaining", verifyUserToken, questionController.getRemai
 
 router.get("/matched", [verifyUserToken, verifyUser2Token], questionController.getRandomQuestionByFilter);
 router.get("/:id", verifyUserToken, questionController.getQuestionById);
+router.get('/matched', questionController.getRandomQuestionByFilter);
+router.get('/total', questionController.getQuestionTotal);
+// must be last method if not it'll always call this method
+router.get('/:id', questionController.getQuestionById);
+
+router.post('/questionbyid', questionController.getQuestionsByIds);
 
 // Create a new question
 router.post("/", verifyUserAdmin, questionController.createQuestion);
