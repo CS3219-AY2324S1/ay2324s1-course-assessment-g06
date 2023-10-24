@@ -722,7 +722,7 @@ const CodeSpace = () => {
                   Test Output
                 </div>
                 <div className='col-md-1 col-sm-1'>
-                  {ranCodeStatus === "success" ? (
+                  {!ranCodeError && ranCodeStatus == "success" ? (
                     <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status' />
                   ) : (
                     <img src={CodeExecutionFail} alt="Code Execution Failed" className='failed-status' />
