@@ -13,8 +13,6 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { savesession } from "../../services/save.service";
 import { runcode } from "../../services/save.service";
 
-import { styled } from '@mui/material/styles';
-import { Button, Container, Grid, Paper } from '@mui/material';
 import './CodeSpace.css';
 import logo from '../../images/peerPrepLogo.png';
 import PublishIcon from '@mui/icons-material/Publish';
@@ -743,8 +741,6 @@ const CodeSpace = () => {
           </div>
         </div>
 
-
-
         {/* Right Side (Code Mirror and Chat) */}
         <div className='col-md-7'>
           <div className='row-md'>
@@ -820,15 +816,6 @@ const CodeSpace = () => {
       </div>
       {/* End of Peer Prep Space (Question, Execution, Code, Chat) */}
 
-
-
-
-
-
-
-
-
-
       {/* Quit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
         <div className="modal-dialog" role="document">
@@ -893,7 +880,6 @@ const CodeSpace = () => {
           </div>
         </div>
       </div>
-
 
       {/* Submit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitDialogOpen ? 'block' : 'none' }}>
