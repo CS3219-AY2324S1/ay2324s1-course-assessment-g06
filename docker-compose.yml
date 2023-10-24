@@ -64,6 +64,8 @@ services:
       - SQL_PASSWORD=${SQL_PASSWORD}
       - SQL_USERNAME=${SQL_USERNAME}
       - SQL_HOST=${SQL_HOST}
+      - CDEX_KEY=${CDEX_KEY}
+      - CDEX_HOST=${CDEX_HOST}
     ports:
       - 3002:3002
     depends_on:
