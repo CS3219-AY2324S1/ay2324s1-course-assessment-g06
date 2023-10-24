@@ -49,12 +49,16 @@ body {
   min-height: 100vh; /* Ensures the background color covers the entire viewport height */
 }
 
-@media (min-width: 992px) {
+@media (max-width: 992px) {
   .hidden-link {
-    display: block !important; /* Show the element when the window width is above 920px */
+    display: none !important; /* Show the element when the window width is above 920px */
   }
 }
 
 .hidden-link {
-  display: none;
+  display: block ; /* Show the element when the window width is above 920px */
+}
+
+.navbar-toggler {
+  margin: 25px;
 }

@@ -8,7 +8,9 @@ import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
 import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import $ from 'jquery'; // Import jQuery
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap JavaScript (with Popper.js included)
 import * as AuthService from "./services/auth.service";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -19,6 +21,7 @@ import PageNotFound from "./components/PageNotFound/PageNotFound";
 import GuestRoute from "./components/GuestRoute";
 import EventBus from "./common/EventBus";
 import logo from './images/peerPrepLogo.png';
+
 
 import "./App.css";
 import "./Table/Table";
@@ -73,48 +76,41 @@ const App: React.FC = () => {
           </Link>
 
           {currentUser ? (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item hidden-link">
-                <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item hidden-link">
-                <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
-                  Matching
-                </Link>
-              </li>
-              <li className="nav-ite hidden-link">
-                <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
-                  Questions
-                </Link>
-              </li>
-              <li className="nav-item hidden-link">
-                <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item hidden-link">
-                <a href="/login" className="nav-link" onClick={logOut}>
-                  Log Out
-                </a>
-              </li> 
-              <li className="nav-item">
-                {/* Hamburger icon button */}
-                <button
-                  className="navbar-toggler"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#navbarText"
-                  aria-controls="navbarText"
-                  aria-expanded={isMenuOpen}
-                  aria-label="Toggle navigation"
-                  onClick={toggleMenu}
-                >
-                  <span className="navbar-toggler-icon"></span>
-                </button>
-              </li>
-            </div>
+            <>
+              {/* Hamburger icon button */}
+              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+              </button>
+              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul className="navbar-nav ml-auto">
+                  <li className="nav-item">
+                    <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
+                      Home
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
+                      Matching
+                    </Link>
+                  </li>
+                  <li className="nav-item ">
+                    <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
+                      Questions
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
+                      Profile
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <a href="/login" className="nav-link" onClick={logOut}>
+                      Log Out
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </>
           ) : (
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
@@ -122,17 +118,10 @@ const App: React.FC = () => {
                   Login
                 </Link>
               </li>
-
               <li className="nav-item">
                 <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
                   Sign Up
                 </Link>
-              </li>
-              <li className="nav-item">
-                {/* Hamburger icon button */}
-                <button className="navbar-toggler nav-link align-center" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                  <span className="navbar-toggler-icon"></span>
-                </button>
               </li>
             </div>
           )}
