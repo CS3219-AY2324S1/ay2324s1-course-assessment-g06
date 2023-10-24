@@ -1,10 +1,4 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  LinearProgress,
-} from "@mui/material";
+import { Box, Card, CardContent, LinearProgress } from "@mui/material";
 import {
   CircularProgressbarWithChildren,
   buildStyles,
@@ -28,6 +22,7 @@ type QuestionDetails = {
   Hard: number;
   Total: number;
 };
+
 // how many the user solved
 type UserDetails = {
   Easy: number;
@@ -109,7 +104,6 @@ const Analytics: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("all question ids in history: ", allQuestionIds);
     if (allQuestionIds.length > 0) {
       const requestBody = {
         ids: allQuestionIds,
@@ -147,7 +141,6 @@ const Analytics: React.FC = () => {
             [item.difficulty]: item.count,
           }));
         });
-        // console.log(total);
 
         // Update the total count
         setQuestionDetails((prevQuestionDetails) => ({
@@ -207,8 +200,8 @@ const Analytics: React.FC = () => {
                 value={userDetails.Total}
                 // number of questions in our db
                 maxValue={questionDetails.Total}
-                text={`${userDetails.Total}`}
-                strokeWidth={3}
+                // text={`${userDetails.Total}`}
+                strokeWidth={5}
                 background
                 styles={buildStyles({
                   trailColor: "transparent",
@@ -218,7 +211,10 @@ const Analytics: React.FC = () => {
                   textSize: "15px",
                 })}
               >
-                <p style={{ paddingTop: "30%", fontSize: "90%" }}>solved</p>
+                <div style={{ fontSize: "170%", fontWeight: "bold" }}>
+                  {userDetails.Total}
+                </div>
+                <div style={{ fontSize: "90%" }}>solved</div>
               </CircularProgressbarWithChildren>
             </div>
           </CardContent>
@@ -233,12 +229,30 @@ const Analytics: React.FC = () => {
             >
               <div
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                   fontSize: "14px",
                   marginTop: "2px",
                   paddingBottom: "3px",
                 }}
               >
-                Easy
+                <span
+                  style={{
+                    fontSize: "14px",
+                    marginTop: "2px",
+                    paddingBottom: "3px",
+                  }}
+                >
+                  Easy
+                </span>
+                <span>
+                  <span>
+                    <strong>{userDetails.Easy}</strong>
+                  </span>
+                  <span>/</span>
+                  <span>{questionDetails.Easy}</span>
+                </span>
               </div>
               <LinearProgress
                 sx={{
@@ -264,13 +278,32 @@ const Analytics: React.FC = () => {
             >
               <div
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                   fontSize: "14px",
                   marginTop: "2px",
                   paddingBottom: "3px",
                 }}
               >
-                Medium
+                <span
+                  style={{
+                    fontSize: "14px",
+                    marginTop: "2px",
+                    paddingBottom: "3px",
+                  }}
+                >
+                  Medium
+                </span>
+                <span>
+                  <span>
+                    <strong>{userDetails.Medium}</strong>
+                  </span>
+                  <span>/</span>
+                  <span>{questionDetails.Medium}</span>
+                </span>
               </div>
+
               <LinearProgress
                 sx={{
                   backgroundColor: "#F9E7B8",
@@ -295,13 +328,26 @@ const Analytics: React.FC = () => {
             >
               <div
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                   fontSize: "14px",
                   marginTop: "2px",
                   paddingBottom: "3px",
                 }}
               >
-                Hard
+                <span>Hard</span>
+                <span>
+                  <span>
+                    <span>
+                      <strong>{userDetails.Hard}</strong>
+                    </span>
+                    <span>/</span>
+                    <span>{questionDetails.Hard}</span>
+                  </span>
+                </span>
               </div>
+
               <LinearProgress
                 sx={{
                   backgroundColor: "#F9A2A2",
@@ -326,9 +372,10 @@ const Analytics: React.FC = () => {
             borderRadius: "15px",
             marginTop: "20px",
             boxShadow: "none",
+            width: "100%",
           }}
         >
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
             <CardContent>
               <header
                 style={{
@@ -348,14 +395,15 @@ const Analytics: React.FC = () => {
             <CardContent
               style={{
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                // justifyContent: "center",
+                // alignItems: "center",
                 marginLeft: "10px",
+                width: "100%",
               }}
             >
               <HeatMap
                 value={heatData}
-                width={1200}
+                width="100%"
                 rectSize={13}
                 weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
                 startDate={new Date("2023/01/01")}
