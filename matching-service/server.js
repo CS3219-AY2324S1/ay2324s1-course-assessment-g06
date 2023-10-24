@@ -55,10 +55,6 @@ app.use(express.urlencoded({ extended: true }));
 // Define after app.use
 require('./routes/save.routes')(app);
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
 console.log("Server is starting...")
 // server.listen(3002, () => {
 //   console.log('Server is listening on port 3002');

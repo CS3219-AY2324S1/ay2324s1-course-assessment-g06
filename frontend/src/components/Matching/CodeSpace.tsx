@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, Location, useNavigate, useBeforeUnload} from 'react-router-dom';
+import { useParams, useLocation, Location, useNavigate, useBeforeUnload } from 'react-router-dom';
 import ReactRouterPrompt from "react-router-prompt";
 import useHistory from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
@@ -15,11 +15,14 @@ import { runcode } from "../../services/save.service";
 
 import { styled } from '@mui/material/styles';
 import { Button, Container, Grid, Paper } from '@mui/material';
-import './CodeSpace.css'; 
+import './CodeSpace.css';
 import logo from '../../images/peerPrepLogo.png';
 import PublishIcon from '@mui/icons-material/Publish';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PlayIcon from '@mui/icons-material/PlayArrow';
+import CircularProgress from "@mui/material/CircularProgress";
+import Sender from "../../images/chatPicture1.png";
+import Receiver from "../../images/chatPicture2.png";
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -43,8 +46,8 @@ interface ChatMessage {
 const CodeSpace = () => {
   /////////////////// PARAMETER INITIALISATION  ///////////////////
   const MATCHING_SERVICE_CORS =
-  process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
-  
+    process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
+
   // Id of the current code space room
   const { roomId } = useParams();
   // Get location/path of current page
@@ -52,7 +55,7 @@ const CodeSpace = () => {
   const navigate = useNavigate();
 
   // To show user the match information
-  const { socketId, difficulty, topic, language} = location.state || {};
+  const { socketId, difficulty, topic, language } = location.state || {};
 
   // Initilaise the chat message with a connected prompt
   const messageData: ChatMessage = {
@@ -73,8 +76,8 @@ const CodeSpace = () => {
   const [questionDifficulty, setQuestiondDifficulty] = useState("");
 
   // To track if the user has quit the room
-  const [hasQuitRoom, setHasQuitRoom] = useState(false); 
-  
+  const [hasQuitRoom, setHasQuitRoom] = useState(false);
+
   // Initilise timer for the collaboration session
   const [timer, setTimer] = useState(10000);
   const [isTimerEnded, setIsTimerEnded] = useState(false);
@@ -132,6 +135,7 @@ const CodeSpace = () => {
   const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  
 
   /////////////////// HANDLE DIALOG OPEN OR CLOSE  ///////////////////
   // To open of close the confirm quit session modal/dialog
@@ -167,38 +171,10 @@ const CodeSpace = () => {
   const openSubmitRequestDialog = () => {
     setIsSubmitRequestDialogOpen(true);
   };
-  
+
   const closeSubmitRequestDialog = () => {
     setIsSubmitRequestDialogOpen(false);
   };
-
-  const QuestionWrapper = styled(Container)(({ theme }) => ({
-    backgroundColor: '#d8d8d8',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    fontWeight: 'bold',
-    textAlign: 'center',
-    borderRadius: '50px',
-    fontSize: '12px',
-    // Media query for smaller screens
-    '@media (max-width: 1200px)': {
-      fontSize: '10px', // Decrease font size for smaller screens
-    },
-  }));
-  
-  const CategoryWrapper = styled(Container)(({ theme }) => ({
-    backgroundColor: 'rgb(255, 192, 203)',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    fontWeight: 'bold',
-    textAlign: 'center',
-    borderRadius: '50px',
-    fontSize: '12px',
-    // Media query for smaller screens
-    '@media (max-width: 1200px)': {
-      fontSize: '10px', // Decrease font size for smaller screens
-    },
-  }));
 
   // Debounce timer to control when to emit "user typing" event
   let typingTimer: NodeJS.Timeout;
@@ -309,7 +285,7 @@ const CodeSpace = () => {
       matchedSocket.on('receiveMessage', (data) => {
         console.log('receiveMessage from server');
         setMessageList((list) => [...list, data]); // Update the selected language
-      }); 
+      });
 
       // Listen for 'userTyping' events from the server
       matchedSocket.on('userTyping', (isTyping) => {
@@ -324,15 +300,15 @@ const CodeSpace = () => {
         setIsAccessAllowed(true);
 
         if (connectedSocket !== socketId) {
-        // Send a message to the chat when another user connects
-        const messageData: ChatMessage = {
-          roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
-          author: 'System', 
-          // message: `A user (${connectedSocket}) has connected`,
-          message: `A user has connected`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        setMessageList((list) => [...list, messageData]);
+          // Send a message to the chat when another user connects
+          const messageData: ChatMessage = {
+            roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
+            author: 'System',
+            // message: `A user (${connectedSocket}) has connected`,
+            message: `A user has connected`,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+          setMessageList((list) => [...list, messageData]);
         }
       });
 
@@ -386,7 +362,7 @@ const CodeSpace = () => {
         // Send a message to the chat when a user disconnects
         const messageData: ChatMessage = {
           roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
-          author: 'System',  
+          author: 'System',
           message: `A user has disconnected`,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
@@ -398,7 +374,7 @@ const CodeSpace = () => {
 
         setOtherUserQuit(true);
         openQuitDialog(); // Open the confirmation dialog
-        
+
         return () => {
           matchedSocket.off('userDisconnected', (roomId))
         };
@@ -506,7 +482,7 @@ const CodeSpace = () => {
     }
     setSubmissionRequestPending(false); // Set submission request as not pending
     closeSubmitRequestDialog(); // Close the submission request dialog
-  
+
     // Set the rejection message
     setSubmissionRequestRejected(true);
   };
@@ -614,7 +590,7 @@ const CodeSpace = () => {
     }
   };
 
-  const saveSessionHistory = (questionId : string, questionDifficulty : string) => {
+  const saveSessionHistory = (questionId: string, questionDifficulty: string) => {
     console.log("submitting session");
     savesession(questionId, questionDifficulty, code).then(
       (response) => {
@@ -628,7 +604,7 @@ const CodeSpace = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-          console.log("Error in submission: ", resMessage);
+        console.log("Error in submission: ", resMessage);
       }
     );
   };
@@ -636,25 +612,25 @@ const CodeSpace = () => {
   /////////////////// HANDLE FRONTEND COMPONENTS  ///////////////////
 
   return (
-    
-    <div style={{ backgroundColor: '#d8d8d8', padding: '15px' }}>
+    <div style={{ backgroundColor: '#white', padding: '15px' }}>
       <div className='p-2 row'>
-        <div className="col-md-4 col-sm d-flex align-items-center">
+        {/* Logo */}
+        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-start">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
-          <span style={{ fontWeight: 'bold', textAlign: 'center', backgroundColor: 'white', borderRadius: '20px', padding: '10px', fontSize: '16px' }}>{topic || 'Not selected'}</span>
         </div>
 
-        <div className="col-md-4 col-sm">
-          <span className="timer">{formattedTime}</span> 
+        {/* Timer */}
+        <div className="col-12 col-md-2 d-flex justify-content-center">
+          <span className="timer">{formattedTime}</span>
         </div>
 
-        <div className="col-md-4 col-sm">
-          <div className="d-flex justify-content-end">
-            {/* Submit Button */}
-            <button className="submit-button mx-2" onClick={openSubmitDialog}>
-              <PublishIcon/> 
-              <span className="pr-1">Submit</span> 
-            </button>
+        {/* Buttons */}
+        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
+          {/* Submit Button */}
+          <button className="submit-button mx-2" onClick={openSubmitDialog}>
+            <PublishIcon />
+            <span className="pr-1">Submit</span>
+          </button>
 
             {/* Quit Button */}
             <button className="quit-button mx-2" onClick={openQuitDialog}>
@@ -669,140 +645,167 @@ const CodeSpace = () => {
             </button>
           </div>
         </div>
-      </div>
 
-    
-      {/* <h2>Welcome, {socketId || 'Loading...'}</h2> */}
-      {/* Match Information */}
-      {/* <p>
-        You are matched with another user using difficulty:{' '}
-        {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and
-        language: {language || 'Not selected'}
-      </p>
-      <div className="timer">Time left: {formattedTime} minutes</div> */}      
-
-        <Grid item xs={6} md={6}></Grid>
-        {/* Question */}
-        {question !== null ? (
-          <Container
-        maxWidth="lg"
-        className='mt-4'
-        style={{
-          margin: '0 auto',
-          backgroundColor: '#E6E6E6',
-          borderRadius: '20px',
-          width: '100%',
-          padding: '20px',
-          maxWidth: '100%',
-          maxHeight: '800px'
-        }}
-      >
-        <Paper
-          style={{
-            padding: '20px',
-            borderRadius: '15px',
-            maxHeight: '725px'
-          }}
-        >
-          <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-            <Grid item xs={12} container justifyContent="space-between">
-              <div>
-                <h1 style={{ fontSize: '25px', fontWeight: 'bold' }}>
-                  {question.title}
-                </h1>
-              </div>
-            </Grid>
-
-            {/* Hide these tags when the width of the screen is smal */}
-            {window.innerWidth > 940 && (
-              <>
-              <Grid item xs={1.5}>
-                <CategoryWrapper>{question.difficulty}</CategoryWrapper>
-              </Grid>
-
-              {question.topics.split(', ').map((topic, index) => (
-                <Grid
-                  item
-                  xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
-                  key={index}
-                >
-                  <QuestionWrapper>{topic}</QuestionWrapper>
-                </Grid>
-              ))}
-              </>
-            )}
-          
-            <Container maxWidth="lg" style={{ marginTop: '25px' }}>
-              <Grid item xs={12}>
-                <div
-                  className="content-wrapper"
-                  style={{ overflow: 'auto', maxHeight: '600px' }}
-                >
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: wrapPreTags(question.content),
-                    }}
-                  />
+      <div className='container' style={{ maxWidth: '100%', margin: '0 auto', padding: '0' }}>
+        <div className='row'>
+          <div className='col-12 col-md-5'>
+            {/* Question */}
+            {question !== null ? (
+              <Container
+                maxWidth="lg"
+                className='mt-3'
+                style={{
+                  margin: '0 auto',
+                  backgroundColor: 'white',
+                  borderRadius: '15px',
+                  width: '100%',
+                  maxWidth: '100%',
+                  minHeight: '950px',
+                  height: '950px',
+                  maxHeight: '950px',
+                  padding: '0',
+                  border: '1px solid #ccc',
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                {/* Header */}
+                <div className="card-header">
+                  Question
                 </div>
-              </Grid>
-            </Container>
-          </Grid>
-        </Paper>
-      </Container>
-        ) : (
-          <p>Loading question...</p>
-        )}
 
-      <br />
-      <br />
+                <Grid sx={{ flexGrow: 1 }} container spacing={1}>
+                  <Grid item xs={12} container justifyContent="space-between">
+                    <div>
+                      <h1 style={{ fontSize: '25px', fontWeight: 'bold', padding: '10px 20px 0px 20px' }}>
+                        {question.title}
+                      </h1>
+                    </div>
+                  </Grid>
 
-      <Grid item xs={6} md={6}>
 
-      {/* Coding Space */}
-      <CodeMirror
-        value={code}
-        height="700px"
-        style={{ width: '100%' }}  // Set the width to 100% to fill the grid item
-        onChange={onChange}
-        extensions={getCodeMirrorExtensions()}
-      />
-    </Grid>
-    
-      <br/>
+                  <div className='container ml-0 mb-3' style={{ maxWidth: '100%', padding: '10px 28px 0px' }}>
+                    <div className='difficulty-tag'>{difficulty}</div>
+                    <div className='topic-tag'>{topic}</div>
+                  </div>
 
-      {/* Chat UI */}
-      <div className="chat-container mx-1" style={{ backgroundColor: 'white' }}> 
-        <h2>Chat</h2>
-        <div className="chat-messages">
-          <ScrollToBottom className='message-container'>
-          {messageList.map((messageContent, index) => (
-            <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
-              <div className='message-content'>
-                {messageContent.message}
+                  <hr />
+
+
+                  {/* Hide these tags when the width of the screen is smal */}
+                  {/* {window.innerWidth > 940 && (
+                    <>
+                      <Grid item xs={1.5}>
+                        <CategoryWrapper>{question.difficulty}</CategoryWrapper>
+                      </Grid>
+
+                      {question.topics.split(', ').map((topic, index) => (
+                        <Grid
+                          item
+                          xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
+                          key={index}
+                        >
+                          <QuestionWrapper>{topic}</QuestionWrapper>
+                        </Grid>
+                      ))}
+                    </>
+                  )} */}
+
+                  <Container className='pr-3' maxWidth="lg" style={{ marginTop: '25px' }}>
+                    <Grid item xs={12}>
+                      <div
+                        className="content-wrapper"
+                        style={{ overflow: 'auto', maxHeight: '775px' }}
+                      >
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: wrapPreTags(question.content),
+                          }}
+                        />
+                      </div>
+                    </Grid>
+                  </Container>
+                </Grid>
+              </Container>
+            ) : (
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+                <CircularProgress color="inherit" />
               </div>
-              <div className='message-meta'>
-                {messageContent.time}
+            )}
+
+          </div>
+
+          <br />
+
+          <div className='col-12 col-md-7'>
+            <div className='codespace mt-3'>
+              <div className="card-header">
+                Code
+              </div>
+              <CodeMirror
+                value={code}
+                height="500px"
+                onChange={onChange}
+                extensions={getCodeMirrorExtensions()}
+              />
+            </div>
+            {/* Coding Space */}
+
+
+            <br />
+
+
+            {/* Chat UI */}
+            <div className="chat-container" style={{ backgroundColor: 'white' }}>
+              <div className="card-header">
+                Chat
+              </div>
+              <div className="chat-messages">
+                <ScrollToBottom className='message-container'>
+                  {messageList.map((messageContent, index) => (
+                    <div key={index} className="chat-message-container">
+                      <div className="chat-avatar-message">
+                        {socketId === messageContent.author ? (
+                          <img src={Receiver} alt="Receiver Avatar" className='receiver-avatar' />
+                        ) : "System" === messageContent.author ? (
+                          <></>
+                        ) : (
+                          <img src={Sender} alt="Sender Avatar" className='sender-avatar' />
+                        )}
+                        <div className={`chat-message ${socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}`}>
+                          <div className='message-content'>
+                            <div className='message-text'>
+                              {messageContent.message}
+                            </div>
+                          </div>
+                          <div className='message-meta'>
+                            {messageContent.time}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </ScrollToBottom>
+              </div>
+
+              <div className="chat-input">
+                <input
+                  type="text"
+                  // maxLength={50}
+                  placeholder="Type your message..."
+                  value={newMessage}
+                  onChange={handleNewMessageChange}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      handleSendMessage();
+                    } else {
+                      handleStartTyping();
+                    }
+                  }}
+                />
+                {isTyping && <div className="typing-indicator">Typing...</div>}
               </div>
             </div>
-          ))}
-          </ScrollToBottom>
-        </div>
-        <div className="chat-input">
-          <input
-            type="text"
-            placeholder="Type your message..."
-            value={newMessage}
-            onChange={handleNewMessageChange}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                handleSendMessage();
-              } else {
-                handleStartTyping(); 
-              }
-            }}
-          />
-          {isTyping && <div className="typing-indicator">Typing...</div>}
-          <button onClick={handleSendMessage}>Send</button>
+          </div>
         </div>
       </div>
 
@@ -884,53 +887,53 @@ const CodeSpace = () => {
 
       {/* Submit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitDialogOpen ? 'block' : 'none' }}>
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Confirm Submission</h5>
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmitDialog}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            {submissionRequestPending ? (
-              <p>Submission request is pending. Waiting for the other user's response...</p>
-            ) : (
-              <p>Are you sure you want to submit this session?</p>
-            )}
-          </div>
-          {!submissionRequestPending ? (
-          <div className="modal-footer">
-            
-            <button type="button" className="btn btn-danger" 
-            onClick={() => {
-              if (otherUserQuit) {
-                handleSubmitSession();
-              } else {
-                handleRequestSubmitSession();
-              }
-            }}>Submit</button>
-          </div>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Submission</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={closeSubmitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              {submissionRequestPending ? (
+                <p>Submission request is pending. Waiting for the other user's response...</p>
+              ) : (
+                <p>Are you sure you want to submit this session?</p>
+              )}
+            </div>
+            {!submissionRequestPending ? (
+              <div className="modal-footer">
+
+                <button type="button" className="btn btn-danger"
+                  onClick={() => {
+                    if (otherUserQuit) {
+                      handleSubmitSession();
+                    } else {
+                      handleRequestSubmitSession();
+                    }
+                  }}>Submit</button>
+              </div>
             ) : (
               <p></p>
             )}
+          </div>
         </div>
       </div>
-    </div>
 
       {/* Submit Request Rejected Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isRejectedDialogOpen ? 'block' : 'none' }}>
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Submission Request Rejected</h5>
-            <button type="button" className="close" onClick={() => setIsRejectedDialogOpen(false)}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            <p>{submissionRejectedMessage}</p>
-          </div>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Submission Request Rejected</h5>
+              <button type="button" className="close" onClick={() => setIsRejectedDialogOpen(false)}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>{submissionRejectedMessage}</p>
+            </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setIsRejectedDialogOpen(false)}>
                 Close
