@@ -128,13 +128,13 @@ const Login: React.FC<Props> = () => {
 
                       <div className="form-group my-3">
                         <div className="row">
-                          <div className="col-md-6 col-sm-12 text-center text-md-start mb-3" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)' }}>
+                          <div className="col-md-5 col-sm-12 text-center text-md-start mb-3" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)' }}>
                             No Account?&nbsp;
                             <Link to="/register" className="d-md-block" style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>
                               Sign up
                             </Link>
                           </div>
-                          <div className="col-md-6 col-sm-12 mb-5" >
+                          <div className="col-md-7 col-sm-12 mb-3" >
                             <div className="text-center">
                               <button
                                 type="submit"
