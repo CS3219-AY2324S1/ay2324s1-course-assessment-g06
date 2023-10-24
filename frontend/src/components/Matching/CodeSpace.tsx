@@ -89,6 +89,8 @@ const CodeSpace = () => {
     return "Start peer prepping together now!";
   });
 
+  const [fileName, setFileName] = useState("index");
+
   // To track code execution/run output
   const [ranCodeStatus, setRanCodeStatus] = useState("");
   const [ranCodeOutput, setRanCodeOutput] = useState("");
@@ -135,7 +137,17 @@ const CodeSpace = () => {
   const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  
+
+  const fileExtensions : Record<string, string> = {
+    'c': '.c',
+    'cpp': '.cpp',
+    'csharp': '.cs',
+    'go': '.go',
+    'java': '.java',
+    'javascript': '.js',
+    'python': '.py',
+    'typescript': '.ts',
+  };
 
   /////////////////// HANDLE DIALOG OPEN OR CLOSE  ///////////////////
   // To open of close the confirm quit session modal/dialog
@@ -251,6 +263,7 @@ const CodeSpace = () => {
     } else {
       setCode("// " + code);
     }
+    setFileName("index" + fileExtensions[language]);
   }, [language]);
 
   // Set default code in space after match according to language
@@ -508,7 +521,6 @@ const CodeSpace = () => {
     console.log("Code run button clicked");
     // Fixed default code
     const input = "";
-    const fileName = "index.py";
     runCode(code, input, language, fileName);
   };
 
@@ -739,7 +751,7 @@ const CodeSpace = () => {
             {/* Code Mirror and Chat */}
             <div className='codespace'>
               <div className="card-header">
-                Code
+                Code ({fileName})
               </div>
               <CodeMirror
                 value={code}
