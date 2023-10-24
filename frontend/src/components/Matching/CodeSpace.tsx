@@ -86,6 +86,14 @@ const CodeSpace = () => {
     return "Start peer prepping together now!";
   });
 
+  // To track code execution/run output
+  const [ranCodeStatus, setRanCodeStatus] = useState("");
+  const [ranCodeOutput, setRanCodeOutput] = useState("");
+  const [ranCodeException, setRanCodeException] = useState("");
+  const [ranCodeError, setRanCodeError] = useState("");
+  const [ranCodeExecutionTime, setRanCodeExecutionTime] = useState("");
+  const [ranCodeInput, setRanCodeInput] = useState("");
+
   // Check if the dialog to prompt confirmation of quit session is open
   const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
 
@@ -260,7 +268,6 @@ const CodeSpace = () => {
     return wrappedContent;
   }
 
-
   // Set default code in space after match according to language
   useEffect(() => {
     if (language == 'python') {
@@ -269,6 +276,12 @@ const CodeSpace = () => {
       setCode("// " + code);
     }
   }, [language]);
+
+  // Set default code in space after match according to language
+  useEffect(() => {
+
+  }, [ranCodeStatus, ranCodeException, ranCodeOutput, ranCodeError, ranCodeExecutionTime, ranCodeInput]);
+
 
   useEffect(() => {
     // Handle all socket events listened from server
@@ -558,12 +571,24 @@ const CodeSpace = () => {
     console.log("running session");
     runcode(code, input, language, fileName).then(
     (response) => {
-      console.log("response received for run code");
-      console.log("status", response.data.status)
-      console.log("exception", response.data.exception)
-      console.log("stdout", response.data.stdout)
-      console.log("stderr", response.data.stderr)
-      console.log("stdin", response.data.stdin)
+      console.log("response received for run code", response);
+      console.log("response.data.status", response.data.status);
+      console.log("response.data.exception", response.data.exception);
+      console.log("response.data.stdout", response.data.stdout);
+      console.log("response.data.stderr", response.data.stderr);
+      console.log("response.data.stdin", response.data.stdin);
+
+      // Set the output of the ran code
+      setRanCodeStatus(response.data.status);
+      setRanCodeException(response.data.exception);
+      setRanCodeOutput(response.data.stdout);
+      setRanCodeError(response.data.stderr);
+      setRanCodeInput(response.data.stdin);
+
+      console.log(ranCodeStatus);
+      console.log(ranCodeError);
+      console.log(ranCodeInput);
+      console.log("all rancode variables set");
     },
     (error) => {
       const resMessage =
@@ -576,7 +601,6 @@ const CodeSpace = () => {
     }
     );
   };
-
 
   // Set the code syntax
   const getCodeMirrorExtensions = () => {
@@ -735,53 +759,62 @@ const CodeSpace = () => {
       <Grid item xs={6} md={6}>
 
       {/* Coding Space */}
-        <CodeMirror
-          value={code}
-          height="700px"
-          style={{ width: '100%' }}  // Set the width to 100% to fill the grid item
-          onChange={onChange}
-          extensions={getCodeMirrorExtensions()}
-        />
-      </Grid>
-      
-        <br/>
+      <CodeMirror
+        value={code}
+        height="700px"
+        style={{ width: '100%' }}  // Set the width to 100% to fill the grid item
+        onChange={onChange}
+        extensions={getCodeMirrorExtensions()}
+      />
+    </Grid>
+    
+      <br/>
 
-        {/* Chat UI */}
-        <div className="chat-container mx-1" style={{ backgroundColor: 'white' }}> 
-          <h2>Chat</h2>
-          <div className="chat-messages">
-            <ScrollToBottom className='message-container'>
-            {messageList.map((messageContent, index) => (
-              <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
-                <div className='message-content'>
-                  {messageContent.message}
-                </div>
-                <div className='message-meta'>
-                  {messageContent.time}
-                </div>
+      {/* Chat UI */}
+      <div className="chat-container mx-1" style={{ backgroundColor: 'white' }}> 
+        <h2>Chat</h2>
+        <div className="chat-messages">
+          <ScrollToBottom className='message-container'>
+          {messageList.map((messageContent, index) => (
+            <div key={index} className="chat-message" id={socketId === messageContent.author ? "own" : "System" === messageContent.author ? "system" : "other"}>
+              <div className='message-content'>
+                {messageContent.message}
               </div>
-            ))}
-            </ScrollToBottom>
-          </div>
-          <div className="chat-input">
-            <input
-              type="text"
-              placeholder="Type your message..."
-              value={newMessage}
-              onChange={handleNewMessageChange}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  handleSendMessage();
-                } else {
-                  handleStartTyping(); 
-                }
-              }}
-            />
-            {isTyping && <div className="typing-indicator">Typing...</div>}
-            <button onClick={handleSendMessage}>Send</button>
-          </div>
+              <div className='message-meta'>
+                {messageContent.time}
+              </div>
+            </div>
+          ))}
+          </ScrollToBottom>
         </div>
+        <div className="chat-input">
+          <input
+            type="text"
+            placeholder="Type your message..."
+            value={newMessage}
+            onChange={handleNewMessageChange}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSendMessage();
+              } else {
+                handleStartTyping(); 
+              }
+            }}
+          />
+          {isTyping && <div className="typing-indicator">Typing...</div>}
+          <button onClick={handleSendMessage}>Send</button>
+        </div>
+      </div>
 
+      {/* Code Output */}
+      <div className="col-md-4 col-sm">
+        <p>Code Status: {ranCodeStatus}</p>
+        <p>Code Exception: {ranCodeException}</p>
+        <p>Code Output: {ranCodeOutput}</p>
+        <p>Code Error: {ranCodeError}</p>
+        <p>Code Execution Time: {ranCodeExecutionTime}</p>
+        <p>Code Input: {ranCodeInput}</p>
+      </div>
 
       {/* Quit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
