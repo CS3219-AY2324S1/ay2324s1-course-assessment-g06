@@ -84,8 +84,8 @@ exports.runcode = async (req, res) => {
     const input = req.body.input;
     const language = req.body.language;
     const fileName = req.body.fileName;
-    const XApiKey = process.env.XApiKey
-    const XApiHost = process.env.XApiHost
+    const XApiKey = process.env.CDEX_KEY
+    const XApiHost = process.env.CDEX_HOST
 
     const upsertPromises = [];
 
