@@ -16,6 +16,9 @@ steps:
   'user-service', '--image', 
   'asia-northeast1-docker.pkg.dev/$PROJECT_ID/cs3219-g06-user-service/cs3219-g06-user-service-image:$COMMIT_SHA', 
   '--region', 'asia-northeast1', '--allow-unauthenticated']
+
+options:
+  serviceAccount: $_SERVICE_ACCOUNT
 # timeout: 1200s
 # images:
 # - '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
