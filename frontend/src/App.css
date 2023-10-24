@@ -49,11 +49,12 @@ body {
   min-height: 100vh; /* Ensures the background color covers the entire viewport height */
 }
 
+@media (min-width: 992px) {
+  .hidden-link {
+    display: block !important; /* Show the element when the window width is above 920px */
+  }
+}
 
 .hidden-link {
   display: none;
-}
-
-.hidden-link.show {
-  display: block;
 }

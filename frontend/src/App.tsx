@@ -74,31 +74,31 @@ const App: React.FC = () => {
 
           {currentUser ? (
             <div className="navbar-nav ml-auto">
-              <li className="nav-item">
+              <li className="nav-item hidden-link">
                 <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-item hidden-link">
                 <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
                   Matching
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-ite hidden-link">
                 <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
                   Questions
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-item hidden-link">
                 <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
                   Profile
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-item hidden-link">
                 <a href="/login" className="nav-link" onClick={logOut}>
                   Log Out
                 </a>
-              </li>
+              </li> 
               <li className="nav-item">
                 {/* Hamburger icon button */}
                 <button
