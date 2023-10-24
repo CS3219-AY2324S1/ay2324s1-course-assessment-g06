@@ -75,12 +75,14 @@ const App: React.FC = () => {
             <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />
           </Link>
 
+          {/* Hamburger icon button */}
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
           {currentUser ? (
             <>
-              {/* Hamburger icon button */}
-              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-              </button>
+
               <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
@@ -112,18 +114,22 @@ const App: React.FC = () => {
               </div>
             </>
           ) : (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
-                  Sign Up
-                </Link>
-              </li>
-            </div>
+            <>
+              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul className="navbar-nav ml-auto">
+                  <li className="nav-item">
+                    <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
+                      Sign Up
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </>
           )}
         </nav>
       )}
