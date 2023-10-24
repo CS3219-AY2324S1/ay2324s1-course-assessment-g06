@@ -112,7 +112,7 @@ exports.runcode = async (req, res) => {
     
     try {
       const response = await axios.request(options);
-      upsertPromises.push(Promise.resolve("Code executed successfully."));
+      upsertPromises.push(Promise.resolve(response.data));
       // console.log(response)
       console.log("result of execution:", response.data);
     } catch (error) {

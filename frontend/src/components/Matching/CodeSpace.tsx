@@ -547,23 +547,16 @@ const CodeSpace = () => {
     console.log("running session");
     runcode(code, input, language, fileName).then(
     (response) => {
-      console.log("response received for run code", response);
-      console.log("response.data.status", response.data.status);
-      console.log("response.data.exception", response.data.exception);
-      console.log("response.data.stdout", response.data.stdout);
-      console.log("response.data.stderr", response.data.stderr);
-      console.log("response.data.stdin", response.data.stdin);
+      const data = response.data.message[0];
 
       // Set the output of the ran code
-      setRanCodeStatus(response.data.status);
-      setRanCodeException(response.data.exception);
-      setRanCodeOutput(response.data.stdout);
-      setRanCodeError(response.data.stderr);
-      setRanCodeInput(response.data.stdin);
+      // Note: Code with no executables will return null for exception, stdout and stderr
+      setRanCodeStatus(data.status);
+      setRanCodeException(data.exception);
+      setRanCodeOutput(data.stdout);
+      setRanCodeError(data.stderr);
+      setRanCodeInput(data.stdin);
 
-      console.log(ranCodeStatus);
-      console.log(ranCodeError);
-      console.log(ranCodeInput);
       console.log("all rancode variables set");
     },
     (error) => {
