@@ -158,6 +158,7 @@ br.column-view {
 }
 
 .code-output-content-container {
+  font-family: 'Courier New', Courier, monospace;
   overflow-x: hidden;
   padding: 15px 10px 10px 20px;
   min-height: 160px;
@@ -166,6 +167,16 @@ br.column-view {
   overflow-y: auto;
 
   border-radius: 15px !important;
+}
+
+.success-status {
+  font-family: 'Courier New', Courier, monospace;
+  color: green;
+}
+
+.failed-status {
+  font-family: 'Courier New', Courier, monospace;
+  color: red;
 }
 
 p {

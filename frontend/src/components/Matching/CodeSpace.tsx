@@ -556,6 +556,7 @@ const CodeSpace = () => {
       setRanCodeOutput(data.stdout);
       setRanCodeError(data.stderr);
       setRanCodeInput(data.stdin);
+      setRanCodeExecutionTime(data.executionTime);
     },
     (error) => {
       const resMessage =
@@ -565,6 +566,9 @@ const CodeSpace = () => {
         error.message ||
         error.toString();
       console.log("Error in execution/run: ", resMessage);
+
+      setRanCodeStatus("failed");
+      setRanCodeError("Error in code execution");
     }
     );
   };
@@ -642,7 +646,7 @@ const CodeSpace = () => {
       <br className='column-view'/>
 
       {/* Container Space (Question, Execution, Code, Chat) */}
-      <div className='p-2 row'>
+      <div className='row'>
         {/* Left Side (Question and Code Execution) */}
         <div className='col-md-5'>
 
@@ -702,20 +706,26 @@ const CodeSpace = () => {
           <div className='row-md-4'>
             <div className='code-output-container'>
               <div className='card-header d-flex justify-content-between'>
-                <div className='col-md-8'>
+                <div className='col-md-10'>
                   Code Execution Output
                 </div>
-                <div className='col-md-4'>
-                  {ranCodeStatus}
+                <div className='col-md-2'>
+                  {ranCodeStatus === "success" ? (
+                    <p className="success-status">{ranCodeStatus}</p>
+                  ) : (
+                    <p className="failed-status">{ranCodeStatus}</p>
+                  )}
                 </div>
               </div>
            
               <div className='code-output-content-container'>
-                {/* Code Output After Run */}
-                <p>Output: {ranCodeOutput}</p>
-                <p>Error: {ranCodeError}</p>
-                <p>Execution Time: {ranCodeExecutionTime}</p>
-                {/* <p>Code Input: {ranCodeInput}</p> */}
+                {/* Show error only if there is an error found */}
+                {ranCodeError ? (
+                  <p>{ranCodeError}</p>
+                ) : (
+                  <p>{ranCodeOutput}</p>
+                )}
+                <p>Execution Time: {ranCodeExecutionTime} ms</p>
               </div>
             </div>
           </div>
