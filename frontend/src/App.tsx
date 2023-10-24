@@ -30,6 +30,19 @@ const App: React.FC = () => {
   const location = useLocation(); // Get the current location
   const isCodeSpaceRoute = location.pathname.startsWith('/match/');
 
+  // State variable to control the menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Function to toggle the menu
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Close the menu when a navigation link is clicked
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   function generateActiveStyle(path: string) {
     return {
       borderBottom: location.pathname === path ? "5px solid #6C63FF" : "5px solid transparent",
@@ -49,12 +62,14 @@ const App: React.FC = () => {
     setCurrentUser(false);
   };
 
+
   return (
     <div>
       {isCodeSpaceRoute ? null : (
-        <nav className="navbar navbar-expand navbar-light bg-white p-2">
+        <nav className="navbar navbar-default navbar-expand-lg navbar-light bg-white p-2">
+          {/* Logo and navigation links */}
           <Link to={"/"} className="navbar-brand">
-            <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
+            <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />
           </Link>
 
           {currentUser ? (
@@ -84,6 +99,21 @@ const App: React.FC = () => {
                   Log Out
                 </a>
               </li>
+              <li className="nav-item">
+                {/* Hamburger icon button */}
+                <button
+                  className="navbar-toggler"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarText"
+                  aria-controls="navbarText"
+                  aria-expanded={isMenuOpen}
+                  aria-label="Toggle navigation"
+                  onClick={toggleMenu}
+                >
+                  <span className="navbar-toggler-icon"></span>
+                </button>
+              </li>
             </div>
           ) : (
             <div className="navbar-nav ml-auto">
@@ -98,10 +128,18 @@ const App: React.FC = () => {
                   Sign Up
                 </Link>
               </li>
+              <li className="nav-item">
+                {/* Hamburger icon button */}
+                <button className="navbar-toggler nav-link align-center" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                  <span className="navbar-toggler-icon"></span>
+                </button>
+              </li>
             </div>
           )}
         </nav>
       )}
+
+      {/* */}
 
       <div className={`${isCodeSpaceRoute ? '' : ' container mt-3'}`}>
         <Routes>

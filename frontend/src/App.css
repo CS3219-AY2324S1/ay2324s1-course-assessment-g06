@@ -49,3 +49,11 @@ body {
   min-height: 100vh; /* Ensures the background color covers the entire viewport height */
 }
 
+
+.hidden-link {
+  display: none;
+}
+
+.hidden-link.show {
+  display: block;
+}
