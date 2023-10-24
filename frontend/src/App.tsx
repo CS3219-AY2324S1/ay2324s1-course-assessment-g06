@@ -1,7 +1,5 @@
 import React from "react";
-import { Routes, Route, Link, Navigate, unstable_usePrompt as usePrompt } from "react-router-dom";
-import "./App.css";
-import "./Table/Table";
+import { Routes, Route, Link } from "react-router-dom";
 import BasicTable from "./Table/Table";
 import Question from "./Question/Question";
 import Matching from "./components/Matching/Matching";
@@ -12,7 +10,6 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as AuthService from "./services/auth.service";
-import IUser from "./types/user.type";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
@@ -20,15 +17,13 @@ import Profile from "./components/Profile";
 import Protected from "./components/Protected";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
 import GuestRoute from "./components/GuestRoute";
-// import BoardUser from "./components/BoardUser";
-// import BoardModerator from "./components/BoardModerator";
-// import BoardAdmin from "./components/BoardAdmin";
 import EventBus from "./common/EventBus";
 import logo from './images/peerPrepLogo.png';
 
+import "./App.css";
+import "./Table/Table";
+
 const App: React.FC = () => {
-  const [showModeratorBoard, setShowModeratorBoard] = useState<boolean>(false);
-  const [showAdminBoard, setShowAdminBoard] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
     localStorage.getItem("user") ? true : false
   );
@@ -37,19 +32,11 @@ const App: React.FC = () => {
 
   function generateActiveStyle(path: string) {
     return {
-      borderBottom: location.pathname === path ? "5px solid #6C63FF" : "none",
+      borderBottom: location.pathname === path ? "5px solid #6C63FF" : "5px solid transparent",
     };
   }
 
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
-
-    if (user) {
-      // setCurrentUser(true);
-      setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
-      setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
-    }
-
     EventBus.on("logout", logOut);
 
     return () => {
@@ -59,63 +46,61 @@ const App: React.FC = () => {
 
   const logOut = () => {
     AuthService.logout();
-    setShowModeratorBoard(false);
-    setShowAdminBoard(false);
     setCurrentUser(false);
   };
 
   return (
     <div>
       {isCodeSpaceRoute ? null : (
-  <nav className="navbar navbar-expand navbar-light bg-white p-3"> 
-        <Link to={"/"} className="navbar-brand">
-          <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
-        </Link>
+        <nav className="navbar navbar-expand navbar-light bg-white p-2">
+          <Link to={"/"} className="navbar-brand">
+            <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />;
+          </Link>
 
-        {currentUser ? (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
-                Matching
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
-                Questions
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
-                Profile
-              </Link>
-            </li>
-            <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={logOut}>
-                Log Out
-              </a>
-            </li>
-          </div>
-        ) : (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-            <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
-                Login
-              </Link>
-            </li>
+          {currentUser ? (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
+                  Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
+                  Matching
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
+                  Questions
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
+                  Profile
+                </Link>
+              </li>
+              <li className="nav-item">
+                <a href="/login" className="nav-link" onClick={logOut}>
+                  Log Out
+                </a>
+              </li>
+            </div>
+          ) : (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
+                  Login
+                </Link>
+              </li>
 
-            <li className="nav-item">
-              <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
-                Sign Up
-              </Link>
-            </li>
-          </div>
-        )}
-      </nav>
+              <li className="nav-item">
+                <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
+                  Sign Up
+                </Link>
+              </li>
+            </div>
+          )}
+        </nav>
       )}
 
       <div className={`${isCodeSpaceRoute ? '' : ' container mt-3'}`}>
@@ -186,12 +171,9 @@ const App: React.FC = () => {
             }
           />
           <Route path="/questions/add-question" element={<AddQuestionForm />} />
-
           <Route path="*" element={<PageNotFound />} />
-        
-        </Routes>
 
-        
+        </Routes>
       </div>
     </div>
   );
