@@ -158,7 +158,8 @@ br.column-view {
 }
 
 .code-output-content-container {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "SFMono-Regular","Menlo","Monaco","Consolas","Liberation Mono","Courier New",monospace;
+  font-size: 14px;
   overflow-x: hidden;
   padding: 15px 10px 10px 20px;
   min-height: 160px;
@@ -170,13 +171,13 @@ br.column-view {
 }
 
 .success-status {
-  font-family: 'Courier New', Courier, monospace;
-  color: green;
+  height: 21px;
+  width: 21px;
 }
 
 .failed-status {
-  font-family: 'Courier New', Courier, monospace;
-  color: red;
+  height: 21px;
+  width: 21px;
 }
 
 p {

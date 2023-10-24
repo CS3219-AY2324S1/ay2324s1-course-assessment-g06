@@ -21,6 +21,8 @@ import PlayIcon from '@mui/icons-material/PlayArrow';
 import CircularProgress from "@mui/material/CircularProgress";
 import Sender from "../../images/chatPicture1.png";
 import Receiver from "../../images/chatPicture2.png";
+import CodeExecutionSuccess from "../../images/codeExecutionSuccess.png";
+import CodeExecutionFail from "../../images/codeExecutionFail.png";
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -716,26 +718,34 @@ const CodeSpace = () => {
           <div className='row-md-4'>
             <div className='code-output-container'>
               <div className='card-header d-flex justify-content-between'>
-                <div className='col-md-10'>
-                  Code Execution Output
+                <div className='col-md-9 col-sm-9'>
+                  Test Output
                 </div>
-                <div className='col-md-2'>
+                <div className='col-md-1 col-sm-1'>
                   {ranCodeStatus === "success" ? (
-                    <p className="success-status">{ranCodeStatus}</p>
+                    <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status' />
                   ) : (
-                    <p className="failed-status">{ranCodeStatus}</p>
+                    <img src={CodeExecutionFail} alt="Code Execution Failed" className='failed-status' />
                   )}
-                </div>
+                  </div>
+                  <div className='col-md-2 col-sm-2'>
+                    {ranCodeExecutionTime} ms
+                  </div>
               </div>
            
               <div className='code-output-content-container'>
                 {/* Show error only if there is an error found */}
                 {ranCodeError ? (
-                  <p>{ranCodeError}</p>
+                  <div>
+                    <p style={{ fontWeight:"bold" }}>Error:</p>
+                    <p>{ranCodeError}</p>
+                  </div>
                 ) : (
-                  <p>{ranCodeOutput}</p>
+                  <div>
+                    <p style={{ fontWeight:"bold" }}>Your Output:</p>
+                    <p>{ranCodeOutput}</p>
+                  </div>
                 )}
-                <p>Execution Time: {ranCodeExecutionTime} ms</p>
               </div>
             </div>
           </div>
