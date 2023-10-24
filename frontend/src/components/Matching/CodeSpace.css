@@ -1,5 +1,22 @@
 /* CodeSpace.css */
 
+h1.question-title {
+  font-size: 25px;
+  font-weight: bold; 
+  padding: 0px 0px 0px 0px;
+}
+
+br.column-view {
+  display: none; /* Hide <br /> by default */
+}
+
+/* Media query to hide */
+@media screen and (min-width: 767px) {
+  br.column-view {
+    display: block;
+  }
+}
+
 /* Style for the chat container */
 .chat-container {
   display: flex;
@@ -9,7 +26,7 @@
   border: 1px solid #ccc;
   border-radius: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  height: 393px;
+  height: 390px;
   width: 100%;
 }
 
@@ -92,6 +109,69 @@
   overflow-x: hidden;
 }
 
+.question-container {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  min-height: 535px;
+  height: 535px;
+  max-height: 535px;
+
+  width: 100%;
+  height: 100%;
+  border-radius: 15px !important;
+  max-width: 100%;
+  /* max-height: 800px; */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* overflow-x: hidden; */
+}
+
+.question-content-container {
+  overflow-x: hidden;
+  padding: 25px;
+  min-height: 500px;
+  height: 500px;
+  max-height: 500px;
+  overflow-y: auto;
+
+  border-radius: 15px !important;
+}
+
+/* Code Execution Component Styles */
+.code-output-container {
+  overflow-y: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px !important;
+  max-width: 100%;
+
+  min-height: 185px;
+  height: 185px;
+  max-height: 185px;
+
+  /* max-height: 800px; */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
+}
+
+.code-output-content-container {
+  overflow-x: hidden;
+  padding: 15px 10px 10px 20px;
+  min-height: 160px;
+  height: 160px;
+  max-height: 160px;
+  overflow-y: auto;
+
+  border-radius: 15px !important;
+}
+
+p {
+  size: 12px;
+}
+
 /* Quit button */
 button.quit-button {
 background-color: #ff4646;
@@ -171,13 +251,18 @@ color: black;
 
 /* Style for card headers */
 .card-header {
-  font-size: 15px;
+  font-size: 12px;
   background-color: rgb(240, 240, 240) !important;
   padding-top: 5px !important;
   padding-left: 20px !important;
   height: 30px;
   border-radius: 15px 15px 0px 0px !important;
   font-weight: bold;
+}
+
+.tag-container {
+  max-width: 100%;
+  padding: 0px 0px 20px 10px;
 }
 
 /* Style for question tags */
@@ -209,7 +294,7 @@ color: black;
   border-radius: 15px !important;
   width: 100%;
   max-width: 100%;
-  max-height: 800px;
+  /* max-height: 800px; */
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

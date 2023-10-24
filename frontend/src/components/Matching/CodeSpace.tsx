@@ -506,8 +506,8 @@ const CodeSpace = () => {
 
   const handleRunCode = () => {
     console.log("Code run button clicked");
-    // For testing
-    const input = "hi";
+    // Fixed default code
+    const input = "";
     const fileName = "index.py";
     runCode(code, input, language, fileName);
   };
@@ -556,8 +556,6 @@ const CodeSpace = () => {
       setRanCodeOutput(data.stdout);
       setRanCodeError(data.stderr);
       setRanCodeInput(data.stdin);
-
-      console.log("all rancode variables set");
     },
     (error) => {
       const resMessage =
@@ -603,152 +601,150 @@ const CodeSpace = () => {
   };
 
   /////////////////// HANDLE FRONTEND COMPONENTS  ///////////////////
-
   return (
-    <div style={{ backgroundColor: '#white', padding: '15px' }}>
-      <div className='p-2 row'>
+    <div style={{ backgroundColor: '#E6E6E6', padding: '15px' }}>
+
+      {/* Header */}
+      <div className='p-1 row'>
         {/* Logo */}
-        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-start">
+        <div className="col-md-5 d-flex justify-content-center justify-content-md-start">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
         </div>
-
+  
         {/* Timer */}
-        <div className="col-12 col-md-2 d-flex justify-content-center">
+        <div className="col-md-2 d-flex justify-content-center">
           <span className="timer">{formattedTime}</span>
         </div>
-
+  
         {/* Buttons */}
-        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
+        <div className="col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
           {/* Submit Button */}
           <button className="submit-button mx-2" onClick={openSubmitDialog}>
             <PublishIcon />
             <span className="pr-1">Submit</span>
           </button>
-
-            {/* Quit Button */}
-            <button className="quit-button mx-2" onClick={openQuitDialog}>
-              <LogoutIcon/>
-              <span className="pr-1">Quit Session</span> 
-            </button>
-
-            {/* Run Button */}
-            <button className="run-button mx-2" onClick={handleRunCode}>
-              <PlayIcon/>
-              <span className="pr-1">Run</span> 
-            </button>
-          </div>
+  
+          {/* Quit Button */}
+          <button className="quit-button mx-2" onClick={openQuitDialog}>
+            <LogoutIcon/>
+            <span className="pr-1">Quit Session</span>
+          </button>
+  
+          {/* Run Button */}
+          <button className="run-button mx-2" onClick={handleRunCode}>
+            <PlayIcon/>
+            <span className="pr-1">Run</span>
+          </button>
         </div>
+      </div>
+      {/* End of Header */}
+  
+      <br className='column-view'/>
 
-      <div className='container' style={{ maxWidth: '100%', margin: '0 auto', padding: '0' }}>
-        <div className='row'>
-          <div className='col-12 col-md-5'>
-            {/* Question */}
-            {question !== null ? (
-              <Container
-                maxWidth="lg"
-                className='mt-3'
-                style={{
-                  margin: '0 auto',
-                  backgroundColor: 'white',
-                  borderRadius: '15px',
-                  width: '100%',
-                  maxWidth: '100%',
-                  minHeight: '950px',
-                  height: '950px',
-                  maxHeight: '950px',
-                  padding: '0',
-                  border: '1px solid #ccc',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                {/* Header */}
-                <div className="card-header">
-                  Question
+      {/* Container Space (Question, Execution, Code, Chat) */}
+      <div className='p-2 row'>
+        {/* Left Side (Question and Code Execution) */}
+        <div className='col-md-5'>
+
+          {/* Question */}
+          <div className='row-md-7'>
+            <div className='question-container'>
+              {/* Header */}
+              <div className="card-header sticky-top">
+                Question
+              </div>
+
+              {question !== null ? (
+              <div className="question-content-container flex-grow-1">
+                {/* Title */}
+                <div className='row-md-1'>
+                  <h1 className='question-title'>
+                    {question.title}
+                  </h1>
                 </div>
 
-                <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-                  <Grid item xs={12} container justifyContent="space-between">
-                    <div>
-                      <h1 style={{ fontSize: '25px', fontWeight: 'bold', padding: '10px 20px 0px 20px' }}>
-                        {question.title}
-                      </h1>
-                    </div>
-                  </Grid>
+                {/* Tags */}
+                <div className='tag-container row-md-1'>
+                  <div className='difficulty-tag'>{difficulty}</div>
+                  <div className='topic-tag'>{topic}</div>
+                </div>
 
+                {/* Line */}
+                <br />
+                <hr />
 
-                  <div className='container ml-0 mb-3' style={{ maxWidth: '100%', padding: '10px 28px 0px' }}>
-                    <div className='difficulty-tag'>{difficulty}</div>
-                    <div className='topic-tag'>{topic}</div>
-                  </div>
-
-                  <hr />
-
-
-                  {/* Hide these tags when the width of the screen is smal */}
-                  {/* {window.innerWidth > 940 && (
-                    <>
-                      <Grid item xs={1.5}>
-                        <CategoryWrapper>{question.difficulty}</CategoryWrapper>
-                      </Grid>
-
-                      {question.topics.split(', ').map((topic, index) => (
-                        <Grid
-                          item
-                          xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
-                          key={index}
-                        >
-                          <QuestionWrapper>{topic}</QuestionWrapper>
-                        </Grid>
-                      ))}
-                    </>
-                  )} */}
-
-                  <Container className='pr-3' maxWidth="lg" style={{ marginTop: '25px' }}>
-                    <Grid item xs={12}>
+                {/* Wrap Question Content */}
+                <div className='row-md-6 ml-0 mb-3' style={{ marginTop: '25px' }}>
+                    <div
+                      className="content-wrapper flex-fill"
+                      style={{ overflow: 'auto' }}
+                    >
                       <div
-                        className="content-wrapper"
-                        style={{ overflow: 'auto', maxHeight: '775px' }}
-                      >
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: wrapPreTags(question.content),
-                          }}
-                        />
-                      </div>
-                    </Grid>
-                  </Container>
-                </Grid>
-              </Container>
-            ) : (
+                        dangerouslySetInnerHTML={{
+                          __html: wrapPreTags(question.content),
+                        }}
+                      />
+                    </div>
+                </div>
+              </div>
+              ) : (
+              /* Question Loader */
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
                 <CircularProgress color="inherit" />
               </div>
-            )}
-
+              )}
+            </div>
           </div>
 
-          <br />
+          <br className='column-view'/>
 
-          <div className='col-12 col-md-7'>
-            <div className='codespace mt-3'>
+          {/* Code Execution Output */}
+          <div className='row-md-4'>
+            <div className='code-output-container'>
+              <div className='card-header d-flex justify-content-between'>
+                <div className='col-md-8'>
+                  Code Execution Output
+                </div>
+                <div className='col-md-4'>
+                  {ranCodeStatus}
+                </div>
+              </div>
+           
+              <div className='code-output-content-container'>
+                {/* Code Output After Run */}
+                <p>Output: {ranCodeOutput}</p>
+                <p>Error: {ranCodeError}</p>
+                <p>Execution Time: {ranCodeExecutionTime}</p>
+                {/* <p>Code Input: {ranCodeInput}</p> */}
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        {/* Right Side (Code Mirror and Chat) */}
+        <div className='col-md-7'>
+          <div className='row-md'>
+            {/* Code Mirror and Chat */}
+            <div className='codespace'>
               <div className="card-header">
                 Code
               </div>
               <CodeMirror
                 value={code}
-                height="500px"
+                height="300px"
                 onChange={onChange}
                 extensions={getCodeMirrorExtensions()}
               />
             </div>
-            {/* Coding Space */}
+          </div>
 
+          <br className='column-view'/>
 
-            <br />
-
-
-            {/* Chat UI */}
-            <div className="chat-container" style={{ backgroundColor: 'white' }}>
+          {/* Chat UI */}
+          <div className='row-md'>
+            <div className="chat-container">
               <div className="card-header">
                 Chat
               </div>
@@ -779,7 +775,6 @@ const CodeSpace = () => {
                   ))}
                 </ScrollToBottom>
               </div>
-
               <div className="chat-input">
                 <input
                   type="text"
@@ -801,16 +796,16 @@ const CodeSpace = () => {
           </div>
         </div>
       </div>
+      {/* End of Peer Prep Space (Question, Execution, Code, Chat) */}
 
-      {/* Code Output */}
-      <div className="col-md-4 col-sm">
-        <p>Code Status: {ranCodeStatus}</p>
-        <p>Code Exception: {ranCodeException}</p>
-        <p>Code Output: {ranCodeOutput}</p>
-        <p>Code Error: {ranCodeError}</p>
-        <p>Code Execution Time: {ranCodeExecutionTime}</p>
-        <p>Code Input: {ranCodeInput}</p>
-      </div>
+
+
+
+
+
+
+
+
 
       {/* Quit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
