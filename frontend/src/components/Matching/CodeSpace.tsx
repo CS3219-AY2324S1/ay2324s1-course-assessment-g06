@@ -9,14 +9,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { addHistory } from "../../services/user-history.service";
-import './CodeSpace.css'; 
-
-import { styled } from '@mui/material/styles';
-import { Button, Container, Grid, Paper } from '@mui/material';
-
-import { runcode } from "../../services/run-code.service";
-
-import './CodeSpace.css';
+import { runcode } from "../../services/code.service";
 import logo from '../../images/peerPrepLogo.png';
 import PublishIcon from '@mui/icons-material/Publish';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -26,6 +19,7 @@ import Sender from "../../images/chatPicture1.png";
 import Receiver from "../../images/chatPicture2.png";
 import CodeExecutionSuccess from "../../images/codeExecutionSuccess.png";
 import CodeExecutionFail from "../../images/codeExecutionFail.png";
+import './CodeSpace.css';
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -581,6 +575,7 @@ const CodeSpace = () => {
         error.message ||
         error.toString();
       console.log("Error in execution/run: ", resMessage);
+      console.log(error);
 
       setRanCodeStatus("failed");
       setRanCodeError("Error in code execution");
@@ -721,10 +716,10 @@ const CodeSpace = () => {
           <div className='row-md-4'>
             <div className='code-output-container'>
               <div className='card-header d-flex justify-content-between'>
-                <div className='col-md-9 col-sm-9'>
+                <div className='col-md-9 col-sm-8'>
                   Test Output
                 </div>
-                <div className='col-md-1 col-sm-1'>
+                <div className='col-md-1 col-sm-2'>
                   {!ranCodeError && ranCodeStatus == "success" ? (
                     <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status' />
                   ) : (

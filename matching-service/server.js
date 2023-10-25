@@ -8,29 +8,27 @@ const { v4: uuidv4 } = require('uuid');
 const rooms = new Map();
 // To keep track of users connected to socket
 const users = new Map();
+// Use env file
+require("dotenv").config({ path: "../.env" });
 
 const app = express();
 const server = http.createServer(app);
 const QUESTION_HOST = process.env.QUESTION_HOST
   ? process.env.QUESTION_HOST
   : 'http://localhost:3000/api/questions';
-// JK need change
-const MATCHING_SERVICE_CORS =
-  process.env.MATCHING_SERVICE_CORS || 'http://localhost:3002';
 
+// JK need change
+const REACT_APP_MATCHING_SERVICE_CORS =
+  process.env.REACT_APP_MATCHING_SERVICE_CORS || 'http://localhost:3002';
 const FRONTEND_SERVICE_CORS =
   process.env.FRONTEND_SERVICE_CORS || 'http://localhost:3001';
 const MATCHING_PORT = process.env.MATCHING_PORT || 3002;
+
 const io = socketIo(server, {
   cors: {
-    origin: [FRONTEND_SERVICE_CORS, MATCHING_SERVICE_CORS],
+    origin: [FRONTEND_SERVICE_CORS, REACT_APP_MATCHING_SERVICE_CORS],
   },
 });
-
-// database
-// const db = require('./models');
-// const SessionHistory = db.SessionHistory;
-// db.sequelize.sync();
 
 // Verification
 const axios = require('axios');
@@ -52,33 +50,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+// Define after app.use
+require('./routes/code.routes')(app);
 
 console.log("Server is starting...")
 
 server.listen(MATCHING_PORT, () => {
   console.log(`Server is listening on port ${MATCHING_PORT}`);
 });
-
-// Note: Unsure if this will mess up server so not implementing yet
-
-// Define a proxy for /save/runexec to forward requests to the desired endpoint
-// const apiProxy = createProxyMiddleware('/save/runexec', {
-//   target: 'https://onecompiler-apis.p.rapidapi.com',
-//   changeOrigin: true, // Change the host to the target's host
-//   pathRewrite: {
-//     '^/save/runexec': '/api/v1/run', // Rewrite the path
-//   },
-//   // You can also add any headers required for your API request
-//   onProxyReq: (proxyReq) => {
-//     proxyReq.setHeader('X-RapidAPI-Key', 'YOUR_API_KEY'); // Add your RapidAPI key
-//   },
-// });
-
-// Use the proxy middleware
-// app.use(apiProxy);
 
 app.get('/api/room/:roomId', async (req, res) => {
   console.log('Received GET request for /api/room/:roomId');
