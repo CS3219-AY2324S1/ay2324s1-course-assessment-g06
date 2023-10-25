@@ -36,14 +36,21 @@ services:
   frontend:
     build:
       context: ./frontend
+      args: 
+        - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
+        - REACT_APP_QUESTION_HOST=http://localhost:3000/api/questions
+        - REACT_APP_MATCHING_SERVICE_CORS=http://localhost:3002
+        - REACT_APP_USER_HISTORY=http://localhost:3003/api/users
+      dockerfile: Dockerfile.dev
     ports: 
       - 3001:3001
     # we use localhost here so that we can access the urls on our local machine
+    # we dont need environment variables cause it's compiled in docker file
     environment: 
-    - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
-    - QUESTION_HOST=http://localhost:3000/api/questions
-    - MATCHING_SERVICE_CORS=http://localhost:3002
-    - USER_HISTORY=http://localhost:3003/api/users
+    # - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
+    # - QUESTION_HOST=http://localhost:3000/api/questions
+    # - MATCHING_SERVICE_CORS=http://localhost:3002
+    # - USER_HISTORY=http://localhost:3003/api/users
     depends_on:
       - user-service
       - question-service
