@@ -34,7 +34,7 @@ const USER_SERVICE = process.env.USR_SVC_AUTH
 
 const io = socketIo(server, {
   cors: {
-    origin: [FRONTEND_SERVICE_CORS, MATCHING_SERVICE_CORS],
+    origin: "*",
   },
 });
 
