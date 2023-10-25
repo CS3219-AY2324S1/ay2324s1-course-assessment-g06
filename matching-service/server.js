@@ -16,14 +16,6 @@ const QUESTION_HOST = process.env.QNS_SVC
   ? process.env.QNS_SVC
   : 'http://localhost:3000/api/questions';
 
-const MATCHING_SERVICE_CORS = process.env.MTC_SVC
-  ? process.env.MTC_SVC
-  : 'http://localhost:3002';
-
-const FRONTEND_SERVICE_CORS = process.env.FEN_SVC
-  ? process.env.FEN_SVC
-  : 'http://localhost:3001';
-
 const MATCHING_PORT = process.env.MTC_SVC_PORT 
   ? process.env.MTC_SVC_PORT
   : 3002;
@@ -38,14 +30,8 @@ const io = socketIo(server, {
   },
 });
 
-// database
-// const db = require('./models');
-// const SessionHistory = db.SessionHistory;
-// db.sequelize.sync();
-
 // Verification
 const axios = require('axios');
-
 
 async function isTokenValid(accessToken) {
   try {
