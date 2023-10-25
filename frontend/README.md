@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+## Docker use
+Build using
+`docker buildx build --platform linux/amd64 -t <name>:<tag> -f Dockerfile.prod .`
+
+TAG using
+`docker tag <image> <user>/<repo>:<tag>`
+
+PUSH using
+`docker push <user>/<repo>:<tag>`
 ## Available Scripts
 
 In the project directory, you can run:

@@ -1,19 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const questionController = require("../controllers/questionController");
-const verifyUserToken = require('../middleware/verifyUserToken');  // Import the middleware
-const verifyUserAdmin = require('../middleware/verifyUserAdmin');  // Import the middleware
+const verifyUserToken = require('../middleware/verifyUserToken');
+const verifyUserAdmin = require('../middleware/verifyUserAdmin');
 const verifyUser2Token = require("../middleware/verifyUser2Token");
 
 // Route for retrieving questions
 router.get("/", verifyUserToken, questionController.getAllQuestions);
+
 router.get("/pagination/first", verifyUserToken, questionController.getFirstPaginatedQuestions);
+
 router.get("/pagination/remaining", verifyUserToken, questionController.getRemainingPaginatedQuestions);
 
 router.get("/matched", [verifyUserToken, verifyUser2Token], questionController.getRandomQuestionByFilter);
+
 router.get("/:id", verifyUserToken, questionController.getQuestionById);
+
 router.get('/matched', questionController.getRandomQuestionByFilter);
+
 router.get('/total', questionController.getQuestionTotal);
+
 // must be last method if not it'll always call this method
 router.get('/:id', questionController.getQuestionById);
 
@@ -27,8 +33,5 @@ router.put("/:id", verifyUserAdmin, questionController.updateQuestion);
 
 // Delete a question by frontendQuestionId
 router.delete("/:id", verifyUserAdmin, questionController.deleteQuestion);
-
-// No difference if i add the below
-// router.get("/", "add-question");
 
 module.exports = router;

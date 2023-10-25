@@ -8,6 +8,13 @@ const questionRoutes = require("./routes/questionRoutes");
 
 const app = express();
 
+console.log("QUESTION-SERVICE ENVIRONMENT VARIABLES");
+console.log("process.env.QNS_SVC_PORT:", process.env.QNS_SVC_PORT);
+console.log("process.env.MONGO_USERNAME:", process.env.MONGO_USERNAME);
+console.log("process.env.MONGO_PASSWORD:", process.env.MONGO_PASSWORD);
+console.log("process.env.MONGO_HOST:", process.env.MONGO_HOST);
+console.log("process.env.USR_SVC_AUTH:", process.env.USR_SVC_AUTH);
+
 // Enable CORS for all routes
 app.use(cors());
 
@@ -16,7 +23,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const PORT = process.env.QUESTION_PORT || 3000;
+const PORT = process.env.QNS_SVC_PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server has started! Open http://localhost:${PORT}`);
 });
@@ -24,7 +31,7 @@ app.listen(PORT, () => {
 // MongoDB Atlas credentials
 const dbUsername = encodeURIComponent(process.env.MONGO_USERNAME);
 const dbPassword = encodeURIComponent(process.env.MONGO_PASSWORD);
-const clusterUrl = process.env.MONGO_CLUSTER_URL;
+const clusterUrl = process.env.MONGO_HOST;
 const dbName = "questions";
 
 // Connection URI for MongoDB Atlas
