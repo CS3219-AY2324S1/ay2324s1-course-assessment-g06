@@ -71,7 +71,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container my-4">
       <div className="row align-items-center justify-content-center">
         <div className="col-md-5">
           <div className="col-md-10 mx-auto">
@@ -171,31 +171,33 @@ const Register: React.FC = () => {
                         />
                       </div>
 
-                      <div className="form-group mt-3 d-flex align-items-center">
-                        <div className="col-md-5" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)'  }}>
-                          Account exists?
-                          <br/>
-                          <Link to="/login" style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>
-                            Login
-                          </Link>
-                        </div>
-                          <div className="col-md-2" />
-                          <div className="col-md-5 text-center">
-                            <button
-                              type="submit"
-                              className="btn btn-block rounded-pill"
-                              style={{
-                                backgroundColor: '#6C63FF',
-                                color: 'white',
-                                fontFamily: 'Inter, sans-serif',
-                                fontWeight: 'bold',
-                                height: '50px',
-                              }}
-                            >
-                              Sign Up
-                            </button>
+                      <div className="form-group my-3">
+                        <div className="row">
+                          <div className="col-md-5 col-sm-12 text-center text-md-start mb-3" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)' }}>
+                            Account exists?&nbsp;
+                            <Link to="/login" className="d-md-block" style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>
+                              Login
+                            </Link>
+                          </div>
+                          <div className="col-md-7 col-sm-12 mb-3" >
+                            <div className="text-center">
+                              <button
+                                type="submit"
+                                className="btn btn-block rounded-pill"
+                                style={{
+                                  backgroundColor: '#6C63FF',
+                                  color: 'white',
+                                  fontFamily: 'Inter, sans-serif',
+                                  fontWeight: 'bold',
+                                  height: '50px',
+                                }}
+                              >
+                                Sign Up
+                              </button>
+                            </div>
                           </div>
                         </div>
+                      </div>
                     </div>
                   )}
 

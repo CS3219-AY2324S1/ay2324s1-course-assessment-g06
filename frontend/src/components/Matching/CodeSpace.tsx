@@ -8,10 +8,13 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langNames, langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { addHistory } from "../../services/user-history.service";
+import './CodeSpace.css'; 
 
-// To refactor after merging with branch-Analytics
-import { savesession } from "../../services/save.service";
-import { runcode } from "../../services/save.service";
+import { styled } from '@mui/material/styles';
+import { Button, Container, Grid, Paper } from '@mui/material';
+
+import { runcode } from "../../services/run-code.service";
 
 import './CodeSpace.css';
 import logo from '../../images/peerPrepLogo.png';
@@ -599,7 +602,7 @@ const CodeSpace = () => {
 
   const saveSessionHistory = (questionId: string, questionDifficulty: string) => {
     console.log("submitting session");
-    savesession(questionId, questionDifficulty, code).then(
+    addHistory(questionId, questionDifficulty, code).then(
       (response) => {
         setMessage(response.data.message);
         console.log("message:", message);
