@@ -46,7 +46,7 @@ services:
       - 3001:3001
     # we use localhost here so that we can access the urls on our local machine
     # we dont need environment variables cause it's compiled in docker file
-    environment: 
+    # environment: 
     # - REACT_APP_USER_SVC_URL=http://localhost:3003/api/auth/
     # - QUESTION_HOST=http://localhost:3000/api/questions
     # - MATCHING_SERVICE_CORS=http://localhost:3002
