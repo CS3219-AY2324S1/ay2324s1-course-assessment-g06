@@ -24,7 +24,7 @@ app.listen(PORT, () => {
 // MongoDB Atlas credentials
 const dbUsername = encodeURIComponent(process.env.MONGO_USERNAME);
 const dbPassword = encodeURIComponent(process.env.MONGO_PASSWORD);
-const clusterUrl = process.env.MONGO_CLUSTER_URL;
+const clusterUrl = process.env.MONGO_HOST;
 const dbName = "questions";
 
 // Connection URI for MongoDB Atlas

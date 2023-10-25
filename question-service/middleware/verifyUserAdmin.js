@@ -1,7 +1,6 @@
 const axios = require('axios');
 
-const USER_SERVICE = process.env.USR_SVC_AUTH || "http://localhost:3003/api/auth";
-const userSvcApi = USER_SERVICE;
+const auth_server = process.env.USR_SVC_AUTH;
 
 const verifyUserAdmin = (req, res, next) => {
 
@@ -12,7 +11,7 @@ const verifyUserAdmin = (req, res, next) => {
     }
 
     // Directly check if user is an admin
-    axios.get(`${userSvcApi}/verifyAdmin`, {
+    axios.get(`${auth_server}/verifyAdmin`, {
         headers: { 'x-access-token': token }
     })
     .then(adminResponse => {

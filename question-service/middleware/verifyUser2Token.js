@@ -1,8 +1,6 @@
 const axios = require('axios');
 
-const USER_SERVICE = process.env.USR_SVC_AUTH || "http://localhost:3003/api/auth";
-const userSvcApi = USER_SERVICE;
-
+const auth_server = process.env.USR_SVC_AUTH;
 
 const verifyUser2Token = (req, res, next) => {
 
@@ -12,7 +10,7 @@ const verifyUser2Token = (req, res, next) => {
         return res.status(403).send({ message: "Token 2 not provided!" });
     }
 
-    axios.get(`${userSvcApi}/verifyToken`, { 
+    axios.get(`${auth_server}/verifyToken`, { 
         headers: { 'x-access-token': token }
     })
     .then(response => {
