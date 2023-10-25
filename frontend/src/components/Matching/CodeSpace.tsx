@@ -352,6 +352,18 @@ const CodeSpace = () => {
         };
       })
 
+      // Handle user run code
+      matchedSocket.on('codeRun', (ranCodeParams) => {
+        console.log("received codeRun from other user");
+        setRanCodeStatus(ranCodeParams[0]);
+        setRanCodeException(ranCodeParams[1]);
+        setRanCodeOutput(ranCodeParams[2]);
+        setRanCodeError(ranCodeParams[3]);
+        setRanCodeInput(ranCodeParams[4]);
+        setRanCodeExecutionTime(ranCodeParams[5]);
+        console.log(ranCodeException);
+      })
+
       // Handle disconnection event
       matchedSocket.on('userDisconnected', (roomId) => {
         // if (isTimerEndSubmitDialogOpen) {
@@ -538,35 +550,40 @@ const CodeSpace = () => {
   };
 
   // Call api to run code
-  const runCode = (code : string, input : string, language : string, fileName : string) => {
-    console.log("running session");
-    runcode(code, input, language, fileName).then(
-    (response) => {
+  const runCode = async (code: string, input: string, language: string, fileName: string) => {
+    try {
+      const response = await runcode(code, input, language, fileName);
+  
       const data = response.data.message[0];
-
-      // Set the output of the ran code
-      // Note: Code with no executables will return null for exception, stdout and stderr
-      setRanCodeStatus(data.status);
-      setRanCodeException(data.exception);
-      setRanCodeOutput(data.stdout);
-      setRanCodeError(data.stderr);
-      setRanCodeInput(data.stdin);
-      setRanCodeExecutionTime(data.executionTime);
-    },
-    (error) => {
-      const resMessage =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      console.log("Error in execution/run: ", resMessage);
-      console.log(error);
-
+      const updatedStatus = data.status;
+      const updatedException = data.exception;
+      const updatedOutput = data.stdout;
+      const updatedError = data.stderr;
+      const updatedInput = data.stdin;
+      const updatedExecutionTime = data.executionTime;
+  
+      setRanCodeStatus(updatedStatus);
+      setRanCodeException(updatedException);
+      setRanCodeOutput(updatedOutput);
+      setRanCodeError(updatedError);
+      setRanCodeInput(updatedInput);
+      setRanCodeExecutionTime(updatedExecutionTime);
+  
+      if (socket) {
+        const ranCodeParams = [updatedStatus, updatedException, updatedOutput, updatedError, updatedInput, updatedExecutionTime];
+        console.log(ranCodeParams);
+        socket.emit('codeRun', roomId, ranCodeParams);
+      }
+    } catch (error) {
+      console.log("Error in execution/run: ", error);
       setRanCodeStatus("failed");
       setRanCodeError("Error in code execution");
+
+      if (socket) {
+        const ranCodeParams = ["failed", null, null, "Error in code execution", null, null];
+        socket.emit('codeRun', roomId, ranCodeParams);
+      }
     }
-    );
   };
 
   // Set the code syntax
