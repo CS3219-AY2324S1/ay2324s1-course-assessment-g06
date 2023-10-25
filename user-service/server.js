@@ -13,7 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // database
 const db = require('./models');
-const Role = db.role;
 
 db.sequelize.sync();
 
@@ -35,6 +34,7 @@ require('./routes/history.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.USR_SVC_PORT || 3003;
+console.log("process.env.USR_SVC_PORT:", process.env.USR_SVC_PORT);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

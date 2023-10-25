@@ -8,6 +8,13 @@ const questionRoutes = require("./routes/questionRoutes");
 
 const app = express();
 
+console.log("QUESTION-SERVICE ENVIRONMENT VARIABLES");
+console.log("process.env.QNS_SVC_PORT:", process.env.QNS_SVC_PORT);
+console.log("process.env.MONGO_USERNAME:", process.env.MONGO_USERNAME);
+console.log("process.env.MONGO_PASSWORD:", process.env.MONGO_PASSWORD);
+console.log("process.env.MONGO_HOST:", process.env.MONGO_HOST);
+console.log("process.env.USR_SVC_AUTH:", process.env.USR_SVC_AUTH);
+
 // Enable CORS for all routes
 app.use(cors());
 

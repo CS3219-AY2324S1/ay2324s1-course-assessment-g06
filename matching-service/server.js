@@ -1,3 +1,4 @@
+require("dotenv").config({ path: "../.env" });
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
@@ -23,6 +24,11 @@ const MATCHING_PORT = process.env.MTC_SVC_PORT
 const USER_SERVICE = process.env.USR_SVC_AUTH
   ? process.env.USR_SVC_AUTH
   : "http://localhost:3003/api/auth";
+
+console.log("process.env.QNS_SVC:", process.env.QNS_SVC);
+console.log("process.env.MTC_SVC_PORT:", process.env.MTC_SVC_PORT);
+console.log("process.env.USR_SVC_AUTH:", process.env.USR_SVC_AUTH);
+console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
 
 const io = socketIo(server, {
   cors: {
@@ -130,9 +136,8 @@ const waitingQueue = [];
 
 // Middleware to authenticate users using JWT token
 // Can check token validity here
-// ?????????????
 io.use(socketioJwt.authorize({
-  secret: 'secret',
+  secret: process.env.JWT_SECRET,
   handshake: true,
 }));
 
