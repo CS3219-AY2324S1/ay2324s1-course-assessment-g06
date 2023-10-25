@@ -10,7 +10,7 @@ services:
       - SQL_HOST=${SQL_HOST}
       - SQL_USERNAME=${SQL_USERNAME}
       - SQL_PASSWORD=${SQL_PASSWORD}
-      - secret_key=${secret_key}
+      - JWT_SECRET=${JWT_SECRET}
     ports:
       - 3003:3003
     networks:
