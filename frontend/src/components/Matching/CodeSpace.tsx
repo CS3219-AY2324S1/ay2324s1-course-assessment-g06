@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, Location, useNavigate, useBeforeUnload } from 'react-router-dom';
-import ReactRouterPrompt from "react-router-prompt";
-import useHistory from 'react-router-dom';
-import { io, Socket } from 'socket.io-client';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { socket } from './socket';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
-import { langNames, langs } from '@uiw/codemirror-extensions-langs';
+import { langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { addHistory } from "../../services/user-history.service";
 import { runcode } from "../../services/code.service";
@@ -194,10 +191,6 @@ const CodeSpace = () => {
       if (!hasQuitRoom) {
         event.preventDefault();
         event.returnValue = "";
-        // Prompt the user with your disconnection dialog
-        // usePrompt({message: "Are you sure you want to leave?",
-        // when: true})
-        // openDisconnectionDialog(); // Call your function to display the dialog
       }
     }
 
@@ -314,7 +307,6 @@ const CodeSpace = () => {
           const messageData: ChatMessage = {
             roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
             author: 'System',
-            // message: `A user (${connectedSocket}) has connected`,
             message: `A user has connected`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           };
@@ -351,7 +343,6 @@ const CodeSpace = () => {
       });
 
       matchedSocket.on('submitSession', (questionIdFromServer, questionDifficultyFromServer) => {
-        // alert('The session has been submitted');
         saveSessionHistory(questionIdFromServer, questionDifficultyFromServer);
         setHasQuitRoom(true);
         navigate("/matching");
@@ -507,11 +498,6 @@ const CodeSpace = () => {
     saveSessionHistory(questionId, questionDifficulty);
     // alert("You have submitted the session.");
     navigate("/matching");
-  };
-
-  // Handle submit session on timer end logic
-  const handleDisconnection = () => {
-    // TO ADD IN
   };
 
   const handleRunCode = () => {
@@ -847,15 +833,7 @@ const CodeSpace = () => {
               type="button"
               className="btn btn-secondary"
               onClick={() => {
-                if (otherUserQuit) {
-                  // Close dialog and set other user quit to false to reset the message when the remaining user click on quit session again
                   closeQuitDialog();
-                  // Removing logic as it prevents the other user from submitting the sessino if their peer has quit
-                  // setOtherUserQuit(false);
-                } else {
-                  // Close the dialog
-                  closeQuitDialog();
-                }
               }}
               >
                 {otherUserQuit ? "Continue" : "Cancel"}
