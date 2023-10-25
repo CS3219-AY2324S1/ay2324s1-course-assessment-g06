@@ -1,4 +1,4 @@
-FROM node:alpine as build
+FROM node:latest as build
 WORKDIR /src/app
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
