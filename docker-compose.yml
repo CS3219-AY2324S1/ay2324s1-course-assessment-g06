@@ -6,11 +6,13 @@ services:
       context: ./user-service
     # hosting this for other users
     environment:
-      - USR_SVC_PORT=${USER_PORT}
-      - SQL_PASSWORD=${SQL_PASSWORD}
-      - SQL_USERNAME=${SQL_USERNAME}
+      - USR_SVC_PORT=${USR_SVC_PORT}
       - SQL_HOST=${SQL_HOST}
+      - SQL_USERNAME=${SQL_USERNAME}
+      - SQL_PASSWORD=${SQL_PASSWORD}
       - secret_key=${secret_key}
+      - CDEX_KEY=dd402959d5msh04776c0c4da193fp1df537jsn5f1a2ca07a68
+      - CDEX_HOST=onecompiler-apis.p.rapidapi.com
     ports:
       - 3003:3003
     networks:
@@ -21,13 +23,34 @@ services:
       context: ./question-service
     environment:
       - USR_SVC_AUTH=http://user-service:3003/api/auth
+      - MONGO_CLUSTER_URL=${MONGO_CLUSTER_URL}
       - MONGO_USERNAME=${MONGO_USERNAME}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
-      - MONGO_CLUSTER_URL=${MONGO_CLUSTER_URL}
     ports:
       - 3000:3000
     depends_on:
       - user-service
+    networks:
+      - service
+
+  matching-service:
+    build:
+      context: ./matching-service
+    environment:
+      - QNS_SVC=http://question-service:3000/api/questions
+      - USR_SVC_HIST=http://user-service:3003/api/user
+      - USR_SVC_AUTH=http://user-service:3003/api/auth
+      - MTC_SVC_PORT=${MTC_SVC_PORT}
+      - SQL_HOST=${SQL_HOST}
+      - SQL_USERNAME=${SQL_USERNAME}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - CDEX_KEY=dd402959d5msh04776c0c4da193fp1df537jsn5f1a2ca07a68
+      - CDEX_HOST=onecompiler-apis.p.rapidapi.com
+    ports:
+      - 3002:3002
+    depends_on:
+      - user-service
+      - question-service
     networks:
       - service
 
@@ -37,12 +60,11 @@ services:
     ports:
       - 3001:3001
     environment: 
-      - REACT_APP_USER_SVC=http://localhost:3003/api/auth
       - REACT_APP_QNS_SVC=http://localhost:3000/api/questions
       - REACT_APP_MTC_SVC=http://localhost:3002
       - REACT_APP_USR_SVC_HIST=http://localhost:3003/api/hist
       - REACT_APP_USR_SVC_AUTH=http://localhost:3003/api/auth
-      - USER_HISTORY=http://localhost:3003/api/users
+      - REACT_APP_USR_SVC_USER=http://localhost:3003/api/user
     depends_on:
       - user-service
       - question-service
@@ -50,28 +72,7 @@ services:
     networks:
       - service
 
-  matching-service:
-    build:
-      context: ./matching-service
-    environment:
-      # shd put localhost here?
-      - FRONTEND_SERVICE_CORS=http://localhost:3001
-      - FEN_SVC=http://localhost:3001
-      - QNS_SVC=http://question-service:3000/api/questions
-      - MTC_SVC=http://matching-service:3002
-      - USR_SVC_HIST=http://user-service:3003/api/hist
-      - USR_SVC_AUTH=http://user-service:3003/api/auth
-      - MATCHING_PORT=${MATCHING_PORT}
-      - SQL_PASSWORD=${SQL_PASSWORD}
-      - SQL_USERNAME=${SQL_USERNAME}
-      - SQL_HOST=${SQL_HOST}
-    ports:
-      - 3002:3002
-    depends_on:
-      - user-service
-      - question-service
-    networks:
-      - service
+
 networks:
   service:
     driver: bridge
