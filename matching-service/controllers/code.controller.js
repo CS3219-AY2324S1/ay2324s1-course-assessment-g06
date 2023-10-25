@@ -3,9 +3,6 @@ const axios = require('axios');
 
 const XApiKey = process.env.CDEX_KEY;
 const XApiHost = process.env.CDEX_HOST;
-console.log("Retrieved CDEX from environment");
-console.log(XApiKey);
-console.log(XApiHost);
 
 // Controller function to post a code execution/run attempt to OneCompiler
 // USAGE: POST request to http://localhost:3002/api/code/run or

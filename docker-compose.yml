@@ -39,8 +39,8 @@ services:
       - USR_SVC_AUTH=http://user-service:3003/api/auth
       - MTC_SVC_PORT=${MTC_SVC_PORT}
       - JWT_SECRET=${JWT_SECRET}
-      - CDEX_KEY=dd402959d5msh04776c0c4da193fp1df537jsn5f1a2ca07a68
-      - CDEX_HOST=onecompiler-apis.p.rapidapi.com
+      - CDEX_KEY=${CDEX_KEY}
+      - CDEX_HOST=${CDEX_HOST}
     ports:
       - 3002:3002
     depends_on:
