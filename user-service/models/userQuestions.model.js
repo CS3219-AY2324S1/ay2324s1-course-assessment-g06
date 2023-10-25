@@ -1,25 +1,26 @@
 module.exports = (sequelize, Sequelize) => {
-  const SessionHistory = sequelize.define("session_history", {
+  const userQuestions = sequelize.define("userQuestions", {
     userId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
     },
-    questionId: {
+    question_id: {
       type: Sequelize.UUID, // Use UUID for MongoDB ObjectIds
       primaryKey: true,
       allowNull: false,
     },
     difficulty: {
-      type: Sequelize.ENUM('Hard', 'Medium', 'Easy'),
+      type: Sequelize.ENUM("Hard", "Medium", "Easy"),
     },
-    attemptedDate: {
+    attemptedAt: {
       type: Sequelize.DATE,
+      primaryKey: true,
     },
-    code: {
+    attempt: {
       type: Sequelize.TEXT,
     },
   });
 
-  return SessionHistory;
+  return userQuestions;
 };
