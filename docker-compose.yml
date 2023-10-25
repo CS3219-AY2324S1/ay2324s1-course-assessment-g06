@@ -36,7 +36,7 @@ services:
       context: ./matching-service
     environment:
       - QNS_SVC=http://question-service:3000/api/questions
-      - USR_SVC_HIST=http://user-service:3003/api/user
+      - USR_SVC_HIST=http://user-service:3003/api/hist
       - USR_SVC_AUTH=http://user-service:3003/api/auth
       - MTC_SVC_PORT=${MTC_SVC_PORT}
       - SQL_HOST=${SQL_HOST}
