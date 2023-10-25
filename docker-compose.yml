@@ -34,15 +34,26 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        - REACT_APP_USER_SVC=http://localhost:3003/api/auth
+        - REACT_APP_QNS_SVC=http://localhost:3000/api/questions
+        - REACT_APP_MTC_SVC=http://localhost:3002
+        - REACT_APP_USR_SVC_HIST=http://localhost:3003/api/hist
+        - REACT_APP_USR_SVC_AUTH=http://localhost:3003/api/auth
+        - USER_HISTORY=http://localhost:3003/api/users
+      dockerfile:
+        Dockerfile.dev
     ports: 
       - 3001:3001
-    environment: 
-      - REACT_APP_USER_SVC=http://localhost:3003/api/auth
-      - REACT_APP_QNS_SVC=http://localhost:3000/api/questions
-      - REACT_APP_MTC_SVC=http://localhost:3002
-      - REACT_APP_USR_SVC_HIST=http://localhost:3003/api/hist
-      - REACT_APP_USR_SVC_AUTH=http://localhost:3003/api/auth
-      - USER_HISTORY=http://localhost:3003/api/users
+    
+    # can ignore env variables, we're using react build now 
+    # environment: 
+      # - REACT_APP_USER_SVC=http://localhost:3003/api/auth
+      # - REACT_APP_QNS_SVC=http://localhost:3000/api/questions
+      # - REACT_APP_MTC_SVC=http://localhost:3002
+      # - REACT_APP_USR_SVC_HIST=http://localhost:3003/api/hist
+      # - REACT_APP_USR_SVC_AUTH=http://localhost:3003/api/auth
+      # - USER_HISTORY=http://localhost:3003/api/users
     depends_on:
       - user-service
       - question-service
