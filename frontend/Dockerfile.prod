@@ -14,11 +14,11 @@ RUN npm install --silent
 COPY . .
 
 # Set env variabvles as this is a static build file
-ENV REACT_APP_USER_SVC=https://us-a2rwifv3ta-dt.a.run.app/api/auth
 ENV REACT_APP_QNS_SVC=https://qs-a2rwifv3ta-dt.a.run.app/api/questions
 ENV REACT_APP_MTC_SVC=https://ms-a2rwifv3ta-dt.a.run.app
 ENV REACT_APP_USR_SVC_HIST=https://us-a2rwifv3ta-dt.a.run.app/api/hist
 ENV REACT_APP_USR_SVC_AUTH=https://us-a2rwifv3ta-dt.a.run.app/api/auth
+ENV REACT_APP_USR_SVC_USER=http://localhost:3003/api/user
 
 # Build the app
 RUN npm run build

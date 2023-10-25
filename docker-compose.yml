@@ -11,8 +11,6 @@ services:
       - SQL_USERNAME=${SQL_USERNAME}
       - SQL_PASSWORD=${SQL_PASSWORD}
       - secret_key=${secret_key}
-      - CDEX_KEY=dd402959d5msh04776c0c4da193fp1df537jsn5f1a2ca07a68
-      - CDEX_HOST=onecompiler-apis.p.rapidapi.com
     ports:
       - 3003:3003
     networks:
