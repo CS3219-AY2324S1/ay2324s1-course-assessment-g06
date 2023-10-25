@@ -46,7 +46,7 @@ const BasicTable: React.FC = () => {
   const currentUser = getCurrentUser();
   const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
 
-  const QUESTION_HOST = process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
+  const QUESTION_HOST = process.env.REACT_APP_QNS_SVC || "http://localhost:3000/api/questions";
 
 
   const fetchFirstPageData = () => {

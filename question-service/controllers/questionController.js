@@ -1,7 +1,5 @@
 const Question = require('../models/question');
 const mongoose = require('mongoose');
-const USER_HOST =
-  process.env.REACT_APP_USER_SVC_URL || 'http://localhost:3003/api/auth';
 
 module.exports = {
   // Controller function to get all questions
@@ -102,9 +100,7 @@ module.exports = {
   // Usage: Put request to http://localhost:3000/api/questions/{id}
   updateQuestion: (req, res) => {
     const { id } = req.params; // Get the question ID from the route parameters
-    console.log(
-      `Mongo putting/updating question to http://localhost:3000/api/questions/${id}`
-    );
+
     // Put only the fields that you want to change in the body
     // Use x-www-form-urlencoded
     const { title, frontendQuestionId, difficulty, content, category, topics } =

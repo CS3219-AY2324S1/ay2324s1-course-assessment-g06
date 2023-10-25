@@ -10,7 +10,7 @@ if (user && user.accessToken) {
     console.log("User is not authorized yet");
 }
 
-const URL = process.env.MATCHING_SERVICE_CORS || "http://localhost:3002"
+const URL = process.env.REACT_APP_MTC_SVC || "http://localhost:3002"
 
 export const socket = io(URL, {
     query: { token: jwtToken }, // Include the token if available

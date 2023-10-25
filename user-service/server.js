@@ -13,16 +13,16 @@ app.use(express.urlencoded({ extended: true }));
 
 // database
 const db = require('./models');
-const Role = db.role;
 
 db.sequelize.sync();
+
 // force: true will drop the table if it already exists
 // db.sequelize.sync({force: true}).then(() => {
 //   console.log('Drop and Resync Database with { force: true }');
 //   initial();
 // });
 
-// simple route
+// Default route to see if server works
 app.get('/', (req, res) => {
   res.json({ message: 'Hello World' });
 });
@@ -33,7 +33,8 @@ require('./routes/user.routes')(app);
 require('./routes/history.routes')(app);
 
 // set port, listen for requests
-const PORT = process.env.USER_PORT || 3003;
+const PORT = process.env.USR_SVC_PORT || 3003;
+console.log("process.env.USR_SVC_PORT:", process.env.USR_SVC_PORT);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

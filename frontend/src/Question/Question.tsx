@@ -101,7 +101,7 @@ export default function Question() {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Confirmation dialog state
   const QUESTION_HOST =
-    process.env.QUESTION_HOST || 'http://localhost:3000/api/questions';
+    process.env.REACT_APP_QNS_SVC || 'http://localhost:3000/api/questions';
 
   useEffect(() => {
     const fetchDataWithDelay = () => {

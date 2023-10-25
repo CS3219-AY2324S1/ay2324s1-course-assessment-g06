@@ -27,6 +27,11 @@ import "./App.css";
 import "./Table/Table";
 
 const App: React.FC = () => {
+  console.log("QNS_SVC: ", process.env.REACT_APP_QNS_SVC);
+  console.log("MTC_SVC: ", process.env.REACT_APP_MTC_SVC);
+  console.log("REACT_APP_USR_SVC_HIST: ", process.env.REACT_APP_USR_SVC_HIST);
+  console.log("REACT_APP_USR_SVC_AUTH: ", process.env.REACT_APP_USR_SVC_AUTH);
+  console.log("REACT_APP_USR_SVC_USER: ", process.env.REACT_APP_USR_SVC_USER);
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
     localStorage.getItem("user") ? true : false
   );
