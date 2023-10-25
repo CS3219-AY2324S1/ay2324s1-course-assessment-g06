@@ -10,11 +10,11 @@ import axios from "axios";
 import authHeader from "../services/auth-header";
 import Tooltip from "@uiw/react-tooltip";
 
-const USER_HOST = process.env.USER_HOST || "http://localhost:3003/api/auth";
+const USER_HOST = process.env.REACT_APP_USR_SVC_AUTH || "http://localhost:3003/api/auth";
 const USER_HISTORY =
-  process.env.USER_HISTORY || "http://localhost:3003/api/user";
+  process.env.REACT_APP_USR_SVC_USER || "http://localhost:3003/api/user";
 const QUESTION_HOST =
-  process.env.QUESTION_HOST || "http://localhost:3000/api/questions";
+  process.env.REACT_APP_QNS_SVC || "http://localhost:3000/api/questions";
 
 type QuestionDetails = {
   Easy: number;
