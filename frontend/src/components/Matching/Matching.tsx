@@ -198,7 +198,7 @@ const Matchmaking: React.FC = () => {
         <div className="col-xl-9 col-lg-7 col-md-6">
           {/* Topic divider */}
           <div className="form-group">
-            <label htmlFor="topics topic-label">Choose a topic:</label>
+            <label htmlFor="topics topic-label">Preferred Topic:</label>
             <div className="col-md-12 scrollable-container">
               {/* Create a wrapper div for each row of buttons */}
               {iconCategories.map((topic, index) => (
@@ -230,7 +230,7 @@ const Matchmaking: React.FC = () => {
           {/* Difficulty buttons divider */}
           <div className="row-md-12">
             <div className="form-group d-flex flex-column">
-              <label className='difficulty-label'>Choose a difficulty level:</label>
+              <label className='difficulty-label'>Preferred Difficulty:</label>
               <div className="col-md-12 d-flex flex-column justify-content-center"> {/* Add justify-content-center */}
                 <div className="difficulty-buttons">
                   {difficultyLevels.map((level) => (
