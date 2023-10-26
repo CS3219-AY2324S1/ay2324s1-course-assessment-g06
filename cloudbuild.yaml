@@ -1,0 +1,32 @@
+steps:
+# Build the user-service
+- name: 'gcr.io/cloud-builders/docker'
+# Service name can be replaced as container name
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}', './user-service']
+
+# Push the user-service image to Container Registry
+# Service name here can also be replaced
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}']
+
+# Deploy the user-service to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', '${_SERVICE_NAME}', '--image', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}', '--region', '${_REGION}']
+# Build the frontend service
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend', './frontend']
+#   dir: 'your-project-directory'
+
+# # Build the question-service
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/question-service', './question-service']
+#   dir: 'your-project-directory'
+
+
+
+images:
+# - 'gcr.io/$PROJECT_ID/frontend'
+# - 'gcr.io/$PROJECT_ID/question-service'
+- 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}'
+
