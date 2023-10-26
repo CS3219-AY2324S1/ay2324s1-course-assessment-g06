@@ -23,7 +23,6 @@ import EventBus from "./common/EventBus";
 import logo from "./images/peerPrepLogo.png";
 import Analytics from "./components/Analytics";
 
-
 import "./App.css";
 import "./Table/Table";
 
@@ -70,7 +69,6 @@ const App: React.FC = () => {
     AuthService.logout();
     setCurrentUser(false);
   };
-
 
   return (
     <div>
