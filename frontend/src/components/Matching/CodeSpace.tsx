@@ -738,7 +738,8 @@ const CodeSpace = () => {
 
               <div className='code-output-content-container'>
                 {/* Show error only if there is an error found */}
-                {ranCodeError ? (
+                {ranCodeStatus == "" ? null : (
+                ranCodeError ? (
                   <div>
                     <p style={{ fontWeight: "bold" }}>Error:</p>
                     <p>{ranCodeError}</p>
@@ -748,6 +749,7 @@ const CodeSpace = () => {
                     <p style={{ fontWeight: "bold" }}>Output:</p>
                     <p>{ranCodeOutput}</p>
                   </div>
+                )
                 )}
               </div>
             </div>
