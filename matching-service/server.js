@@ -279,7 +279,7 @@ io.on('connection', async (socket) => {
 
       // If user is alone in the room (other user has quit)
       if (otherUserQuit) {
-        socket.to(roomId).emit('submitSession', questionId, questionDifficulty);
+        socket.to(roomId).emit('submitSession');
       } else {
         // Other user is still in the room, to request submission
         socket.to(roomId).emit('requestSubmitSession', questionId, questionDifficulty);
