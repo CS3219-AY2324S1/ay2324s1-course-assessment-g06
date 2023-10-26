@@ -192,7 +192,7 @@ const Matchmaking: React.FC = () => {
   ];
 
   return (
-    <div className="container mt-5" >
+    <div className="container my-4" >
       <div className="row">
         {/* Left section */}
         <div className="col-xl-9 col-lg-7 col-md-6">
