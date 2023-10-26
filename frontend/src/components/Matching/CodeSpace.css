@@ -171,13 +171,14 @@ br.column-view {
 }
 
 .success-status {
+  margin-top: 1px;
   height: 21px;
   width: 21px;
 }
 
 .failed-status {
-  height: 21px;
-  width: 21px;
+  height: 17px;
+  width: 17px;
 }
 
 p {

@@ -40,8 +40,8 @@ interface ChatMessage {
 const CodeSpace = () => {
   /////////////////// PARAMETER INITIALISATION  ///////////////////
   const MATCHING_SERVICE_CORS =
-  process.env.REACT_APP_MTC_SVC || 'http://localhost:3002';
-  
+    process.env.REACT_APP_MTC_SVC || 'http://localhost:3002';
+
   // Id of the current code space room
   const { roomId } = useParams();
   // Get location/path of current page
@@ -132,7 +132,7 @@ const CodeSpace = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  const fileExtensions : Record<string, string> = {
+  const fileExtensions: Record<string, string> = {
     'c': '.c',
     'cpp': '.cpp',
     'csharp': '.cs',
@@ -553,22 +553,22 @@ const CodeSpace = () => {
   const runCode = async (code: string, input: string, language: string, fileName: string) => {
     try {
       const response = await runcode(code, input, language, fileName);
-  
+
       const data = response.data.message[0];
       const updatedStatus = data.status;
       const updatedException = data.exception;
       const updatedOutput = data.stdout;
       const updatedError = data.stderr;
       const updatedInput = data.stdin;
-      const updatedExecutionTime = data.executionTime;
-  
+      const updatedExecutionTime = data.executionTime + "ms";
+
       setRanCodeStatus(updatedStatus);
       setRanCodeException(updatedException);
       setRanCodeOutput(updatedOutput);
       setRanCodeError(updatedError);
       setRanCodeInput(updatedInput);
       setRanCodeExecutionTime(updatedExecutionTime);
-  
+
       if (socket) {
         const ranCodeParams = [updatedStatus, updatedException, updatedOutput, updatedError, updatedInput, updatedExecutionTime];
         console.log(ranCodeParams);
@@ -627,12 +627,12 @@ const CodeSpace = () => {
         <div className="col-md-5 d-flex justify-content-center justify-content-md-start">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
         </div>
-  
+
         {/* Timer */}
         <div className="col-md-2 d-flex justify-content-center">
           <span className="timer">{formattedTime}</span>
         </div>
-  
+
         {/* Buttons */}
         <div className="col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
           {/* Submit Button */}
@@ -640,23 +640,23 @@ const CodeSpace = () => {
             <PublishIcon />
             <span className="pr-1">Submit</span>
           </button>
-  
+
           {/* Quit Button */}
           <button className="quit-button mx-2" onClick={openQuitDialog}>
-            <LogoutIcon/>
+            <LogoutIcon />
             <span className="pr-1">Quit Session</span>
           </button>
-  
+
           {/* Run Button */}
           <button className="run-button mx-2" onClick={handleRunCode}>
-            <PlayIcon/>
+            <PlayIcon />
             <span className="pr-1">Run</span>
           </button>
         </div>
       </div>
       {/* End of Header */}
-  
-      <br className='column-view'/>
+
+      <br className='column-view' />
 
       {/* Container Space (Question, Execution, Code, Chat) */}
       <div className='row'>
@@ -672,26 +672,26 @@ const CodeSpace = () => {
               </div>
 
               {question !== null ? (
-              <div className="question-content-container flex-grow-1">
-                {/* Title */}
-                <div className='row-md-1'>
-                  <h1 className='question-title'>
-                    {question.title}
-                  </h1>
-                </div>
+                <div className="question-content-container flex-grow-1">
+                  {/* Title */}
+                  <div className='row-md-1'>
+                    <h1 className='question-title'>
+                      {question.title}
+                    </h1>
+                  </div>
 
-                {/* Tags */}
-                <div className='tag-container row-md-1'>
-                  <div className='difficulty-tag'>{difficulty}</div>
-                  <div className='topic-tag'>{topic}</div>
-                </div>
+                  {/* Tags */}
+                  <div className='tag-container row-md-1'>
+                    <div className='difficulty-tag'>{difficulty}</div>
+                    <div className='topic-tag'>{topic}</div>
+                  </div>
 
-                {/* Line */}
-                <br />
-                <hr />
+                  {/* Line */}
+                  <br />
+                  <hr />
 
-                {/* Wrap Question Content */}
-                <div className='row-md-6 ml-0 mb-3' style={{ marginTop: '25px' }}>
+                  {/* Wrap Question Content */}
+                  <div className='row-md-6 ml-0 mb-3' style={{ marginTop: '25px' }}>
                     <div
                       className="content-wrapper flex-fill"
                       style={{ overflow: 'auto' }}
@@ -702,48 +702,49 @@ const CodeSpace = () => {
                         }}
                       />
                     </div>
+                  </div>
                 </div>
-              </div>
               ) : (
-              /* Question Loader */
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
-                <CircularProgress color="inherit" />
-              </div>
+                /* Question Loader */
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+                  <CircularProgress color="inherit" />
+                </div>
               )}
             </div>
           </div>
 
-          <br className='column-view'/>
+          <br className='column-view' />
 
           {/* Code Execution Output */}
           <div className='row-md-4'>
             <div className='code-output-container'>
               <div className='card-header d-flex justify-content-between'>
-                <div className='col-md-9 col-sm-8'>
-                  Test Output
+                <div className='col-md-10 pl-0  '>
+                  Console
                 </div>
-                <div className='col-md-1 col-sm-2'>
+                <div className='col-md-2 d-flex justify-content-end align-items-center'>
+                  <div className='mr-2'>
+                    {ranCodeExecutionTime}
+                  </div>
+
                   {!ranCodeError && ranCodeStatus == "success" ? (
-                    <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status' />
+                    <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status align-items-center' />
                   ) : (
-                    <img src={CodeExecutionFail} alt="Code Execution Failed" className='failed-status' />
+                    <img src={CodeExecutionFail} alt="Code Execution Failed" className='failed-status align-items-center' />
                   )}
-                  </div>
-                  <div className='col-md-2 col-sm-2'>
-                    {ranCodeExecutionTime} ms
-                  </div>
+                </div>
               </div>
-           
+
               <div className='code-output-content-container'>
                 {/* Show error only if there is an error found */}
                 {ranCodeError ? (
                   <div>
-                    <p style={{ fontWeight:"bold" }}>Error:</p>
+                    <p style={{ fontWeight: "bold" }}>Error:</p>
                     <p>{ranCodeError}</p>
                   </div>
                 ) : (
                   <div>
-                    <p style={{ fontWeight:"bold" }}>Your Output:</p>
+                    <p style={{ fontWeight: "bold" }}>Output:</p>
                     <p>{ranCodeOutput}</p>
                   </div>
                 )}
@@ -769,7 +770,7 @@ const CodeSpace = () => {
             </div>
           </div>
 
-          <br className='column-view'/>
+          <br className='column-view' />
 
           {/* Chat UI */}
           <div className='row-md'>
@@ -846,12 +847,12 @@ const CodeSpace = () => {
               )}
             </div>
             <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => {
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => {
                   closeQuitDialog();
-              }}
+                }}
               >
                 {otherUserQuit ? "Continue" : "Cancel"}
               </button>
