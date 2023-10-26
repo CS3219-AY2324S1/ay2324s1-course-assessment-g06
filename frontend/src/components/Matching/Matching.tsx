@@ -301,6 +301,7 @@ const Matchmaking: React.FC = () => {
             >
               <span className="sr-only">Loading...</span>
             </div>
+            &nbsp;
             <div id="matchStatus" className="text-right">{matchStatus}</div>
           </div>
         </div>
