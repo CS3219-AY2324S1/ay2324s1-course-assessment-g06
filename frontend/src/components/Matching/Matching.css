@@ -177,10 +177,10 @@ div.scrollable-container {
     overflow-y: scroll; /* Always show vertical scrollbar */
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    max-height: 480px;
+    max-height: 530px;
     scrollbar-width: thin;
     scrollbar-color: #888 #f0f0f0; 
+    max-width: 918px;
   }
 
 /* For Webkit browsers (such as Chrome, Safari) */
@@ -203,12 +203,23 @@ div.scrollable-container {
   margin-top: 0px; /* Adjust the margin as needed */
 }
 
-/* Label for difficulty */
-.difficulty-label {
-  padding: 15px;
+/* Label for topic */
+.topic-header {
+  padding-left: 10px;
+  margin-left: 20px;
+  margin-bottom: 0px;
 }
 
+/* Label for difficulty */
+.difficulty-header {
+  padding-left: 15px;
+  margin-bottom: 15px
+}
 
+/* Label for language */
+.language-header {
+  margin-bottom: 15px;
+}
 
 @media (max-width: 768px) {
   button.topic-button {
