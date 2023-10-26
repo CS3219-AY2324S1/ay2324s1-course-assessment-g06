@@ -148,6 +148,7 @@ button.custom-match-button {
     border-radius: 15px;
     padding: 12px 24px;
     transition: background-color 0.3s;
+    margin-bottom: 10px;
   }
 
 button.custom-match-button:hover {
