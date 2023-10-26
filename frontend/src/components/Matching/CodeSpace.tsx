@@ -121,6 +121,9 @@ const CodeSpace = () => {
   // To hide information if user is not authorised into code space
   const [isAccessAllowed, setIsAccessAllowed] = useState(false);
 
+  const [submitFlag, setSubmitFlag] = useState(false);
+
+
   // Check if the submission request from one user is pending from other user
   const [submissionRequestPending, setSubmissionRequestPending] = useState(false);
   const [submissionRequestRejected, setSubmissionRequestRejected] = useState(false);
@@ -259,7 +262,30 @@ const CodeSpace = () => {
   // Set default code in space after match according to language
   useEffect(() => {
 
-  }, [ranCodeStatus, ranCodeException, ranCodeOutput, ranCodeError, ranCodeExecutionTime, ranCodeInput]);
+  }, [ranCodeStatus, ranCodeException, ranCodeOutput, ranCodeError, ranCodeExecutionTime, ranCodeInput, code]);
+
+
+  // Inside your component
+  useEffect(() => {
+    console.log('from on effect' + code); 
+    if (submitFlag && socket) {
+      // Emit a "submitSession" event to the server with the updated code
+      console.log('submitting session with code: ' + code)
+      socket.emit('submitSession', roomId, questionId, questionDifficulty);
+
+      closeSubmitRequestDialog();
+      console.log("submitting session");
+
+      saveSessionHistory(questionId, questionDifficulty);
+
+      // alert("You have submitted the session.");
+      navigate("/matching");
+      
+      // Reset the submitFlag after submission
+      setSubmitFlag(false);
+    }
+  }, [code, roomId, questionId, questionDifficulty, submitFlag]); // This effect will run whenever 'code' changes
+
 
 
   useEffect(() => {
@@ -282,6 +308,7 @@ const CodeSpace = () => {
       // Listen for 'codeChange' events from the server
       matchedSocket.on('codeChange', (newCode: string) => {
         setCode(newCode); // Update the value with the new code
+        console.log('from codechange ' + code);
       });
 
       // Listen for 'receive message' events from the server
@@ -342,10 +369,9 @@ const CodeSpace = () => {
         setIsRejectedDialogOpen(true);
       });
 
-      matchedSocket.on('submitSession', (questionIdFromServer, questionDifficultyFromServer) => {
-        saveSessionHistory(questionIdFromServer, questionDifficultyFromServer);
-        setHasQuitRoom(true);
-        navigate("/matching");
+      // Set submit flag to true and submits via onEffect
+      matchedSocket.on('submitSession', () => {
+        setSubmitFlag(true);
 
         return () => {
           matchedSocket.off("submitSession");
@@ -465,18 +491,8 @@ const CodeSpace = () => {
 
   // Handle submit session logic
   const handleSubmitSession = () => {
-    if (socket) {
-      // Emit a "submitSession" event to the server
-      socket.emit('submitSession', roomId, questionId, questionDifficulty);
-    }
-
-    closeSubmitRequestDialog();
-    console.log("submitting session");
-
-    saveSessionHistory(questionId, questionDifficulty);
-
-    // alert("You have submitted the session.");
-    navigate("/matching");
+    console.log("submitcode: " + code)
+    setSubmitFlag(true);
   };
 
   // Handle request submit session logic
@@ -739,17 +755,17 @@ const CodeSpace = () => {
               <div className='code-output-content-container'>
                 {/* Show error only if there is an error found */}
                 {ranCodeStatus == "" ? null : (
-                ranCodeError ? (
-                  <div>
-                    <p style={{ fontWeight: "bold" }}>Error:</p>
-                    <p>{ranCodeError}</p>
-                  </div>
-                ) : (
-                  <div>
-                    <p style={{ fontWeight: "bold" }}>Output:</p>
-                    <p>{ranCodeOutput}</p>
-                  </div>
-                )
+                  ranCodeError ? (
+                    <div>
+                      <p style={{ fontWeight: "bold" }}>Error:</p>
+                      <p>{ranCodeError}</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p style={{ fontWeight: "bold" }}>Output:</p>
+                      <p>{ranCodeOutput}</p>
+                    </div>
+                  )
                 )}
               </div>
             </div>
