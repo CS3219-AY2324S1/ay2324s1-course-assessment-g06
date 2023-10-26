@@ -21,6 +21,7 @@ steps:
   # future iteration maybe i set it here see how
   # '--set-env-vars=',
   # ''
+  # kms
   "--allow-unauthenticated"
   ]
   # if need be in the future
