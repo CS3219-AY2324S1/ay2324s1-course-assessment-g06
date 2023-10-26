@@ -91,7 +91,6 @@ export default function UserAttempt() {
       })
         .then((response) => response.json())
         .then((responseData) => {
-          // question data is here
           setQuestion(responseData);
           setIsLoading(false);
         })
@@ -123,7 +122,6 @@ export default function UserAttempt() {
         })
         .catch((error) => {
           console.error("Error fetching attempt:", error);
-          //   setAttempt(null);
           setIsLoading(false);
         });
     };
@@ -231,20 +229,6 @@ export default function UserAttempt() {
               </div>
             </Grid>
           </Container>
-          {/* <Container maxWidth="lg" style={{ marginTop: "25px" }}>
-            <Grid item xs={12}>
-              <div
-                className="content-wrapper"
-                style={{ overflow: "auto", maxHeight: "350px" }}
-              >
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: wrapPreTags(attempt.attempt),
-                  }}
-                />
-              </div>
-            </Grid>
-          </Container> */}
         </Grid>
       </Paper>
 

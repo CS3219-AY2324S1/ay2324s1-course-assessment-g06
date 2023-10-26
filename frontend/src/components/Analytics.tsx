@@ -9,7 +9,6 @@ import HeatMap from "@uiw/react-heat-map";
 import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useNavigate } from "react-router-dom";
-import Tooltip from "@uiw/react-tooltip";
 
 const USER_HOST =
   process.env.REACT_APP_USR_SVC_AUTH || "http://localhost:3003/api/auth";
@@ -190,7 +189,6 @@ const Analytics: React.FC = () => {
           <CardContent>
             <header
               style={{
-                // fontFamily: "Cascadia Code, Inter, sans-serif",
                 letterSpacing: "1px",
                 fontSize: "110%",
                 fontWeight: "bold",
@@ -206,11 +204,8 @@ const Analytics: React.FC = () => {
           <CardContent style={{ marginTop: "5%" }}>
             <div style={{ width: "78%", height: "78%" }}>
               <CircularProgressbarWithChildren
-                // number of questions user completed
                 value={userDetails.Total}
-                // number of questions in our db
                 maxValue={questionDetails.Total}
-                // text={`${userDetails.Total}`}
                 strokeWidth={5}
                 background
                 styles={buildStyles({
@@ -389,7 +384,6 @@ const Analytics: React.FC = () => {
             <CardContent>
               <header
                 style={{
-                  // fontFamily: "Cascadia Code, Inter, sans-serif",
                   letterSpacing: "1px",
                   fontSize: "100%",
                   paddingLeft: "20px",
@@ -400,13 +394,9 @@ const Analytics: React.FC = () => {
                 year
               </header>
             </CardContent>
-            {/* </Box> */}
-            {/* <Box sx={{ display: "flex", flexDirection: "row" }}> */}
             <CardContent
               style={{
                 display: "flex",
-                // justifyContent: "center",
-                // alignItems: "center",
                 marginLeft: "10px",
                 width: "100%",
               }}
@@ -417,21 +407,6 @@ const Analytics: React.FC = () => {
                 rectSize={13}
                 weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
                 startDate={new Date("2023/01/01")}
-                // rectRender={(props, data) => {
-                //   return (
-                //     <Tooltip
-                //       key={props.key}
-                //       placement="top"
-                //       content={`count: ${data.count || 0}`}
-                //     >
-                //       <rect {...props} />
-                //     </Tooltip>
-                //   );
-                // }}
-                // endDate={new Date('2022/12/31')}
-                //legendCellSize?
-                //rectProps?
-                // go see props for css in the future
                 panelColors={{
                   0: "white", // lightest purple
                   2: "#9C96FF", // light purple
