@@ -1,33 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./Question.css";
 import { styled } from "@mui/material/styles";
 import { Button, Container, Grid, Paper } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getCurrentUser } from "../services/auth.service";
-
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button as DialogButton,
-} from "@mui/material";
-
-const DeleteButton = styled(Button)`
-  background-color: #ff5733;
-  color: black;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  &:hover {
-    background-color: #fe6848;
-  }
-`;
 
 interface QuestionInt {
   _id: string;
@@ -37,6 +14,14 @@ interface QuestionInt {
   content: string;
   category: string;
   topics: string;
+}
+
+interface AttemptInt {
+  userId: number;
+  question_id: string;
+  difficulty: string;
+  attemptedAt: string;
+  attempt: string;
 }
 
 const QuestionWrapper = styled(Container)(({ theme }) => ({
@@ -67,20 +52,6 @@ const CategoryWrapper = styled(Container)(({ theme }) => ({
   },
 }));
 
-const CustomDialog = styled(Dialog)``;
-
-const CustomDialogTitle = styled(DialogTitle)`
-  font-weight: bold;
-`;
-
-const CustomDialogContent = styled(DialogContent)`
-  padding: 20px;
-`;
-
-const CustomDialogActions = styled(DialogActions)`
-  justify-content: space-between;
-`;
-
 const BackButton = styled(Button)`
   background-color: #d8d8d8;
   color: white;
@@ -90,18 +61,26 @@ const BackButton = styled(Button)`
   }
 `;
 
-export default function Question() {
+export default function UserAttempt() {
   const { id } = useParams<{ id: string }>();
   const [question, setQuestion] = useState<QuestionInt | null>(null);
+  const [attempt, setAttempt] = useState<AttemptInt>({
+    userId: 0,
+    question_id: "",
+    difficulty: "",
+    attemptedAt: "",
+    attempt: "",
+  });
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const currentUser = getCurrentUser();
   const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // Confirmation dialog state
   const QUESTION_HOST =
     process.env.REACT_APP_QNS_SVC || "http://localhost:3000/api/questions";
+  const USER_HISTORY =
+    process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/user";
 
   useEffect(() => {
     const fetchDataWithDelay = () => {
@@ -112,6 +91,7 @@ export default function Question() {
       })
         .then((response) => response.json())
         .then((responseData) => {
+          // question data is here
           setQuestion(responseData);
           setIsLoading(false);
         })
@@ -125,49 +105,40 @@ export default function Question() {
     fetchDataWithDelay();
   }, [id, currentUser.accessToken]);
 
+  useEffect(() => {
+    const fetchUserAttempt = () => {
+      fetch(USER_HISTORY + "/getall", {
+        headers: {
+          "x-access-token": currentUser.accessToken,
+        },
+      })
+        .then((response) => response.json())
+        .then((responseData) => {
+          const targetData = responseData.find(
+            (item: any) => item.question_id === `${id}`
+          );
+          console.log(targetData);
+          setAttempt(targetData);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching attempt:", error);
+          //   setAttempt(null);
+          setIsLoading(false);
+        });
+    };
+
+    fetchUserAttempt();
+  }, [id, currentUser.accessToken]);
+
   function wrapPreTags(content: string) {
     const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
     return wrappedContent;
   }
 
   const handleBack = () => {
-    navigate("/questions");
-  };
-
-  const openDeleteDialog = () => {
-    setIsDeleteDialogOpen(true);
-  };
-
-  const closeDeleteDialog = () => {
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleUpdate = () => {
-    navigate(`/questions/${id}/update`);
-  };
-
-  const handleDelete = () => {
-    // Close the confirmation dialog
-    closeDeleteDialog();
-
-    fetch(QUESTION_HOST + `/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": currentUser.accessToken,
-      },
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Question deleted successfully");
-          navigate("/questions");
-        } else {
-          console.error("Error deleting question:", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Error deleting question:", error);
-      });
+    console.log("navigated back to analytics");
+    navigate("/analytics");
   };
 
   if (isLoading) {
@@ -213,34 +184,6 @@ export default function Question() {
                 {question.title}
               </h1>
             </div>
-            <div>
-              {isAdmin && (
-                <>
-                  <Button
-                    variant="contained"
-                    style={{
-                      backgroundColor: "#6C63FF",
-                      borderRadius: "50px",
-                      fontSize: "15px",
-                      marginRight: "10px",
-                    }}
-                    onClick={handleUpdate}
-                  >
-                    <EditIcon />
-                  </Button>
-                  <Button
-                    variant="contained"
-                    style={{
-                      backgroundColor: "#FF6A6A",
-                      borderRadius: "20px",
-                    }}
-                    onClick={openDeleteDialog}
-                  >
-                    <DeleteIcon />
-                  </Button>
-                </>
-              )}
-            </div>
           </Grid>
 
           <Grid item xs={1.5}>
@@ -268,59 +211,43 @@ export default function Question() {
                     __html: wrapPreTags(question.content),
                   }}
                 />
+                <p style={{ marginTop: "35px", fontWeight: "bold" }}>
+                  Attempt:
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    backgroundColor: "#EFEFEF",
+                    borderRadius: "10px",
+                    paddingTop: "40px",
+                    paddingBottom: "40px",
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: wrapPreTags(attempt.attempt),
+                  }}
+                />
               </div>
             </Grid>
           </Container>
+          {/* <Container maxWidth="lg" style={{ marginTop: "25px" }}>
+            <Grid item xs={12}>
+              <div
+                className="content-wrapper"
+                style={{ overflow: "auto", maxHeight: "350px" }}
+              >
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: wrapPreTags(attempt.attempt),
+                  }}
+                />
+              </div>
+            </Grid>
+          </Container> */}
         </Grid>
       </Paper>
 
-      <CustomDialog
-        open={isDeleteDialogOpen}
-        onClose={closeDeleteDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        PaperProps={{
-          sx: { bgcolor: "lightgray", borderRadius: "20px", padding: "5px" },
-        }}
-      >
-        <CustomDialogTitle id="alert-dialog-title">
-          Confirm Deletion
-        </CustomDialogTitle>
-        <CustomDialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this question?
-          </DialogContentText>
-        </CustomDialogContent>
-        <CustomDialogActions sx={{ justifyContent: "space-between" }}>
-          <DialogButton
-            onClick={closeDeleteDialog}
-            style={{
-              fontSize: "18px",
-              backgroundColor: "white",
-              borderRadius: "15px",
-              color: "black",
-              textTransform: "none",
-              margin: "0 auto",
-            }}
-          >
-            Cancel
-          </DialogButton>
-          <DialogButton
-            onClick={handleDelete}
-            autoFocus
-            style={{
-              fontSize: "18px",
-              backgroundColor: "#FF6A6A",
-              borderRadius: "15px",
-              color: "white",
-              textTransform: "none",
-              margin: "0 auto",
-            }}
-          >
-            Delete
-          </DialogButton>
-        </CustomDialogActions>
-      </CustomDialog>
       <Grid item xs={12}>
         <BackButton
           sx={{

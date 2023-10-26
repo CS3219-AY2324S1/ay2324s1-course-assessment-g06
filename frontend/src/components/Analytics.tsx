@@ -8,11 +8,13 @@ import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
 import axios from "axios";
 import authHeader from "../services/auth-header";
+import { useNavigate } from "react-router-dom";
 import Tooltip from "@uiw/react-tooltip";
 
-const USER_HOST = process.env.REACT_APP_USR_SVC_AUTH || "http://localhost:3003/api/auth";
+const USER_HOST =
+  process.env.REACT_APP_USR_SVC_AUTH || "http://localhost:3003/api/auth";
 const USER_HISTORY =
-  process.env.REACT_APP_USR_SVC_USER || "http://localhost:3003/api/user";
+  process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/user";
 const QUESTION_HOST =
   process.env.REACT_APP_QNS_SVC || "http://localhost:3000/api/questions";
 
@@ -61,14 +63,16 @@ const Analytics: React.FC = () => {
 
   const [allQuestionIds, setAllQuestionIds] = useState<string[]>([]);
   const [allQuestionTitles, setAllQuestionTitles] = useState<
-    { title: string; difficulty: string }[]
+    { question_id: string; title: string; difficulty: string }[]
   >([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
     // fetch user history
     axios
-      .get(USER_HISTORY + "/history", { headers: authHeader() })
+      .get(USER_HISTORY + "/get", { headers: authHeader() })
       .then((res) => {
         // Assuming res.data is an array of solved questions
         const solvedQuestions = res.data;
@@ -115,9 +119,11 @@ const Analytics: React.FC = () => {
         .then((response) => {
           const data = response.data;
           const titleAndDifficulty = data.map((item: any) => ({
+            question_id: item._id,
             title: item.title,
             difficulty: item.difficulty,
           }));
+          console.log(titleAndDifficulty);
 
           setAllQuestionTitles(titleAndDifficulty);
         })
@@ -166,6 +172,10 @@ const Analytics: React.FC = () => {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    // fetch user's attempt
+  });
   return (
     <div className="container">
       <Card
@@ -472,7 +482,9 @@ const Analytics: React.FC = () => {
                 marginLeft: "1.5%",
                 marginBottom: "15px",
                 padding: "7px",
+                cursor: "pointer",
               }}
+              onClick={() => navigate(`/analytics/${item.question_id}`)}
             >
               <span style={{ fontWeight: "bold", paddingLeft: "1%" }}>
                 {item.title}
