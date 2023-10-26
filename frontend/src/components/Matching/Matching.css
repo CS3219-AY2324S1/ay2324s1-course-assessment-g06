@@ -28,10 +28,15 @@ button.difficulty-easy:hover {
 }
 
 button.difficulty-easy.active {
-  background-color: #7ec575;
+  background-color: #7ec575 !important;
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
   font-weight: bold;
+}
+
+button.difficulty-easy:disabled {
+  opacity: 0.5;
+  background-color: #E6E6E6;
 }
 
 /* Medium Button */
@@ -50,11 +55,17 @@ button.difficulty-medium:hover {
 }
 
 button.difficulty-medium.active {
-  background-color: rgb(236, 197, 89);
+  background-color: rgb(236, 197, 89) !important;
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
   font-weight: bold;
 }
+
+button.difficulty-medium:disabled {
+  opacity: 0.5;
+  background-color: #E6E6E6;
+}
+
 
 /* Hard Button */
 button.difficulty-hard {
@@ -73,10 +84,15 @@ button.difficulty-hard:hover {
 }
 
 button.difficulty-hard.active {
-  background-color: #f14949;
+  background-color: #f14949 !important;
   color: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
   font-weight: bold;
+}
+
+button.difficulty-hard:disabled {
+  opacity: 0.5;
+  background-color: #E6E6E6;
 }
 
 /* Grouping of difficulty buttons (Easy, Medium, Hard) */
@@ -129,7 +145,7 @@ button.topic-button:hover {
 }
 
 button.topic-button.active {
-    background-color: #6C63FF;
+    background-color: #6C63FF !important;
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     font-weight: bold;
