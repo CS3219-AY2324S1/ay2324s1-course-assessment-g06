@@ -726,11 +726,12 @@ const CodeSpace = () => {
                   <div className='mr-2'>
                     {ranCodeExecutionTime}
                   </div>
-
-                  {!ranCodeError && ranCodeStatus == "success" ? (
-                    <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status align-items-center' />
-                  ) : (
-                    <img src={CodeExecutionFail} alt="Code Execution Failed" className='failed-status align-items-center' />
+                  {ranCodeStatus == "" ? null : (
+                    !ranCodeError && ranCodeStatus == "success" ? (
+                      <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status align-items-center' />
+                    ) : (
+                      <img src={CodeExecutionFail} alt="Code Execution Failed" className='failed-status align-items-center' />
+                    )
                   )}
                 </div>
               </div>
