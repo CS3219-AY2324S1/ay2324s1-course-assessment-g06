@@ -12,7 +12,15 @@ steps:
 # Deploy the user-service to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', '${_SERVICE_NAME}', '--image', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}', '--region', '${_REGION}']
+  args: ['run', 'deploy', '${_SERVICE_NAME}', 
+  '--image', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA', 
+  '--region', '${_REGION}',
+  '--port', '${_PORT}',
+  '--env-vars-file', '.env'
+  ]
+  # if need be in the future
+  # env:
+
 # Build the frontend service
 # - name: 'gcr.io/cloud-builders/docker'
 #   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend', './frontend']
