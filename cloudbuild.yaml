@@ -2,12 +2,12 @@ steps:
 # Build the user-service
 - name: 'gcr.io/cloud-builders/docker'
 # Service name can be replaced as container name
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}', './user-service']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA', './user-service']
 
 # Push the user-service image to Container Registry
 # Service name here can also be replaced
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}']
+  args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA']
 
 # Deploy the user-service to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -24,9 +24,9 @@ steps:
 #   dir: 'your-project-directory'
 
 
-
+# testing
 images:
 # - 'gcr.io/$PROJECT_ID/frontend'
 # - 'gcr.io/$PROJECT_ID/question-service'
-- 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}'
+- 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA'
 
