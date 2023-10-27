@@ -3,7 +3,9 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
 # USR CLOUD RUN NAME can be replaced as image name
 # right now pointing to docker file (change in the future)
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA', './user-service']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA', 
+  '-f', './user-service/Dockerfile.prod',
+  './user-service']
 
 # Push the user-service image to Container Registry
 # USR CLOUD RUN NAME can be changed to image name
@@ -31,7 +33,9 @@ steps:
 
 # Build the question-service
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA', './question-service']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA', 
+  '-f', './question-service/Dockerfile.prod',
+  './question-service']
 
 # Push the question-service image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
@@ -49,7 +53,9 @@ steps:
 
 # Build matching-service
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/matching-service:$COMMIT_SHA', './matching-service']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/matching-service:$COMMIT_SHA', 
+  '-f', './matching-service/Dockerfile.prod',
+  './matching-service']
 
 # Push the matching-service image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
@@ -69,7 +75,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA', 
   # specifiy which dockerfile to use
-  '-f', './frontend/Dockerfile.stage',
+  '-f', './frontend/Dockerfile.prod',
   './frontend'
   ]
 
