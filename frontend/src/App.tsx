@@ -111,7 +111,7 @@ const App: React.FC = () => {
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
                     <Link
-                      to={"/"}
+                      to={"/home"}
                       className="nav-link"
                       style={generateActiveStyle("/")}
                     >
@@ -237,7 +237,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/analytics"
+            path="/home"
             element={
               <Protected isLoggedIn={currentUser}>
                 <Analytics />
@@ -261,7 +261,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/analytics/:id"
+            path="/home/:id"
             element={
               <Protected isLoggedIn={currentUser}>
                 <UserAttempt />

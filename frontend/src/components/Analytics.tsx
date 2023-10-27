@@ -432,7 +432,6 @@ const Analytics: React.FC = () => {
         <CardContent style={{ width: "100%" }}>
           <header
             style={{
-              fontFamily: "Cascadia Code, Inter, sans-serif",
               letterSpacing: "1px",
               fontSize: "100%",
               paddingLeft: "20px",
@@ -459,7 +458,7 @@ const Analytics: React.FC = () => {
                 padding: "7px",
                 cursor: "pointer",
               }}
-              onClick={() => navigate(`/analytics/${item.question_id}`)}
+              onClick={() => navigate(`/home/${item.question_id}`)}
             >
               <span style={{ fontWeight: "bold", paddingLeft: "1%" }}>
                 {item.title}

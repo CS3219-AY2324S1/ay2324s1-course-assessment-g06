@@ -136,7 +136,7 @@ export default function UserAttempt() {
 
   const handleBack = () => {
     console.log("navigated back to analytics");
-    navigate("/analytics");
+    navigate("/home");
   };
 
   if (isLoading) {
@@ -215,12 +215,14 @@ export default function UserAttempt() {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "left",
                     alignContent: "center",
+                    fontFamily: "Cascadia Code, Inter, sans-serif",
                     backgroundColor: "#EFEFEF",
                     borderRadius: "10px",
                     paddingTop: "40px",
                     paddingBottom: "40px",
+                    paddingLeft: "40px",
                   }}
                   dangerouslySetInnerHTML={{
                     __html: wrapPreTags(attempt.attempt),
