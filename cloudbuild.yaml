@@ -1,21 +1,23 @@
 steps:
 # Build the user-service
 - name: 'gcr.io/cloud-builders/docker'
-# Service name can be replaced as container name
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA', './user-service']
+# USR CLOUD RUN NAME can be replaced as image name
+# right now pointing to docker file (change in the future)
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_USR_CLOUD_RUN_NAME}:$COMMIT_SHA', './user-service']
 
 # Push the user-service image to Container Registry
-# Service name here can also be replaced
+# USR CLOUD RUN NAME can be changed to image name
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA']
+  args: ['push', 'gcr.io/$PROJECT_ID/${_USR_CLOUD_RUN_NAME}:$COMMIT_SHA']
 
 # Deploy the user-service to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', '${_SERVICE_NAME}', 
-  '--image', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA', 
+  # the first service name is impt to replace the prev service :D
+  args: ['run', 'deploy', '${_USR_CLOUD_RUN_NAME}', 
+  '--image', 'gcr.io/$PROJECT_ID/${_USR_CLOUD_RUN_NAME}:$COMMIT_SHA', 
   '--region', '${_REGION}',
-  '--port', '${_PORT}',
+  '--port', '${_USER_PORT}',
   # Fack no .env file here
   # '--env-vars-file', './.env',
   # future iteration maybe i set it here see how
@@ -27,20 +29,34 @@ steps:
   # if need be in the future
   # env:
 
-# Build the frontend service
+# Build the question-service
 # - name: 'gcr.io/cloud-builders/docker'
-#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend', './frontend']
-#   dir: 'your-project-directory'
-
-# # Build the question-service
-# - name: 'gcr.io/cloud-builders/docker'
+# # USR CLOUD RUN NAME can be replaced as image name
+# # right now pointing to Dockerfile not prod (change in the future)
 #   args: ['build', '-t', 'gcr.io/$PROJECT_ID/question-service', './question-service']
-#   dir: 'your-project-directory'
+
+# # Push the question-service image to Container Registry
+# # USR CLOUD RUN NAME can be changed to image name
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['push', 'gcr.io/$PROJECT_ID/${_USR_CLOUD_RUN_NAME}:$COMMIT_SHA']
+
+# # Build the frontend service
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend', 
+#   # specifiy which dockerfile to use
+#   '-f', './user-service/Dockerfile.prod',
+#   './frontend'
+#   ]
+
+
+
+
 
 
 # testing
 images:
 # - 'gcr.io/$PROJECT_ID/frontend'
 # - 'gcr.io/$PROJECT_ID/question-service'
-- 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA'
+# User service name can be changed to image name instead
+- 'gcr.io/$PROJECT_ID/${_USR_CLOUD_RUN_NAME}:$COMMIT_SHA'
 
