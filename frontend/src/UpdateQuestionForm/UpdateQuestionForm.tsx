@@ -206,11 +206,11 @@ export default function UpdateForm() {
           />
           <FormInputTextEditor onChange={editorHandleChange} content={question.content} formSubmitted={formSubmitted} />
           <div style={{ justifyContent: "space-between", margin: "0 auto" }}>
-            <Button type="submit" variant="contained" style={{ fontSize: "16px", backgroundColor: "#6C63FF", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto", marginRight: "30px" }}>
-              Update
-            </Button>
-            <Button onClick={handleBack} variant="contained" style={{ fontSize: "16px", backgroundColor: "gray", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto" }}>
+            <Button onClick={handleBack} variant="contained" style={{ fontSize: "16px", backgroundColor: "gray", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto", marginRight: "30px"  }}>
               Back
+            </Button>
+            <Button type="submit" variant="contained" style={{ fontSize: "16px", backgroundColor: "#6C63FF", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto" }}>
+              Update
             </Button>
           </div>
 
