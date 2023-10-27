@@ -29,7 +29,7 @@ steps:
   # if need be in the future
   # env:
 
-Build the question-service
+# Build the question-service
 - name: 'gcr.io/cloud-builders/docker'
 # USR CLOUD RUN NAME can be replaced as image name
 # right now pointing to Dockerfile not prod (change in the future)
@@ -65,9 +65,8 @@ Build the question-service
 
 # testing
 images:
-# - 'gcr.io/$PROJECT_ID/frontend'
-
-# User service name can be changed to image name instead
 - 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA'
 - 'gcr.io/$PROJECT_ID/question-service':$COMMIT_SHA
+# - 'gcr.io/$PROJECT_ID/frontend'
+# User service name can be changed to image name instead
 
