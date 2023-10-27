@@ -59,14 +59,10 @@ steps:
 #   ]
 
 
-
-
-
-
 # testing
 images:
 - 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA'
-- 'gcr.io/$PROJECT_ID/question-service':$COMMIT_SHA
+- 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA'
 # - 'gcr.io/$PROJECT_ID/frontend'
 # User service name can be changed to image name instead
 
