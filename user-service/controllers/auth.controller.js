@@ -16,6 +16,7 @@ exports.signup = (req, res) => {
     password: bcrypt.hashSync(req.body.password, 8),
   })
     .then((user) => {
+      // If there are roles to be set, find them and set them.
       if (req.body.roles) {
         Role.findAll({
           where: {
@@ -29,6 +30,7 @@ exports.signup = (req, res) => {
           });
         });
       } else {
+        // Else, set as normal user
         // user role = 1
         user.setRoles([1]).then(() => {
           res.send({ message: 'User registered successfully!' });
@@ -48,7 +50,7 @@ exports.signin = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Invalid username or password' });
+        return res.status(404).send({ message: 'Invalid username' });
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -59,7 +61,7 @@ exports.signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: 'Invalid username or password',
+          message: 'Invalid password',
         });
       }
 
@@ -89,7 +91,7 @@ exports.signin = (req, res) => {
 };
 
 exports.removeUser = (req, res) => {
-  //This userId is decoded from JWT token, decoded by middleware
+
   const id = req.userId;
 
   User.findOne({
@@ -112,7 +114,6 @@ exports.removeUser = (req, res) => {
 exports.updateProfile = (req, res) => {
   const id = req.userId;
   const { username, email } = req.body;
-  // check if user exists
   User.findOne({
     where: {
       id: id,
@@ -134,13 +135,13 @@ exports.updateProfile = (req, res) => {
 };
 
 exports.updatePassword = (req, res) => {
-  // const id = req.params.id;
+
   const id = req.userId;
+
   const { currentPassword, newPassword } = req.body;
   User.findOne({
     where: { id: id },
   }).then((user) => {
-    // check user exists
     if (!user) {
       return res.status(404).send({ message: 'User Not found.' });
     }
@@ -159,7 +160,7 @@ exports.updatePassword = (req, res) => {
 };
 
 exports.getProfile = (req, res) => {
-  // const id = req.params.id;
+
   const id = req.userId;
   
   User.findOne({
