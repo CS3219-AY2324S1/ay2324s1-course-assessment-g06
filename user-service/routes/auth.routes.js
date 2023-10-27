@@ -12,18 +12,10 @@ module.exports = function (app) {
     next();
   });
 
-  // Format is, app.action('ROUTE', [Middleware, access, to, req], controller.action)
-  // [authJwt.verifyToken] is the middleware to verify JWT token
-  // e.g. After authJwt.verifyToken, the req object will have userId decoded from JWT token
-  // The req object will be passed to controller.action
-
   // Used for signup, no JWT present
   app.post(
     '/api/auth/signup',
-    [
-      verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted,
-    ],
+    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
     controller.signup
   );
 
@@ -32,8 +24,7 @@ module.exports = function (app) {
 
   app.delete('/api/auth/removeuser', [authJwt.verifyToken], controller.removeUser);
 
-  app.patch(
-    '/api/auth/updateprofile',
+  app.patch('/api/auth/updateprofile',
     [authJwt.verifyToken, verifyExisting.checkEmail, verifyExisting.checkUsername],
     controller.updateProfile
   );
