@@ -55,7 +55,7 @@ class FormInputTextEditor extends React.Component<Props, State> {
     const contentIsEmpty = editorState.getCurrentContent().getPlainText().trim() === "";
 
     return (
-      <div style={{ maxWidth: '956px' }}> 
+      <div style={{ maxWidth: '1250px' }}> 
         <div>
           <Editor
             editorState={editorState}
