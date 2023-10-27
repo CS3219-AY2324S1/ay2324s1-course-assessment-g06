@@ -129,7 +129,7 @@ const BasicTable: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="lg" style={{ margin: "0 auto" }}>
+    <Container maxWidth="xl" style={{ margin: "0 auto" }}>
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <TableHead>
