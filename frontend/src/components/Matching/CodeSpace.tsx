@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, Location, useNavigate, useBeforeUnload } from 'react-router-dom';
-import ReactRouterPrompt from "react-router-prompt";
-import useHistory from 'react-router-dom';
-import { io, Socket } from 'socket.io-client';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { socket } from './socket';
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
-import { langNames, langs } from '@uiw/codemirror-extensions-langs';
+import { langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { addHistory } from "../../services/user-history.service";
-import './CodeSpace.css'; 
-
-// import { savesession } from "../../services/save.service";
-import { styled } from '@mui/material/styles';
-import { Button, Container, Grid, Paper } from '@mui/material';
-import './CodeSpace.css';
+import { runcode } from "../../services/code.service";
 import logo from '../../images/peerPrepLogo.png';
 import PublishIcon from '@mui/icons-material/Publish';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PlayIcon from '@mui/icons-material/PlayArrow';
 import CircularProgress from "@mui/material/CircularProgress";
 import Sender from "../../images/chatPicture1.png";
 import Receiver from "../../images/chatPicture2.png";
+import CodeExecutionSuccess from "../../images/codeExecutionSuccess.png";
+import CodeExecutionFail from "../../images/codeExecutionFail.png";
+import './CodeSpace.css';
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -44,8 +40,8 @@ interface ChatMessage {
 const CodeSpace = () => {
   /////////////////// PARAMETER INITIALISATION  ///////////////////
   const MATCHING_SERVICE_CORS =
-  process.env.REACT_APP_MTC_SVC || 'http://localhost:3002';
-  
+    process.env.REACT_APP_MTC_SVC || 'http://localhost:3002';
+
   // Id of the current code space room
   const { roomId } = useParams();
   // Get location/path of current page
@@ -87,6 +83,16 @@ const CodeSpace = () => {
     return "Start peer prepping together now!";
   });
 
+  const [fileName, setFileName] = useState("index");
+
+  // To track code execution/run output
+  const [ranCodeStatus, setRanCodeStatus] = useState("");
+  const [ranCodeOutput, setRanCodeOutput] = useState("");
+  const [ranCodeException, setRanCodeException] = useState("");
+  const [ranCodeError, setRanCodeError] = useState("");
+  const [ranCodeExecutionTime, setRanCodeExecutionTime] = useState("");
+  const [ranCodeInput, setRanCodeInput] = useState("");
+
   // Check if the dialog to prompt confirmation of quit session is open
   const [isQuitDialogOpen, setIsQuitDialogOpen] = useState(false);
 
@@ -115,6 +121,9 @@ const CodeSpace = () => {
   // To hide information if user is not authorised into code space
   const [isAccessAllowed, setIsAccessAllowed] = useState(false);
 
+  const [submitFlag, setSubmitFlag] = useState(false);
+
+
   // Check if the submission request from one user is pending from other user
   const [submissionRequestPending, setSubmissionRequestPending] = useState(false);
   const [submissionRequestRejected, setSubmissionRequestRejected] = useState(false);
@@ -125,7 +134,17 @@ const CodeSpace = () => {
   const [messageList, setMessageList] = useState<ChatMessage[]>([messageData]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  
+
+  const fileExtensions: Record<string, string> = {
+    'c': '.c',
+    'cpp': '.cpp',
+    'csharp': '.cs',
+    'go': '.go',
+    'java': '.java',
+    'javascript': '.js',
+    'python': '.py',
+    'typescript': '.ts',
+  };
 
   /////////////////// HANDLE DIALOG OPEN OR CLOSE  ///////////////////
   // To open of close the confirm quit session modal/dialog
@@ -175,10 +194,6 @@ const CodeSpace = () => {
       if (!hasQuitRoom) {
         event.preventDefault();
         event.returnValue = "";
-        // Prompt the user with your disconnection dialog
-        // usePrompt({message: "Are you sure you want to leave?",
-        // when: true})
-        // openDisconnectionDialog(); // Call your function to display the dialog
       }
     }
 
@@ -234,7 +249,6 @@ const CodeSpace = () => {
     return wrappedContent;
   }
 
-
   // Set default code in space after match according to language
   useEffect(() => {
     if (language == 'python') {
@@ -242,7 +256,37 @@ const CodeSpace = () => {
     } else {
       setCode("// " + code);
     }
+    setFileName("index" + fileExtensions[language]);
   }, [language]);
+
+  // Set default code in space after match according to language
+  useEffect(() => {
+
+  }, [ranCodeStatus, ranCodeException, ranCodeOutput, ranCodeError, ranCodeExecutionTime, ranCodeInput, code]);
+
+
+  // Inside your component
+  useEffect(() => {
+    console.log('from on effect' + code); 
+    if (submitFlag && socket) {
+      // Emit a "submitSession" event to the server with the updated code
+      console.log('submitting session with code: ' + code)
+      socket.emit('submitSession', roomId, questionId, questionDifficulty);
+
+      closeSubmitRequestDialog();
+      console.log("submitting session");
+
+      saveSessionHistory(questionId, questionDifficulty);
+
+      // alert("You have submitted the session.");
+      navigate("/matching");
+      
+      // Reset the submitFlag after submission
+      setSubmitFlag(false);
+    }
+  }, [code, roomId, questionId, questionDifficulty, submitFlag]); // This effect will run whenever 'code' changes
+
+
 
   useEffect(() => {
     // Handle all socket events listened from server
@@ -264,6 +308,7 @@ const CodeSpace = () => {
       // Listen for 'codeChange' events from the server
       matchedSocket.on('codeChange', (newCode: string) => {
         setCode(newCode); // Update the value with the new code
+        console.log('from codechange ' + code);
       });
 
       // Listen for 'receive message' events from the server
@@ -289,7 +334,6 @@ const CodeSpace = () => {
           const messageData: ChatMessage = {
             roomId: roomId !== undefined ? roomId : "0", // Make sure roomId is always defined
             author: 'System',
-            // message: `A user (${connectedSocket}) has connected`,
             message: `A user has connected`,
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           };
@@ -325,15 +369,25 @@ const CodeSpace = () => {
         setIsRejectedDialogOpen(true);
       });
 
-      matchedSocket.on('submitSession', (questionIdFromServer, questionDifficultyFromServer) => {
-        // alert('The session has been submitted');
-        saveSessionHistory(questionIdFromServer, questionDifficultyFromServer);
-        setHasQuitRoom(true);
-        navigate("/matching");
+      // Set submit flag to true and submits via onEffect
+      matchedSocket.on('submitSession', () => {
+        setSubmitFlag(true);
 
         return () => {
           matchedSocket.off("submitSession");
         };
+      })
+
+      // Handle user run code
+      matchedSocket.on('codeRun', (ranCodeParams) => {
+        console.log("received codeRun from other user");
+        setRanCodeStatus(ranCodeParams[0]);
+        setRanCodeException(ranCodeParams[1]);
+        setRanCodeOutput(ranCodeParams[2]);
+        setRanCodeError(ranCodeParams[3]);
+        setRanCodeInput(ranCodeParams[4]);
+        setRanCodeExecutionTime(ranCodeParams[5]);
+        console.log(ranCodeException);
       })
 
       // Handle disconnection event
@@ -437,18 +491,8 @@ const CodeSpace = () => {
 
   // Handle submit session logic
   const handleSubmitSession = () => {
-    if (socket) {
-      // Emit a "submitSession" event to the server
-      socket.emit('submitSession', roomId, questionId, questionDifficulty);
-    }
-
-    closeSubmitRequestDialog();
-    console.log("submitting session");
-
-    saveSessionHistory(questionId, questionDifficulty);
-
-    // alert("You have submitted the session.");
-    navigate("/matching");
+    console.log("submitcode: " + code)
+    setSubmitFlag(true);
   };
 
   // Handle request submit session logic
@@ -484,9 +528,11 @@ const CodeSpace = () => {
     navigate("/matching");
   };
 
-  // Handle submit session on timer end logic
-  const handleDisconnection = () => {
-    // TO ADD IN
+  const handleRunCode = () => {
+    console.log("Code run button clicked");
+    // Fixed default code
+    const input = "";
+    runCode(code, input, language, fileName);
   };
 
   // Handle code change events
@@ -516,6 +562,43 @@ const CodeSpace = () => {
       // Room is not active and the 404 page is shown
       console.error('Error fetching room data:', error);
       navigate("/404"); // Redirect to the 404 error page
+    }
+  };
+
+  // Call api to run code
+  const runCode = async (code: string, input: string, language: string, fileName: string) => {
+    try {
+      const response = await runcode(code, input, language, fileName);
+
+      const data = response.data.message[0];
+      const updatedStatus = data.status;
+      const updatedException = data.exception;
+      const updatedOutput = data.stdout;
+      const updatedError = data.stderr;
+      const updatedInput = data.stdin;
+      const updatedExecutionTime = data.executionTime + "ms";
+
+      setRanCodeStatus(updatedStatus);
+      setRanCodeException(updatedException);
+      setRanCodeOutput(updatedOutput);
+      setRanCodeError(updatedError);
+      setRanCodeInput(updatedInput);
+      setRanCodeExecutionTime(updatedExecutionTime);
+
+      if (socket) {
+        const ranCodeParams = [updatedStatus, updatedException, updatedOutput, updatedError, updatedInput, updatedExecutionTime];
+        console.log(ranCodeParams);
+        socket.emit('codeRun', roomId, ranCodeParams);
+      }
+    } catch (error) {
+      console.log("Error in execution/run: ", error);
+      setRanCodeStatus("failed");
+      setRanCodeError("Error in code execution");
+
+      if (socket) {
+        const ranCodeParams = ["failed", null, null, "Error in code execution", null, null];
+        socket.emit('codeRun', roomId, ranCodeParams);
+      }
     }
   };
 
@@ -551,23 +634,23 @@ const CodeSpace = () => {
   };
 
   /////////////////// HANDLE FRONTEND COMPONENTS  ///////////////////
-
   return (
+    <div style={{ backgroundColor: '#E6E6E6', padding: '15px' }}>
 
-    <div style={{ backgroundColor: '#white', padding: '15px' }}>
-      <div className='p-2 row'>
+      {/* Header */}
+      <div className='p-1 row'>
         {/* Logo */}
-        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-start">
+        <div className="col-md-5 d-flex justify-content-center justify-content-md-start">
           <img src={logo} alt="Logo" height="43.76" width="140" className="mr-3" />
         </div>
 
         {/* Timer */}
-        <div className="col-12 col-md-2 d-flex justify-content-center">
+        <div className="col-md-2 d-flex justify-content-center">
           <span className="timer">{formattedTime}</span>
         </div>
 
         {/* Buttons */}
-        <div className="col-12 col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
+        <div className="col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
           {/* Submit Button */}
           <button className="submit-button mx-2" onClick={openSubmitDialog}>
             <PublishIcon />
@@ -579,131 +662,138 @@ const CodeSpace = () => {
             <LogoutIcon />
             <span className="pr-1">Quit Session</span>
           </button>
+
+          {/* Run Button */}
+          <button className="run-button mx-2" onClick={handleRunCode}>
+            <PlayIcon />
+            <span className="pr-1">Run</span>
+          </button>
         </div>
       </div>
+      {/* End of Header */}
 
+      <br className='column-view' />
 
+      {/* Container Space (Question, Execution, Code, Chat) */}
+      <div className='row'>
+        {/* Left Side (Question and Code Execution) */}
+        <div className='col-md-5'>
 
-      {/* <h2>Welcome, {socketId || 'Loading...'}</h2> */}
-      {/* Match Information */}
-      {/* <p>
-        You are matched with another user using difficulty:{' '}
-        {difficulty || 'Not selected'}, topic: {topic || 'Not selected'} and
-        language: {language || 'Not selected'}
-      </p>
-      <div className="timer">Time left: {formattedTime} minutes</div> */}
+          {/* Question */}
+          <div className='row-md-7'>
+            <div className='question-container'>
+              {/* Header */}
+              <div className="card-header sticky-top">
+                Question
+              </div>
 
+              {question !== null ? (
+                <div className="question-content-container flex-grow-1">
+                  {/* Title */}
+                  <div className='row-md-1'>
+                    <h1 className='question-title'>
+                      {question.title}
+                    </h1>
+                  </div>
 
-      <div className='container' style={{ maxWidth: '100%', margin: '0 auto', padding: '0' }}>
-        <div className='row'>
-          <div className='col-12 col-md-5'>
-            {/* Question */}
-            {question !== null ? (
-              <Container
-                maxWidth="lg"
-                className='mt-3'
-                style={{
-                  margin: '0 auto',
-                  backgroundColor: 'white',
-                  borderRadius: '15px',
-                  width: '100%',
-                  maxWidth: '100%',
-                  minHeight: '950px',
-                  height: '950px',
-                  maxHeight: '950px',
-                  padding: '0',
-                  border: '1px solid #ccc',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                {/* Header */}
-                <div className="card-header">
-                  Question
-                </div>
-
-                <Grid sx={{ flexGrow: 1 }} container spacing={1}>
-                  <Grid item xs={12} container justifyContent="space-between">
-                    <div>
-                      <h1 style={{ fontSize: '25px', fontWeight: 'bold', padding: '10px 20px 0px 20px' }}>
-                        {question.title}
-                      </h1>
-                    </div>
-                  </Grid>
-
-
-                  <div className='container ml-0 mb-3' style={{ maxWidth: '100%', padding: '10px 28px 0px' }}>
+                  {/* Tags */}
+                  <div className='tag-container row-md-1'>
                     <div className='difficulty-tag'>{difficulty}</div>
                     <div className='topic-tag'>{topic}</div>
                   </div>
 
+                  {/* Line */}
+                  <br />
                   <hr />
 
-
-                  {/* Hide these tags when the width of the screen is smal */}
-                  {/* {window.innerWidth > 940 && (
-                    <>
-                      <Grid item xs={1.5}>
-                        <CategoryWrapper>{question.difficulty}</CategoryWrapper>
-                      </Grid>
-
-                      {question.topics.split(', ').map((topic, index) => (
-                        <Grid
-                          item
-                          xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
-                          key={index}
-                        >
-                          <QuestionWrapper>{topic}</QuestionWrapper>
-                        </Grid>
-                      ))}
-                    </>
-                  )} */}
-
-                  <Container className='pr-3' maxWidth="lg" style={{ marginTop: '25px' }}>
-                    <Grid item xs={12}>
+                  {/* Wrap Question Content */}
+                  <div className='row-md-6 ml-0 mb-3' style={{ marginTop: '25px' }}>
+                    <div
+                      className="content-wrapper flex-fill"
+                      style={{ overflow: 'auto' }}
+                    >
                       <div
-                        className="content-wrapper"
-                        style={{ overflow: 'auto', maxHeight: '775px' }}
-                      >
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: wrapPreTags(question.content),
-                          }}
-                        />
-                      </div>
-                    </Grid>
-                  </Container>
-                </Grid>
-              </Container>
-            ) : (
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
-                <CircularProgress color="inherit" />
-              </div>
-            )}
-
+                        dangerouslySetInnerHTML={{
+                          __html: wrapPreTags(question.content),
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Question Loader */
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+                  <CircularProgress color="inherit" />
+                </div>
+              )}
+            </div>
           </div>
 
-          <br />
+          <br className='column-view' />
 
-          <div className='col-12 col-md-7'>
-            <div className='codespace mt-3'>
+          {/* Code Execution Output */}
+          <div className='row-md-4'>
+            <div className='code-output-container'>
+              <div className='card-header d-flex justify-content-between'>
+                <div className='col-md-10 pl-0  '>
+                  Console
+                </div>
+                <div className='col-md-2 d-flex justify-content-end align-items-center'>
+                  <div className='mr-2'>
+                    {ranCodeExecutionTime}
+                  </div>
+                  {ranCodeStatus == "" ? null : (
+                    !ranCodeError && ranCodeStatus == "success" ? (
+                      <img src={CodeExecutionSuccess} alt="Code Executed Successfully" className='success-status align-items-center' />
+                    ) : (
+                      <img src={CodeExecutionFail} alt="Code Execution Failed" className='failed-status align-items-center' />
+                    )
+                  )}
+                </div>
+              </div>
+
+              <div className='code-output-content-container'>
+                {/* Show error only if there is an error found */}
+                {ranCodeStatus == "" ? null : (
+                  ranCodeError ? (
+                    <div>
+                      <p style={{ fontWeight: "bold" }}>Error:</p>
+                      <p>{ranCodeError}</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p style={{ fontWeight: "bold" }}>Output:</p>
+                      <p>{ranCodeOutput}</p>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side (Code Mirror and Chat) */}
+        <div className='col-md-7'>
+          <div className='row-md'>
+            {/* Code Mirror and Chat */}
+            <div className='codespace'>
               <div className="card-header">
-                Code
+                Code ({fileName})
               </div>
               <CodeMirror
                 value={code}
-                height="500px"
+                height="300px"
                 onChange={onChange}
                 extensions={getCodeMirrorExtensions()}
               />
             </div>
-            {/* Coding Space */}
+          </div>
 
+          <br className='column-view' />
 
-            <br />
-
-
-            {/* Chat UI */}
-            <div className="chat-container" style={{ backgroundColor: 'white' }}>
+          {/* Chat UI */}
+          <div className='row-md'>
+            <div className="chat-container">
               <div className="card-header">
                 Chat
               </div>
@@ -734,7 +824,6 @@ const CodeSpace = () => {
                   ))}
                 </ScrollToBottom>
               </div>
-
               <div className="chat-input">
                 <input
                   type="text"
@@ -755,47 +844,40 @@ const CodeSpace = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* End of Peer Prep Space (Question, Execution, Code, Chat) */}
 
-        {/* Quit Session Dialog/Modal */}
-        <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{"Confirm Quit"}</h5>
-                <button type="button" className="close" onClick={closeQuitDialog}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              {/* Quit Session Message */}
-              <div className="modal-body">
-                {otherUserQuit ? (
-                  <p>The other user has left the session. Do you want to leave the session?</p>
-                ) : (
-                  <p>Are you sure you want to quit this session?</p>
-                )}
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => {
-                    if (otherUserQuit) {
-                      // Close dialog and set other user quit to false to reset the message when the remaining user click on quit session again
-                      closeQuitDialog();
-                      // Removing logic as it prevents the other user from submitting the sessino if their peer has quit
-                      // setOtherUserQuit(false);
-                    } else {
-                      // Close the dialog
-                      closeQuitDialog();
-                    }
-                  }}
-                >
-                  {otherUserQuit ? "Continue" : "Cancel"}
-                </button>
-                <button type="button" className="btn btn-danger" onClick={handleQuitSession}>
-                  {otherUserQuit ? "Leave" : "Quit"}
-                </button>
-              </div>
+      {/* Quit Session Dialog/Modal */}
+      <div className="modal" tabIndex={-1} role="dialog" style={{ display: isQuitDialogOpen ? 'block' : 'none' }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">{"Confirm Quit"}</h5>
+              <button type="button" className="close" onClick={closeQuitDialog}>
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {/* Quit Session Message */}
+            <div className="modal-body">
+              {otherUserQuit ? (
+                <p>The other user has left the session. Do you want to leave the session?</p>
+              ) : (
+                <p>Are you sure you want to quit this session?</p>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => {
+                  closeQuitDialog();
+                }}
+              >
+                {otherUserQuit ? "Continue" : "Cancel"}
+              </button>
+              <button type="button" className="btn btn-danger" onClick={handleQuitSession}>
+                {otherUserQuit ? "Leave" : "Quit"}
+              </button>
             </div>
           </div>
         </div>
@@ -821,7 +903,6 @@ const CodeSpace = () => {
           </div>
         </div>
       </div>
-
 
       {/* Submit Session Dialog/Modal */}
       <div className="modal" tabIndex={-1} role="dialog" style={{ display: isSubmitDialogOpen ? 'block' : 'none' }}>
@@ -902,7 +983,6 @@ const CodeSpace = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
