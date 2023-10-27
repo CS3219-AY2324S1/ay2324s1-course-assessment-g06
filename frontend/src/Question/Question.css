@@ -82,6 +82,37 @@
   font-size: 16px; /* Adjust the font size */
 }
 
+/* Container for tags */
+
+.tag-container {
+  max-width: 100%;
+  padding: 0px 0px 20px 10px;
+}
+
+/* Style for question tags */
+.topic-tag {
+  background-color: #d8d8d8;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50px;
+  font-size: 12px;
+  float: left;
+  padding: 5px 15px;
+  margin-right: 5px;
+}
+
+/* Style for difficulty tags */
+.difficulty-tag {
+  background-color: rgb(255, 192, 203);
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50px;
+  font-size: 12px;
+  float: left;
+  padding: 5px 15px;
+  margin-right: 5px;
+}
+
 .button-container {
   display: flex;
   position: relative;
@@ -106,3 +137,4 @@
   background-color: rgba(0, 0, 0, .5);
   box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
+

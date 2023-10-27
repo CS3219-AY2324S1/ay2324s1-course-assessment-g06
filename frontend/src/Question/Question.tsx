@@ -190,13 +190,13 @@ export default function Question() {
   }
 
   return (
-    <div       
-    style={{
-      margin: '0 auto',
-      backgroundColor: '#E6E6E6',
-      borderRadius: '20px',
-      padding: '20px',
-    }}>
+    <div
+      style={{
+        margin: '0 auto',
+        backgroundColor: '#E6E6E6',
+        borderRadius: '20px',
+        padding: '20px',
+      }}>
       <Paper
         style={{
           padding: '20px',
@@ -240,19 +240,15 @@ export default function Question() {
             </div>
           </Grid>
 
-          <Grid item xs={1.5}>
-            <CategoryWrapper>{question.difficulty}</CategoryWrapper>
-          </Grid>
+          {/* Tags */}
+          <div className='tag-container row-md-1'>
+            <div className='difficulty-tag'>{question.difficulty}</div>
+            {question.topics.split(', ').map((topic, index) => (
+              <div className='topic-tag'>{topic}</div>
+            ))}
+          </div>
 
-          {question.topics.split(', ').map((topic, index) => (
-            <Grid
-              item
-              xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
-              key={index}
-            >
-              <QuestionWrapper>{topic}</QuestionWrapper>
-            </Grid>
-          ))}
+
 
           <Container maxWidth="lg" style={{ marginTop: '25px' }}>
             <Grid item xs={12}>
