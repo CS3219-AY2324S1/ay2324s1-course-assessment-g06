@@ -30,7 +30,7 @@ db.user.belongsToMany(db.role, {
 
 db.user.hasMany(db.userQuestions);
 
-db.ROLES = ['user', 'admin', 'moderator'];
+db.ROLES = ['user', 'admin'];
 db.DIFFICULTY = ['Easy', 'Medium', 'Hard'];
 
 module.exports = db;
