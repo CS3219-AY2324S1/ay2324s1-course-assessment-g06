@@ -1,0 +1,30 @@
+
+FROM node:alpine as build
+
+# Create an app directory to hold the application code inside the image
+WORKDIR /src/app
+
+# Copy app dependencies (package.json, package-lock.json, tsconfig.json, etc)
+COPY package*.json ./
+
+# Install app dependencies
+RUN npm install --silent
+
+# Copy the rest of the application code
+COPY . .
+
+# Set env variabvles as this is a static build file
+ENV REACT_APP_QNS_SVC=https://qs-cd-test-a2rwifv3ta-dt.a.run.app/api/questions
+ENV REACT_APP_MTC_SVC=https://ms-cd-test-a2rwifv3ta-dt.a.run.app
+ENV REACT_APP_USR_SVC_HIST=https://us-cd-test-a2rwifv3ta-dt.a.run.app/api/hist
+ENV REACT_APP_USR_SVC_AUTH=https://us-cd-test-a2rwifv3ta-dt.a.run.app/api/auth
+ENV REACT_APP_USR_SVC_USER=https://us-cd-test-a2rwifv3ta-dt.a.run.app/api/user
+
+# Build the app
+RUN npm run build
+
+RUN npm i -g serve
+
+EXPOSE 3001
+
+CMD ["serve", "-s", "build","-l","3001"]
