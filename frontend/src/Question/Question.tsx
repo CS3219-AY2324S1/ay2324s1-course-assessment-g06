@@ -54,12 +54,9 @@ const CustomDialogActions = styled(DialogActions)`
 `;
 
 const BackButton = styled(Button)`
-  background-color: #d8d8d8;
+  background-color: #6C63FF;
   color: white;
   font-weight: bold;
-  &:hover {
-    background-color: #6c63ff;
-  }
 `;
 
 export default function Question() {
@@ -179,7 +176,7 @@ export default function Question() {
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
           <Grid item xs={12} container justifyContent="space-between">
             <div>
-              <h1 style={{ fontSize: '25px', fontWeight: 'bold', paddingLeft: '10px'}}>
+              <h1 style={{ fontSize: '25px', fontWeight: 'bold', paddingLeft: '10px' }}>
                 {question.title}
               </h1>
             </div>

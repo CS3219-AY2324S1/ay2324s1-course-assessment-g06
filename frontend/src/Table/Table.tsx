@@ -20,12 +20,9 @@ import { getCurrentUser } from "../services/auth.service";
 
 
 const AddButton = styled(Button)`
-  background-color: #d8d8d8;
+  background-color: #6C63FF;
   color: white;
   font-weight: bold;
-  &:hover {
-    background-color: #6C63FF;
-  }
 `;
 
 interface Question {
@@ -208,6 +205,8 @@ const BasicTable: React.FC = () => {
                 borderRadius: '40px',
                 minWidth: '40px',
                 maxWidth: '40px',
+                minHeight: '38px',
+                maxHeight: '38px',
               }}
               variant="contained"
               onClick={handleAddButtonClick}
