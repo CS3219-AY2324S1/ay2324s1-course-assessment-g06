@@ -39,34 +39,6 @@ interface QuestionInt {
   topics: string;
 }
 
-const QuestionWrapper = styled(Container)(({ theme }) => ({
-  backgroundColor: '#d8d8d8',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  fontWeight: 'bold',
-  textAlign: 'center',
-  borderRadius: '50px',
-  fontSize: '12px',
-  // Media query for smaller screens
-  '@media (max-width: 1200px)': {
-    fontSize: '10px', // Decrease font size for smaller screens
-  },
-}));
-
-const CategoryWrapper = styled(Container)(({ theme }) => ({
-  backgroundColor: 'rgb(255, 192, 203)',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  fontWeight: 'bold',
-  textAlign: 'center',
-  borderRadius: '50px',
-  fontSize: '12px',
-  // Media query for smaller screens
-  '@media (max-width: 1200px)': {
-    fontSize: '10px', // Decrease font size for smaller screens
-  },
-}));
-
 const CustomDialog = styled(Dialog)``;
 
 const CustomDialogTitle = styled(DialogTitle)`
@@ -191,8 +163,9 @@ export default function Question() {
 
   return (
     <div
+      className='mb-3'
       style={{
-        margin: '0 auto',
+        margin: '10px',
         backgroundColor: '#E6E6E6',
         borderRadius: '20px',
         padding: '20px',
@@ -206,11 +179,11 @@ export default function Question() {
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
           <Grid item xs={12} container justifyContent="space-between">
             <div>
-              <h1 style={{ fontSize: '25px', fontWeight: 'bold' }}>
+              <h1 style={{ fontSize: '25px', fontWeight: 'bold', paddingLeft: '10px'}}>
                 {question.title}
               </h1>
             </div>
-            <div>
+            <div className='mb-3 ml-2'>
               {isAdmin && (
                 <>
                   <Button
@@ -218,7 +191,7 @@ export default function Question() {
                     style={{
                       backgroundColor: '#6C63FF',
                       borderRadius: '50px',
-                      fontSize: '15px',
+                      fontSize: '10px',
                       marginRight: '10px',
                     }}
                     onClick={handleUpdate}
@@ -229,7 +202,8 @@ export default function Question() {
                     variant="contained"
                     style={{
                       backgroundColor: '#FF6A6A',
-                      borderRadius: '20px',
+                      borderRadius: '50px',
+                      fontSize: '10px',
                     }}
                     onClick={openDeleteDialog}
                   >
@@ -241,7 +215,7 @@ export default function Question() {
           </Grid>
 
           {/* Tags */}
-          <div className='tag-container row-md-1'>
+          <div className='question-tag-container row-md-1'>
             <div className='difficulty-tag'>{question.difficulty}</div>
             {question.topics.split(', ').map((topic, index) => (
               <div className='topic-tag'>{topic}</div>
@@ -250,11 +224,11 @@ export default function Question() {
 
 
 
-          <Container maxWidth="lg" style={{ marginTop: '25px' }}>
+          <Container className='pl-3'>
             <Grid item xs={12}>
               <div
-                className="content-wrapper"
-                style={{ overflow: 'auto', maxHeight: '450px' }}
+                className="content-wrapper pl-0"
+                style={{ overflow: 'auto', maxHeight: '420px' }}
               >
                 <div
                   dangerouslySetInnerHTML={{
@@ -273,7 +247,7 @@ export default function Question() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         PaperProps={{
-          sx: { bgcolor: 'lightgray', borderRadius: '20px', padding: '5px' },
+          sx: { bgcolor: 'white', borderRadius: '20px', padding: '5px' },
         }}
       >
         <CustomDialogTitle id="alert-dialog-title">
@@ -289,7 +263,7 @@ export default function Question() {
             onClick={closeDeleteDialog}
             style={{
               fontSize: '18px',
-              backgroundColor: 'white',
+              backgroundColor: '#d8d8d8',
               borderRadius: '15px',
               color: 'black',
               textTransform: 'none',

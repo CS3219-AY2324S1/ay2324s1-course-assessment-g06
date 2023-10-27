@@ -84,9 +84,9 @@
 
 /* Container for tags */
 
-.tag-container {
+.question-tag-container {
   max-width: 100%;
-  padding: 0px 0px 20px 10px;
+  padding: 0px 0px 15px 18px;
 }
 
 /* Style for question tags */
@@ -99,6 +99,8 @@
   float: left;
   padding: 5px 15px;
   margin-right: 5px;
+  margin-bottom: 10px;
+
 }
 
 /* Style for difficulty tags */
@@ -111,6 +113,7 @@
   float: left;
   padding: 5px 15px;
   margin-right: 5px;
+  margin-bottom: 10px;
 }
 
 .button-container {
