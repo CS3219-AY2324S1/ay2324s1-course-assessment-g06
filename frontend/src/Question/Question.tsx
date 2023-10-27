@@ -190,16 +190,13 @@ export default function Question() {
   }
 
   return (
-    <Container
-      maxWidth="lg"
-      style={{
-        margin: '40px auto 0 auto',
-        backgroundColor: '#E6E6E6',
-        borderRadius: '20px',
-        width: '80%',
-        padding: '20px',
-      }}
-    >
+    <div       
+    style={{
+      margin: '0 auto',
+      backgroundColor: '#E6E6E6',
+      borderRadius: '20px',
+      padding: '20px',
+    }}>
       <Paper
         style={{
           padding: '20px',
@@ -261,7 +258,7 @@ export default function Question() {
             <Grid item xs={12}>
               <div
                 className="content-wrapper"
-                style={{ overflow: 'auto', maxHeight: '350px' }}
+                style={{ overflow: 'auto', maxHeight: '450px' }}
               >
                 <div
                   dangerouslySetInnerHTML={{
@@ -339,6 +336,6 @@ export default function Question() {
           <ArrowBackIcon />
         </BackButton>
       </Grid>
-    </Container>
+    </div>
   );
 }
