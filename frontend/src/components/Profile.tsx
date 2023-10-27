@@ -65,6 +65,7 @@ const Profile: React.FC = () => {
   const [buttonWidth, setButtonWidth] = useState("97%");
   const [showBackButton, setShowBackButton] = useState(false);
   const [isTextFieldClicked, setIsTextFieldClicked] = useState(false);
+  const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
 
   const enableTextField = () => {
     setIsTextFieldClicked(true);
@@ -530,6 +531,7 @@ const Profile: React.FC = () => {
                     marginTop: "20px",
                   }}
                 >
+                {!isAdmin && (
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -544,7 +546,7 @@ const Profile: React.FC = () => {
                     }}
                   >
                     delete account
-                  </button>
+                  </button>)}
                 </div>
               </div>
               <div className="col-12 col-sm-7 justify-content-center align-items-center">
