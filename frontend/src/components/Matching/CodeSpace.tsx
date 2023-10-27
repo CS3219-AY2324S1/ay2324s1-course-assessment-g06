@@ -267,7 +267,7 @@ const CodeSpace = () => {
 
   // Inside your component
   useEffect(() => {
-    console.log('from on effect' + code); 
+    console.log('from on effect' + code);
     if (submitFlag && socket) {
       // Emit a "submitSession" event to the server with the updated code
       console.log('submitting session with code: ' + code)
@@ -280,7 +280,7 @@ const CodeSpace = () => {
 
       // alert("You have submitted the session.");
       navigate("/matching");
-      
+
       // Reset the submitFlag after submission
       setSubmitFlag(false);
     }
@@ -651,6 +651,13 @@ const CodeSpace = () => {
 
         {/* Buttons */}
         <div className="col-md-5 d-flex justify-content-center justify-content-md-end pr-0">
+
+          {/* Run Button */}
+          <button className="run-button mx-2" onClick={handleRunCode}>
+            <PlayIcon />
+            <span className="pr-1">Run</span>
+          </button>
+
           {/* Submit Button */}
           <button className="submit-button mx-2" onClick={openSubmitDialog}>
             <PublishIcon />
@@ -663,11 +670,6 @@ const CodeSpace = () => {
             <span className="pr-1">Quit Session</span>
           </button>
 
-          {/* Run Button */}
-          <button className="run-button mx-2" onClick={handleRunCode}>
-            <PlayIcon />
-            <span className="pr-1">Run</span>
-          </button>
         </div>
       </div>
       {/* End of Header */}
@@ -681,7 +683,7 @@ const CodeSpace = () => {
 
           {/* Question */}
           <div className='row-md-7'>
-            <div className='question-container'>
+            <div className='question-container my-2'>
               {/* Header */}
               <div className="card-header sticky-top">
                 Question
@@ -729,11 +731,9 @@ const CodeSpace = () => {
             </div>
           </div>
 
-          <br className='column-view' />
-
           {/* Code Execution Output */}
           <div className='row-md-4'>
-            <div className='code-output-container'>
+            <div className='code-output-container mb-2'>
               <div className='card-header d-flex justify-content-between'>
                 <div className='col-md-10 pl-0  '>
                   Console
@@ -776,7 +776,7 @@ const CodeSpace = () => {
         <div className='col-md-7'>
           <div className='row-md'>
             {/* Code Mirror and Chat */}
-            <div className='codespace'>
+            <div className='codespace my-2'>
               <div className="card-header">
                 Code ({fileName})
               </div>
@@ -789,11 +789,9 @@ const CodeSpace = () => {
             </div>
           </div>
 
-          <br className='column-view' />
-
           {/* Chat UI */}
           <div className='row-md'>
-            <div className="chat-container">
+            <div className="chat-container mb-2">
               <div className="card-header">
                 Chat
               </div>
