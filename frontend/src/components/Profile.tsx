@@ -585,6 +585,7 @@ const Profile: React.FC = () => {
                       if (!textFieldsEnabled && !passwordButtonClicked) {
                         setTextFieldsEnabled(true);
                       } else {
+                        setTextFieldsEnabled(false);
                         if (!passwordButtonClicked) {
                           updateFormik.handleSubmit(); // Call the Update Profile method
                         } else {
