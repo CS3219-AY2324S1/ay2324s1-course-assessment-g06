@@ -227,17 +227,17 @@ const Profile: React.FC = () => {
     <div className="container">
       <div
         className="jumbotron"
-        style={{ borderRadius: "10px", backgroundColor: "#E6E6E6" }}
+        style={{ borderRadius: "10px", backgroundColor: "#E6E6E6", paddingLeft: "12px" }}
       >
         <form onSubmit={updateFormik.handleSubmit}>
           <div className="container">
             <div className="row justify-content-center align-items-center">
-              <div className="col-12 col-sm-4">
+              <div className="col-12 col-md-4">
                 <div className="d-flex align-items-center justify-content-center">
                   <img src={profilepic} alt="picture" className="img-fluid" />
                 </div>
               </div>
-              <div className="col-12 col-sm-7">
+              <div className="col-12 col-md-7">
                 <div className="row justify-content-center align-items-center">
                   <div
                     style={{
@@ -246,7 +246,7 @@ const Profile: React.FC = () => {
                       marginTop: "20px",
                     }}
                   >
-                    <label htmlFor="username" style={{ position: "relative" }}>
+                    <label htmlFor="username" style={{ position: "relative", fontSize: '18px' }}>
                       Username
                     </label>
                     <TextField
@@ -295,7 +295,8 @@ const Profile: React.FC = () => {
                       htmlFor="email"
                       style={{
                         position: "relative",
-                        paddingRight: "35px",
+                        paddingRight: "40px",
+                        fontSize: '18px'
                       }}
                     >
                       Email
@@ -345,7 +346,7 @@ const Profile: React.FC = () => {
                     >
                       <label
                         htmlFor="password"
-                        style={{ position: "relative", paddingRight: "5px" }}
+                        style={{ position: "relative", paddingRight: "5px", fontSize: '18px'}}
                       >
                         Password
                       </label>
@@ -523,7 +524,7 @@ const Profile: React.FC = () => {
             {/* <Button onClick={toggleUpdateUserModal}>Cancel</Button> */}
 
             <div className="row justify-content-center align-items-center">
-              <div className="col-12 col-sm-4 d-flex justify-content-center align-items-center">
+              <div className="col-12 col-md-4 d-flex justify-content-center align-items-center">
                 <div
                   style={{
                     display: "flex",
@@ -549,18 +550,17 @@ const Profile: React.FC = () => {
                   </button>)}
                 </div>
               </div>
-              <div className="col-12 col-sm-7 justify-content-center align-items-center">
+              <div className="col-12 col-md-7 justify-content-center align-items-center">
                 <div
+                className="w-100"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
                     marginTop: "20px",
                   }}
                 >
                   {showBackButton && (
                     <Button
                       onClick={(e) => {
-                        setButtonWidth("97%");
+                        setButtonWidth("100%");
                         e.preventDefault(); // Prevent form submission
                         setShowBackButton(!showBackButton);
                         setPasswordButtonClicked(!passwordButtonClicked);
