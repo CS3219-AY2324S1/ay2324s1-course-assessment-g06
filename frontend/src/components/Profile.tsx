@@ -236,6 +236,29 @@ const Profile: React.FC = () => {
                 <div className="d-flex align-items-center justify-content-center">
                   <img src={profilepic} alt="picture" className="img-fluid my-2" />
                 </div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  {!isAdmin && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleDeleteModal();
+                      }}
+                      style={{
+                        position: "relative",
+                        border: "none",
+                        textDecoration: "underline",
+                        color: "#9BA4B5",
+                        background: "none",
+                      }}
+                    >
+                      delete account
+                    </button>)}
+                </div>
               </div>
               <div className="col-12 col-md-7">
                 <div className="row justify-content-center align-items-center">
@@ -348,7 +371,7 @@ const Profile: React.FC = () => {
                     >
                       <label
                         htmlFor="password"
-                        style={{ position: "relative", paddingRight: "-2px", fontSize: '18px'}}
+                        style={{ position: "relative", paddingRight: "-2px", fontSize: '18px' }}
                       >
                         Password
                       </label>
@@ -523,47 +546,16 @@ const Profile: React.FC = () => {
                     </div>
                   </>
                 )}
-              </div>
-            </div>
 
-            {/* <Button onClick={toggleUpdateUserModal}>Cancel</Button> */}
 
-            <div className="row justify-content-center align-items-center">
-              <div className="col-12 col-md-4 d-flex justify-content-center align-items-center">
                 <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginTop: "20px",
-                  }}
-                >
-                {!isAdmin && (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleDeleteModal();
-                    }}
-                    style={{
-                      position: "relative",
-                      border: "none",
-                      textDecoration: "underline",
-                      color: "#9BA4B5",
-                      background: "none",
-                    }}
-                  >
-                    delete account
-                  </button>)}
-                </div>
-              </div>
-              <div className="col-12 col-md-7 justify-content-center align-items-center">
-              <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     marginBottom: "20px",
                     paddingLeft: "10px",
                     paddingRight: "10px",
-
+                    marginTop: "40px"
                   }}
                 >
                   {showBackButton && (
