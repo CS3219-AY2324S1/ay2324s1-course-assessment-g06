@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 import BasicTable from "./Table/Table";
 import Question from "./Question/Question";
 import Matching from "./components/Matching/Matching";
@@ -195,14 +195,7 @@ const App: React.FC = () => {
 
       <div className={`${isCodeSpaceRoute ? "" : " container mt-3"}`}>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Protected isLoggedIn={currentUser}>
-                <Analytics />
-              </Protected>
-            }
-          />
+          <Route path="/" element={<Navigate to="/home" />} />
           <Route
             path="/login"
             element={
