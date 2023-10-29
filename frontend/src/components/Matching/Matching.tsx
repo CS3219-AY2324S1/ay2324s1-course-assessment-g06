@@ -3,7 +3,7 @@ import { socket } from './socket';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import './Matching.css';
-import { iconCategories } from './IconMatching'; 
+import { iconCategories } from './IconMatching';
 import { langNames } from '@uiw/codemirror-extensions-langs';
 import { getCurrentUser } from '../../services/auth.service';
 
@@ -58,10 +58,12 @@ const Matchmaking: React.FC = () => {
       setTimeout(() => {
         setIsMatching(false);
         navigate(`/match/${roomId}`, {
-          state: { socketId: socket.id, 
-            difficulty: selectedDifficulty, 
-            topic: selectedTopic, 
-            language: selectedLanguage },
+          state: {
+            socketId: socket.id,
+            difficulty: selectedDifficulty,
+            topic: selectedTopic,
+            language: selectedLanguage
+          },
         });
       }, 2000); // 2 seconds delay
     }
@@ -93,19 +95,19 @@ const Matchmaking: React.FC = () => {
       }
       setIsConnected(true);
     }
-  
+
     function onDisconnect() {
       if (isMatching) {
         setIsMatching(false);
       }
       setIsConnected(false);
     }
-  
+
     // Listen for the 'connect' event to check the connection status
     socket.on('connect', onConnect);
     // Listen for the 'disconnect' event to detect disconnection
     socket.on('disconnect', onDisconnect);
-  
+
     // Unsubscribe from the events when the component unmounts
     return () => {
       socket.off('connect', onConnect);
@@ -190,19 +192,21 @@ const Matchmaking: React.FC = () => {
   ];
 
   return (
-    <div className="container mt-5" >
+    <div className="container my-4" >
       <div className="row">
         {/* Left section */}
-        <div className="col-xl-9 col-lg-7 col-md-6">
+        <div className="col-xl-8 col-lg-6 col-md-6">
           {/* Topic divider */}
           <div className="form-group">
-            <label htmlFor="topics">Choose a topic:</label>
-              <div className="col-md-12 scrollable-container">
+            <label htmlFor="topics" className='topic-header'>Preferred Topic:</label>
+
+            <div className='col-md-12'>
+              <div className="scrollable-container">
                 {/* Create a wrapper div for each row of buttons */}
                 {iconCategories.map((topic, index) => (
                   <div key={topic.label} className={`topic-label row-sm-8 row-md-8`}>
                     <button
-                      className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''} btn-sm` }
+                      className={`btn topic-button ${selectedTopic === topic.label ? 'active' : ''} btn-sm`}
                       onClick={() => handleTopicClick(topic.label)}
                       disabled={isMatching}
                     >
@@ -210,25 +214,26 @@ const Matchmaking: React.FC = () => {
                         src={selectedTopic === topic.label ? topic.activeIconFilePath : topic.iconFilePath}
                         alt={topic.label}
                       />
-                    
 
                     </button>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <span style={{ marginTop: '10px', textAlign: 'center' }}>{topic.label}</span>
+                      <span style={{ marginTop: '10px', textAlign: 'center' }}>{topic.label}</span>
                     </div>
                   </div>
-                  ))}
+                ))}
               </div>
             </div>
+
+          </div>
         </div>
         {/* End of left section */}
 
         {/* Right section */}
-        <div className="col-xl-3 col-lg-5 col-md-6">
+        <div className="col-xl-4 col-lg-6 col-md-6">
           {/* Difficulty buttons divider */}
           <div className="row-md-12">
             <div className="form-group d-flex flex-column">
-              <label>Choose your difficulty level:</label>
+              <label className='difficulty-header'>Preferred Difficulty:</label>
               <div className="col-md-12 d-flex flex-column justify-content-center"> {/* Add justify-content-center */}
                 <div className="difficulty-buttons">
                   {difficultyLevels.map((level) => (
@@ -248,61 +253,61 @@ const Matchmaking: React.FC = () => {
           </div>
 
           {/* Progamming language dropdown field divider */}
-          <div className="row-md-12 ">
-              <div className="form-group">
-                  <div className="col-md-12"> 
-                      <div className="form-group">
-                        <label htmlFor="language">Preferred Language:</label>
-                        <select
-                          id="language"
-                          className="form-control"
-                          value={selectedLanguage}
-                          onChange={handleLanguageChange}
-                          disabled={isMatching}
-                        >
-                          <option value="c">C</option>
-                          <option value="cpp">C++</option>
-                          <option value="csharp">C#</option>
-                          <option value="go">Go</option>
-                          <option value="java">Java</option>
-                          <option value="javascript">JavaScript</option>
-                          <option value="python">Python</option>
-                          <option value="ruby">Ruby</option>
-                          <option value="typescript">TypeScript</option>
-                        </select>
-                      </div>
-                    </div>
+          <div className="row-md-12">
+            <div className="form-group">
+              <div className="col-md-12">
+                <div className="form-group">
+                  <label htmlFor="language" className='language-header'>Preferred Language:</label>
+                  <select
+                    id="language"
+                    className="form-control"
+                    value={selectedLanguage}
+                    onChange={handleLanguageChange}
+                    disabled={isMatching}
+                  >
+                    <option value="c">C</option>
+                    <option value="cpp">C++</option>
+                    <option value="csharp">C#</option>
+                    <option value="go">Go</option>
+                    <option value="java">Java</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="typescript">TypeScript</option>
+                  </select>
                 </div>
+              </div>
             </div>
           </div>
-        </div>
-        {/* End of right section */}
 
 
-      {/* Bottom section */}
-      <div className="row mt-3">
-        {/* Match button divider */}
-        <div className="col-md-12 text-right">
-          <button
-            id="matchButton"
-            className="btn custom-match-button"
-            onClick={handleMatchClick}
-            disabled={isMatchFound}
-          >
-            {isMatching ? 'Cancel Match' : 'Match'}
-          </button>
-          <div className="d-flex align-items-center justify-content-end">
-            <div
-              id="spinner"
-              className={`spinner-border spinner-border-sm text-primary ml-2 ${isMatching ? '' : 'd-none'}`}
-              role="status"
+          <div className="col-md-12 text-right mt-5">
+            <button
+              id="matchButton"
+              className="btn custom-match-button mt-3"
+              onClick={handleMatchClick}
+              disabled={isMatchFound}
             >
-              <span className="sr-only">Loading...</span>
+              {isMatching ? 'Cancel Match' : 'Match'}
+            </button>
+            <div className="d-flex align-items-center justify-content-end">
+              <div
+                id="spinner"
+                className={`spinner-border spinner-border-sm text-primary ml-2 ${isMatching ? '' : 'd-none'}`}
+                role="status"
+              >
+                <span className="sr-only">Loading...</span>
+              </div>
+              &nbsp;
+              <div id="matchStatus" className="text-right">{matchStatus}</div>
             </div>
-            <div id="matchStatus" className="text-right">{matchStatus}</div>
           </div>
+
+
+
         </div>
       </div>
+      {/* End of right section */}
     </div>
   );
 };

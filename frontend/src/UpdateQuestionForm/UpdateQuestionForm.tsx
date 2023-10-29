@@ -182,7 +182,14 @@ export default function UpdateForm() {
   // Showcases the FE visible components
   return (
     <form onSubmit={(e) => onUpdate(e)}>
-      <Container maxWidth="lg" style={{ margin: "40px auto 0 auto", backgroundColor: "#E6E6E6", borderRadius: "20px", maxWidth: "80%", padding: "20px" }}>
+      <div
+        className='mb-3'
+        style={{
+          margin: '10px',
+          backgroundColor: '#E6E6E6',
+          borderRadius: '20px',
+          padding: '20px',
+        }}>
         <Paper style={{ display: "grid", gridRowGap: "20px", padding: "20px", borderRadius: "15px" }}>
           <Typography variant="h6" style={{ fontWeight: "bold" }}>
             Update Question
@@ -194,22 +201,22 @@ export default function UpdateForm() {
             </Alert>
           )}
           <FormInputText name="title" control={control} label="Question Title" options={[]} formSubmitted={formSubmitted} />
-          <FormMultipleInputDropdown name="topics" control={control} label="Topics" options={dropdownTopicsOptions} formSubmitted={formSubmitted} defaultValue={question.topics}/>
-          <FormInputDropdown name="difficulty" control={control} label="Complexity" options={dropdownComplexityOptions} formSubmitted={formSubmitted}  defaultValue={question.difficulty}
-/>
-            <FormInputTextEditor onChange={editorHandleChange} content={question.content} formSubmitted={formSubmitted} />
+          <FormMultipleInputDropdown name="topics" control={control} label="Topics" options={dropdownTopicsOptions} formSubmitted={formSubmitted} defaultValue={question.topics} />
+          <FormInputDropdown name="difficulty" control={control} label="Complexity" options={dropdownComplexityOptions} formSubmitted={formSubmitted} defaultValue={question.difficulty}
+          />
+          <FormInputTextEditor onChange={editorHandleChange} content={question.content} formSubmitted={formSubmitted} />
           <div style={{ justifyContent: "space-between", margin: "0 auto" }}>
-            <Button type="submit" variant="contained" style={{ fontSize: "16px", backgroundColor: "#6C63FF", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto", marginRight: "30px" }}>
-              Update
-            </Button>
-            <Button onClick={handleBack} variant="contained" style={{ fontSize: "16px", backgroundColor: "gray", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto" }}>
+            <Button onClick={handleBack} variant="contained" style={{ fontSize: "16px", backgroundColor: "gray", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto", marginRight: "30px"  }}>
               Back
+            </Button>
+            <Button type="submit" variant="contained" style={{ fontSize: "16px", backgroundColor: "#6C63FF", borderRadius: "15px", color: "white", textTransform: "none", margin: "0 auto" }}>
+              Update
             </Button>
           </div>
 
         </Paper>
-        </Container>
-    </form>
+      </div>
+    </form >
   );
 }
 

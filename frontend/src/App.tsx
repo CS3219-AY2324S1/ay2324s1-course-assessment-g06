@@ -39,17 +39,14 @@ const App: React.FC = () => {
   const location = useLocation(); // Get the current location
   const isCodeSpaceRoute = location.pathname.startsWith("/match/");
 
-  // State variable to control the menu
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false); // State variable for dropdown menu
 
-  // Function to toggle the menu
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
   };
 
-  // Close the menu when a navigation link is clicked
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const closeDropdown = () => {
+    setDropdownOpen(false);
   };
 
   function generateActiveStyle(path: string) {
@@ -92,6 +89,7 @@ const App: React.FC = () => {
           {/* Hamburger icon button */}
           <button
             className="navbar-toggler"
+            onClick={() => setDropdownOpen(!isDropdownOpen)}
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -105,14 +103,17 @@ const App: React.FC = () => {
           {currentUser ? (
             <>
               <div
-                className="collapse navbar-collapse"
+                className={`navbar-collapse collapse ${
+                  isDropdownOpen ? "show" : ""
+                }`}
                 id="navbarSupportedContent"
               >
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
                     <Link
-                      to={"/home"}
+                      to={"/"}
                       className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
                       style={generateActiveStyle("/")}
                     >
                       Home
@@ -122,6 +123,7 @@ const App: React.FC = () => {
                     <Link
                       to={"/matching"}
                       className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
                       style={generateActiveStyle("/matching")}
                     >
                       Matching
@@ -131,6 +133,7 @@ const App: React.FC = () => {
                     <Link
                       to={"/questions"}
                       className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
                       style={generateActiveStyle("/questions")}
                     >
                       Questions
@@ -140,6 +143,7 @@ const App: React.FC = () => {
                     <Link
                       to={"/profile"}
                       className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
                       style={generateActiveStyle("/profile")}
                     >
                       Profile
@@ -156,7 +160,9 @@ const App: React.FC = () => {
           ) : (
             <>
               <div
-                className="collapse navbar-collapse"
+                className={`navbar-collapse collapse ${
+                  isDropdownOpen ? "show" : ""
+                }`}
                 id="navbarSupportedContent"
               >
                 <ul className="navbar-nav ml-auto">
@@ -164,6 +170,7 @@ const App: React.FC = () => {
                     <Link
                       to={"/login"}
                       className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
                       style={generateActiveStyle("/login")}
                     >
                       Login
@@ -173,6 +180,7 @@ const App: React.FC = () => {
                     <Link
                       to={"/register"}
                       className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
                       style={generateActiveStyle("/register")}
                     >
                       Sign Up

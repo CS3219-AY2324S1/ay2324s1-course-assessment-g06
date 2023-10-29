@@ -9,6 +9,8 @@ const { v4: uuidv4 } = require('uuid');
 const rooms = new Map();
 // To keep track of users connected to socket
 const users = new Map();
+// Use env file
+require("dotenv").config({ path: "../.env" });
 
 const app = express();
 const server = http.createServer(app);
@@ -55,9 +57,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+// Define after app.use
+require('./routes/code.routes')(app);
 
 console.log("Server is starting...")
 
@@ -266,36 +267,36 @@ io.on('connection', async (socket) => {
     }
   });
 
-    // Request submission from other user
-    socket.on('requestSubmitSession', (roomId, questionId, questionDifficulty, otherUserQuit) => {
-      console.log("A user clicked on submit session")
-      console.log("is user still with a peer? ", !otherUserQuit);
-      
-      // Check if the user is in the specified room
-      if (socket.rooms.has(roomId)) {
-        // Emit an event to inform the other user that the session is being submitted
-        // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
+  // Request submission from other user
+  socket.on('requestSubmitSession', (roomId, questionId, questionDifficulty, otherUserQuit) => {
+    console.log("A user clicked on submit session")
+    console.log("is user still with a peer? ", !otherUserQuit);
+    
+    // Check if the user is in the specified room
+    if (socket.rooms.has(roomId)) {
+      // Emit an event to inform the other user that the session is being submitted
+      // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
 
-        // If user is alone in the room (other user has quit)
-        if (otherUserQuit) {
-          socket.to(roomId).emit('submitSession', questionId, questionDifficulty);
-        } else {
-          // Other user is still in the room, to request submission
-          socket.to(roomId).emit('requestSubmitSession', questionId, questionDifficulty);
-        }
+      // If user is alone in the room (other user has quit)
+      if (otherUserQuit) {
+        socket.to(roomId).emit('submitSession');
+      } else {
+        // Other user is still in the room, to request submission
+        socket.to(roomId).emit('requestSubmitSession', questionId, questionDifficulty);
       }
-    });
+    }
+  });
 
-    // Reject submission request from other user
-    socket.on('rejectSubmitRequest', (roomId, questionId, questionDifficulty) => {
-      console.log("Other user has rejected the submit request")
-      
-      // Check if the user is in the specified room
-      if (socket.rooms.has(roomId)) {
-        // Emit an event to inform the other user that the submission request is rejected
-        socket.to(roomId).emit('rejectSubmitRequest', questionId, questionDifficulty);
-      }
-    });
+  // Reject submission request from other user
+  socket.on('rejectSubmitRequest', (roomId, questionId, questionDifficulty) => {
+    console.log("Other user has rejected the submit request")
+    
+    // Check if the user is in the specified room
+    if (socket.rooms.has(roomId)) {
+      // Emit an event to inform the other user that the submission request is rejected
+      socket.to(roomId).emit('rejectSubmitRequest', questionId, questionDifficulty);
+    }
+  });
 
   // Submit data to sql history
   socket.on('submitSession', (roomId, questionId, questionDifficulty) => {
@@ -313,8 +314,14 @@ io.on('connection', async (socket) => {
 
   // Submit data to sql history
   socket.on('submitIndividualSession', (roomId, questionId, questionDifficulty) => {
-    console.log("A user clicked on submit session on timer end")
+    console.log("A user clicked on submit session on timer end");
     socket.leave(roomId);
+  });
+
+  // Other user ran code
+  socket.on('codeRun',( roomId, ranCodeParams) => {
+    console.log("A user clicked on run code");
+    socket.to(roomId).emit('codeRun', ranCodeParams);
   });
 });
 

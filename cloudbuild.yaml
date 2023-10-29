@@ -1,0 +1,103 @@
+steps:
+# Build the user-service
+- name: 'gcr.io/cloud-builders/docker'
+# USR CLOUD RUN NAME can be replaced as image name
+# right now pointing to docker file (change in the future)
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA', 
+  '-f', './user-service/Dockerfile.prod',
+  './user-service']
+
+# Push the user-service image to Container Registry
+# USR CLOUD RUN NAME can be changed to image name
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA']
+
+# Deploy the user-service to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  # the first service name is impt to replace the prev service :D
+  args: ['run', 'deploy', '${_USR_CLOUD_RUN_NAME}', 
+  '--image', 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA', 
+  '--region', '${_REGION}',
+  '--port', '${_USER_PORT}',
+  # Fack no .env file here
+  # '--env-vars-file', './.env',
+  # future iteration maybe i set it here see how
+  # '--set-env-vars=',
+  # ''
+  # kms
+  "--allow-unauthenticated"
+  ]
+  # if need be in the future
+  # env:
+
+# Build the question-service
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA', 
+  '-f', './question-service/Dockerfile.prod',
+  './question-service']
+
+# Push the question-service image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA']
+
+# Deploy question-service
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', '${_QN_CLOUD_RUN_NAME}', 
+  '--image', 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA', 
+  '--region', '${_REGION}',
+  '--port', '${_QN_PORT}',
+  "--allow-unauthenticated"
+  ]
+
+# Build matching-service
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/matching-service:$COMMIT_SHA', 
+  '-f', './matching-service/Dockerfile.prod',
+  './matching-service']
+
+# Push the matching-service image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/matching-service:$COMMIT_SHA']
+
+# Deploy matching-service
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', '${_MS_CLOUD_RUN_NAME}', 
+  '--image', 'gcr.io/$PROJECT_ID/matching-service:$COMMIT_SHA', 
+  '--region', '${_REGION}',
+  '--port', '${_MS_PORT}',
+  "--allow-unauthenticated"
+  ]
+
+# Build the frontend service
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA', 
+  # specifiy which dockerfile to use
+  '-f', './frontend/Dockerfile.prod',
+  './frontend'
+  ]
+
+# Push the frontend-service image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA']
+
+# Deploy frontend-service
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', '${_FE_CLOUD_RUN_NAME}', 
+  '--image', 'gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA', 
+  '--region', '${_REGION}',
+  '--port', '${_FE_PORT}',
+  "--allow-unauthenticated"
+  ]
+
+# testing
+images:
+- 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA'
+- 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA'
+- 'gcr.io/$PROJECT_ID/matching-service:$COMMIT_SHA'
+- 'gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA'
+# User service name can be changed to image name instead
+
