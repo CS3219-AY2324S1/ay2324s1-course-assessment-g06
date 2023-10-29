@@ -2,8 +2,7 @@ require("dotenv").config({ path: "../.env" });
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const socketIo = require('socket.io');
-const socketioJwt = require('socketio-jwt');
+
 const { v4: uuidv4 } = require('uuid');
 // To keep track of active rooms
 const rooms = new Map();
@@ -14,6 +13,9 @@ require("dotenv").config({ path: "../.env" });
 
 const app = express();
 const server = http.createServer(app);
+
+const socketIo = require('socket.io')(server, { wsEngine: 'ws' });
+const socketioJwt = require('socketio-jwt');
 
 const QUESTION_HOST = process.env.QNS_SVC
   ? process.env.QNS_SVC
