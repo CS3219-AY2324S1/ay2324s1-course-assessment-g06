@@ -195,7 +195,14 @@ const App: React.FC = () => {
 
       <div className={`${isCodeSpaceRoute ? "" : " container mt-3"}`}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <Analytics />
+              </Protected>
+            }
+          />
           <Route
             path="/login"
             element={
