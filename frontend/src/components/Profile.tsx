@@ -227,26 +227,51 @@ const Profile: React.FC = () => {
     <div className="container">
       <div
         className="jumbotron"
-        style={{ borderRadius: "10px", backgroundColor: "#E6E6E6" }}
+        style={{ borderRadius: "10px", backgroundColor: "#E6E6E6", paddingLeft: "20px", paddingRight: "20px" }}
       >
         <form onSubmit={updateFormik.handleSubmit}>
           <div className="container">
             <div className="row justify-content-center align-items-center">
-              <div className="col-12 col-sm-4">
+              <div className="col-12 col-md-4">
                 <div className="d-flex align-items-center justify-content-center">
-                  <img src={profilepic} alt="picture" className="img-fluid" />
+                  <img src={profilepic} alt="picture" className="img-fluid my-2" />
+                </div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  {!isAdmin && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleDeleteModal();
+                      }}
+                      style={{
+                        position: "relative",
+                        border: "none",
+                        textDecoration: "underline",
+                        color: "#9BA4B5",
+                        background: "none",
+                      }}
+                    >
+                      delete account
+                    </button>)}
                 </div>
               </div>
-              <div className="col-12 col-sm-7">
+              <div className="col-12 col-md-7">
                 <div className="row justify-content-center align-items-center">
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      marginTop: "20px",
+                      marginBottom: "20px",
+                      marginTop: "40px",
+
                     }}
                   >
-                    <label htmlFor="username" style={{ position: "relative" }}>
+                    <label htmlFor="username" style={{ position: "relative", marginRight: "-5px", fontSize: "18px" }}>
                       Username
                     </label>
                     <TextField
@@ -288,14 +313,15 @@ const Profile: React.FC = () => {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      marginTop: "20px",
+                      marginBottom: "20px",
                     }}
                   >
                     <label
                       htmlFor="email"
                       style={{
                         position: "relative",
-                        paddingRight: "35px",
+                        paddingRight: "34px",
+                        fontSize: '18px'
                       }}
                     >
                       Email
@@ -340,12 +366,12 @@ const Profile: React.FC = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        marginTop: "20px",
+                        marginBottom: "20px",
                       }}
                     >
                       <label
                         htmlFor="password"
-                        style={{ position: "relative", paddingRight: "5px" }}
+                        style={{ position: "relative", paddingRight: "-2px", fontSize: '18px' }}
                       >
                         Password
                       </label>
@@ -374,14 +400,15 @@ const Profile: React.FC = () => {
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          marginTop: "20px",
+                          marginBottom: "20px",
                         }}
                       >
                         <label
                           htmlFor="currentPassword"
                           style={{
                             position: "relative",
-                            marginRight: "-54px",
+                            marginRight: "-66px",
+                            fontSize: "18px"
                           }}
                         >
                           Current Password
@@ -425,14 +452,15 @@ const Profile: React.FC = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        marginTop: "20px",
+                        marginBottom: "20px",
                       }}
                     >
                       <label
                         htmlFor="newPassword"
                         style={{
                           position: "relative",
-                          marginRight: "-31px",
+                          marginRight: "-41px",
+                          fontSize: "18px",
                         }}
                       >
                         New Password
@@ -472,14 +500,15 @@ const Profile: React.FC = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        marginTop: "20px",
+                        marginBottom: "30px",
                       }}
                     >
                       <label
                         htmlFor="confirmPassword"
                         style={{
                           position: "relative",
-                          marginRight: "-55px",
+                          marginRight: "-70px",
+                          fontSize: "18px"
                         }}
                       >
                         Confirm Password
@@ -517,44 +546,16 @@ const Profile: React.FC = () => {
                     </div>
                   </>
                 )}
-              </div>
-            </div>
 
-            {/* <Button onClick={toggleUpdateUserModal}>Cancel</Button> */}
 
-            <div className="row justify-content-center align-items-center">
-              <div className="col-12 col-sm-4 d-flex justify-content-center align-items-center">
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    marginTop: "20px",
-                  }}
-                >
-                {!isAdmin && (
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleDeleteModal();
-                    }}
-                    style={{
-                      position: "relative",
-                      border: "none",
-                      textDecoration: "underline",
-                      color: "#9BA4B5",
-                      background: "none",
-                    }}
-                  >
-                    delete account
-                  </button>)}
-                </div>
-              </div>
-              <div className="col-12 col-sm-7 justify-content-center align-items-center">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginTop: "20px",
+                    marginBottom: "20px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                    marginTop: "40px"
                   }}
                 >
                   {showBackButton && (
@@ -585,6 +586,7 @@ const Profile: React.FC = () => {
                       if (!textFieldsEnabled && !passwordButtonClicked) {
                         setTextFieldsEnabled(true);
                       } else {
+                        setTextFieldsEnabled(false);
                         if (!passwordButtonClicked) {
                           updateFormik.handleSubmit(); // Call the Update Profile method
                         } else {
