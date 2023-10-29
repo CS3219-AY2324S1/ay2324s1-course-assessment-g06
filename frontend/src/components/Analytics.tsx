@@ -10,8 +10,6 @@ import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useNavigate } from "react-router-dom";
 
-const USER_HOST =
-  process.env.REACT_APP_USR_SVC_AUTH || "http://localhost:3003/api/auth";
 const USER_HISTORY =
   process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/user";
 const QUESTION_HOST =
@@ -68,7 +66,6 @@ const Analytics: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user") || "{}");
     // fetch user history
     axios
       .get(USER_HISTORY + "/get", { headers: authHeader() })
@@ -177,207 +174,226 @@ const Analytics: React.FC = () => {
   });
   return (
     <div className="container">
-      <Card
+      {/* <Card
         sx={{
           display: "flex",
           borderRadius: "15px",
           backgroundColor: "#E6E6E6",
           boxShadow: "none",
         }}
+      > */}
+      {/* <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          width: "100%",
+          backgroundColor: "#E6E6E6",
+        }}
+      > */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "#E6E6E6",
+          borderRadius: "15px",
+          boxShadow: "none",
+          paddingBottom: "2%",
+        }}
       >
-        <div
-          style={{
+        <CardContent>
+          <header
+            style={{
+              letterSpacing: "1px",
+              fontSize: "110%",
+              fontWeight: "bold",
+              paddingLeft: "3%",
+              paddingTop: "2%",
+            }}
+          >
+            Solved Problems
+          </header>
+        </CardContent>
+
+        <Box
+          sx={{
             display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
-            width: "100%",
+            flexDirection: "row",
+            width: "80%",
+            marginLeft: "15%",
           }}
         >
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <CardContent>
-              <header
-                style={{
-                  letterSpacing: "1px",
-                  fontSize: "110%",
-                  fontWeight: "bold",
-                  paddingTop: "10px",
-                }}
+          <CardContent>
+            <div style={{ width: "90%", height: "90%" }}>
+              <CircularProgressbarWithChildren
+                value={userDetails.Total}
+                maxValue={questionDetails.Total}
+                strokeWidth={5}
+                background
+                styles={buildStyles({
+                  trailColor: "transparent",
+                  pathColor: "#6C63FF",
+                  textColor: "black",
+                  backgroundColor: "white",
+                  textSize: "15px",
+                })}
               >
-                Solved Problems
-              </header>
-            </CardContent>
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", width: "80%" }}>
-            <CardContent style={{ marginTop: "5%" }}>
-              <div style={{ width: "78%", height: "78%" }}>
-                <CircularProgressbarWithChildren
-                  value={userDetails.Total}
-                  maxValue={questionDetails.Total}
-                  strokeWidth={5}
-                  background
-                  styles={buildStyles({
-                    trailColor: "transparent",
-                    pathColor: "#6C63FF",
-                    textColor: "black",
-                    backgroundColor: "white",
-                    textSize: "15px",
-                  })}
-                >
-                  <div style={{ fontSize: "170%", fontWeight: "bold" }}>
-                    {userDetails.Total}
-                  </div>
-                  <div style={{ fontSize: "90%" }}>solved</div>
-                </CircularProgressbarWithChildren>
-              </div>
-            </CardContent>
-            <CardContent style={{ width: "100%", marginTop: "5%" }}>
+                <div style={{ fontSize: "170%", fontWeight: "bold" }}>
+                  {userDetails.Total}
+                </div>
+                <div style={{ fontSize: "90%" }}>solved</div>
+              </CircularProgressbarWithChildren>
+            </div>
+          </CardContent>
+          <CardContent style={{ width: "100%", paddingTop: "3%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                paddingBottom: "10px",
+              }}
+            >
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
-                  paddingBottom: "10px",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  fontSize: "14px",
+                  marginTop: "2px",
+                  paddingBottom: "3px",
                 }}
               >
-                <div
+                <span
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
                     fontSize: "14px",
                     marginTop: "2px",
                     paddingBottom: "3px",
                   }}
                 >
-                  <span
-                    style={{
-                      fontSize: "14px",
-                      marginTop: "2px",
-                      paddingBottom: "3px",
-                    }}
-                  >
-                    Easy
+                  Easy
+                </span>
+                <span>
+                  <span>
+                    <strong>{userDetails.Easy}</strong>
                   </span>
+                  <span>/</span>
+                  <span>{questionDetails.Easy}</span>
+                </span>
+              </div>
+              <LinearProgress
+                sx={{
+                  backgroundColor: "#D5E8D2",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#BCDEB6",
+                  },
+                  height: "9px",
+                  borderRadius: "20px",
+                }}
+                variant="determinate"
+                value={100 * (userDetails.Easy / (questionDetails.Easy || 1))}
+                className="MuiLinearProgress-colorPrimary"
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                paddingBottom: "10px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  fontSize: "14px",
+                  marginTop: "2px",
+                  paddingBottom: "3px",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "14px",
+                    marginTop: "2px",
+                    paddingBottom: "3px",
+                  }}
+                >
+                  Medium
+                </span>
+                <span>
+                  <span>
+                    <strong>{userDetails.Medium}</strong>
+                  </span>
+                  <span>/</span>
+                  <span>{questionDetails.Medium}</span>
+                </span>
+              </div>
+
+              <LinearProgress
+                sx={{
+                  backgroundColor: "#F9E7B8",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#F2CE6F",
+                  },
+                  height: "9px",
+                  borderRadius: "20px",
+                }}
+                variant="determinate"
+                value={
+                  100 * (userDetails.Medium / (questionDetails.Medium || 1))
+                }
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  fontSize: "14px",
+                  marginTop: "2px",
+                  paddingBottom: "3px",
+                }}
+              >
+                <span>Hard</span>
+                <span>
                   <span>
                     <span>
-                      <strong>{userDetails.Easy}</strong>
+                      <strong>{userDetails.Hard}</strong>
                     </span>
                     <span>/</span>
-                    <span>{questionDetails.Easy}</span>
+                    <span>{questionDetails.Hard}</span>
                   </span>
-                </div>
-                <LinearProgress
-                  sx={{
-                    backgroundColor: "#D5E8D2",
-                    "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#BCDEB6",
-                    },
-                    height: "9px",
-                    borderRadius: "20px",
-                  }}
-                  variant="determinate"
-                  value={100 * (userDetails.Easy / (questionDetails.Easy || 1))}
-                  className="MuiLinearProgress-colorPrimary"
-                />
+                </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
-                  paddingBottom: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    fontSize: "14px",
-                    marginTop: "2px",
-                    paddingBottom: "3px",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "14px",
-                      marginTop: "2px",
-                      paddingBottom: "3px",
-                    }}
-                  >
-                    Medium
-                  </span>
-                  <span>
-                    <span>
-                      <strong>{userDetails.Medium}</strong>
-                    </span>
-                    <span>/</span>
-                    <span>{questionDetails.Medium}</span>
-                  </span>
-                </div>
 
-                <LinearProgress
-                  sx={{
-                    backgroundColor: "#F9E7B8",
-                    "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#F2CE6F",
-                    },
-                    height: "9px",
-                    borderRadius: "20px",
-                  }}
-                  variant="determinate"
-                  value={
-                    100 * (userDetails.Medium / (questionDetails.Medium || 1))
-                  }
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "100%",
+              <LinearProgress
+                sx={{
+                  backgroundColor: "#F9A2A2",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#F14949",
+                  },
+                  height: "9px",
+                  borderRadius: "20px",
                 }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    fontSize: "14px",
-                    marginTop: "2px",
-                    paddingBottom: "3px",
-                  }}
-                >
-                  <span>Hard</span>
-                  <span>
-                    <span>
-                      <span>
-                        <strong>{userDetails.Hard}</strong>
-                      </span>
-                      <span>/</span>
-                      <span>{questionDetails.Hard}</span>
-                    </span>
-                  </span>
-                </div>
-
-                <LinearProgress
-                  sx={{
-                    backgroundColor: "#F9A2A2",
-                    "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#F14949",
-                    },
-                    height: "9px",
-                    borderRadius: "20px",
-                  }}
-                  variant="determinate"
-                  value={100 * (userDetails.Hard / (questionDetails.Hard || 1))}
-                />
-              </div>
-            </CardContent>
-          </Box>
-        </div>
-      </Card>
-      <Box sx={{}}>
+                variant="determinate"
+                value={100 * (userDetails.Hard / (questionDetails.Hard || 1))}
+              />
+            </div>
+          </CardContent>
+        </Box>
+      </Box>
+      {/* </div> */}
+      {/* </Card> */}
+      <Box>
         <Card
           sx={{
             display: "flex",
