@@ -38,18 +38,18 @@ const App: React.FC = () => {
   const location = useLocation(); // Get the current location
   const isCodeSpaceRoute = location.pathname.startsWith('/match/');
 
-  // State variable to control the menu
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Function to toggle the menu
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const [isDropdownOpen, setDropdownOpen] = useState(false); // State variable for dropdown menu
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
   };
 
-  // Close the menu when a navigation link is clicked
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const closeDropdown = () => {
+    setDropdownOpen(false);
   };
+
+
 
   function generateActiveStyle(path: string) {
     return {
@@ -80,31 +80,31 @@ const App: React.FC = () => {
           </Link>
 
           {/* Hamburger icon button */}
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button className="navbar-toggler" onClick={() => setDropdownOpen(!isDropdownOpen)} type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
             <span className="navbar-toggler-icon"></span>
           </button>
 
           {currentUser ? (
             <>
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <div className={`navbar-collapse collapse ${isDropdownOpen ? "show" : ""}`} id="navbarSupportedContent">
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
-                    <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
+                    <Link to={"/"} className="nav-link" onClick={() => setDropdownOpen(false)} style={generateActiveStyle("/")}>
                       Home
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
+                    <Link to={"/matching"} className="nav-link" onClick={() => setDropdownOpen(false)} style={generateActiveStyle("/matching")}>
                       Matching
                     </Link>
                   </li>
                   <li className="nav-item ">
-                    <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
+                    <Link to={"/questions"} className="nav-link" onClick={() => setDropdownOpen(false)} style={generateActiveStyle("/questions")}>
                       Questions
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
+                    <Link to={"/profile"} className="nav-link" onClick={() => setDropdownOpen(false)} style={generateActiveStyle("/profile")}>
                       Profile
                     </Link>
                   </li>
@@ -118,15 +118,15 @@ const App: React.FC = () => {
             </>
           ) : (
             <>
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <div className={`navbar-collapse collapse ${isDropdownOpen ? "show" : ""}`} id="navbarSupportedContent">
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
-                    <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
+                    <Link to={"/login"} className="nav-link" onClick={() => setDropdownOpen(false)} style={generateActiveStyle("/login")}>
                       Login
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
+                    <Link to={"/register"} className="nav-link" onClick={() => setDropdownOpen(false)} style={generateActiveStyle("/register")}>
                       Sign Up
                     </Link>
                   </li>
