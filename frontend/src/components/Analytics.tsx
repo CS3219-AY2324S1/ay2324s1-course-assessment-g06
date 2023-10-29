@@ -174,23 +174,6 @@ const Analytics: React.FC = () => {
   });
   return (
     <div className="container">
-      {/* <Card
-        sx={{
-          display: "flex",
-          borderRadius: "15px",
-          backgroundColor: "#E6E6E6",
-          boxShadow: "none",
-        }}
-      > */}
-      {/* <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignContent: "center",
-          width: "100%",
-          backgroundColor: "#E6E6E6",
-        }}
-      > */}
       <Box
         sx={{
           display: "flex",
@@ -391,8 +374,6 @@ const Analytics: React.FC = () => {
           </CardContent>
         </Box>
       </Box>
-      {/* </div> */}
-      {/* </Card> */}
       <Box>
         <Card
           sx={{
