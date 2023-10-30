@@ -80,10 +80,20 @@ export default function Question() {
           "x-access-token": currentUser.accessToken,
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json(); // Continue processing if it's a successful response
+          } else {
+            console.error("Error fetching data:", response.statusText);
+            setIsLoading(false);
+            navigate("/404");
+          }
+        })
         .then((responseData) => {
-          setQuestion(responseData);
-          setIsLoading(false);
+          if (responseData) {
+            setQuestion(responseData);
+            setIsLoading(false);
+          }
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -94,6 +104,7 @@ export default function Question() {
 
     fetchDataWithDelay();
   }, [id, currentUser.accessToken]);
+
 
   function wrapPreTags(content: string) {
     const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
