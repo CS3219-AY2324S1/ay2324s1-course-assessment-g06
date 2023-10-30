@@ -11,7 +11,7 @@ import authHeader from "../services/auth-header";
 import { useNavigate } from "react-router-dom";
 
 const USER_HISTORY =
-  process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/user";
+  process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/hist";
 const QUESTION_HOST =
   process.env.REACT_APP_QNS_SVC || "http://localhost:3000/api/questions";
 
