@@ -120,7 +120,7 @@ export default function Question() {
     closeDeleteDialog();
 
     fetch(QUESTION_HOST + `/${id}`, {
-      method: "DELETE",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": currentUser.accessToken,

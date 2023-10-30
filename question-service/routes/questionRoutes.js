@@ -36,6 +36,6 @@ router.put("/:id", verifyUserAdmin, questionController.updateQuestion);
 router.get("/:id", verifyUserToken, questionController.getQuestionById);
 
 // Soft delete a question by frontendQuestionId
-router.delete("/:id", verifyUserAdmin, questionController.softDeleteQuestion);
+router.patch("/:id", verifyUserAdmin, questionController.softDeleteQuestion);
 
 module.exports = router;

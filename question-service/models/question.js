@@ -7,6 +7,7 @@ const questionSchema = new mongoose.Schema({
   content: String,
   category: String,
   topics: String,
+  isDeleted: { type: Boolean, default: false },
 });
 
 const Question = mongoose.model("Question", questionSchema);
