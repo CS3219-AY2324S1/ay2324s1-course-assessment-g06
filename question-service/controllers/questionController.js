@@ -138,6 +138,26 @@ module.exports = {
         res.status(500).json({ error: 'Error updating question' });
       });
   },
+  // Controller function to soft delete a question by ID
+  // Usage: Patch request to http://localhost:3000/api/questions/{id}
+  softDeleteQuestion: (req, res) => {
+    const { id } = req.params; // Get the question ID from the route parameters
+
+    Question.findByIdAndUpdate(
+      id,
+      { $set: { isDeleted: true } },
+      { new: true } // Set this option to return the updated document
+    )
+      .then((question) => {
+        if (!question) {
+          return res.status(404).json({ error: 'Question not found' });
+        }
+        res.json({ message: 'Question soft deleted successfully' });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: 'Error soft deleting question' });
+      });
+  },
   // Controller function to delete a question by ID
   // Usage: Delete request to http://localhost:3000/api/questions/{id}
   deleteQuestion: (req, res) => {
