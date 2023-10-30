@@ -462,7 +462,7 @@ const Analytics: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 border: "1px solid white",
-                borderRadius: "5px",
+                borderRadius: "20px",
                 backgroundColor: "white",
                 width: "100%",
                 marginBottom: "15px",
@@ -476,13 +476,10 @@ const Analytics: React.FC = () => {
               </span>
               <span
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginRight: "3%",
-                  padding: "0.7%",
-                  width: "7%",
-                  borderRadius: "20px",
+                  fontWeight: "bold",
+                  borderRadius: "50px",
+                  padding: "5px 15px",
+                  marginRight: "15px",
                   backgroundColor:
                     item.difficulty === "Easy"
                       ? "#BCDEB6" // Background color for "Easy" difficulty
