@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 import BasicTable from "./Table/Table";
 import Question from "./Question/Question";
 import Matching from "./components/Matching/Matching";
@@ -8,9 +8,9 @@ import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
 import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import $ from 'jquery'; // Import jQuery
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap JavaScript (with Popper.js included)
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
+import $ from "jquery"; // Import jQuery
+import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Import Bootstrap JavaScript (with Popper.js included)
 import * as AuthService from "./services/auth.service";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -25,6 +25,7 @@ import Analytics from "./components/Analytics";
 
 import "./App.css";
 import "./Table/Table";
+import UserAttempt from "./UserAttempt/UserAttempt";
 
 const App: React.FC = () => {
   console.log("QNS_SVC: ", process.env.REACT_APP_QNS_SVC);
@@ -36,24 +37,24 @@ const App: React.FC = () => {
     localStorage.getItem("user") ? true : false
   );
   const location = useLocation(); // Get the current location
-  const isCodeSpaceRoute = location.pathname.startsWith('/match/');
+  const isCodeSpaceRoute = location.pathname.startsWith("/match/");
 
-  // State variable to control the menu
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false); // State variable for dropdown menu
 
-  // Function to toggle the menu
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
   };
 
-  // Close the menu when a navigation link is clicked
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const closeDropdown = () => {
+    setDropdownOpen(false);
   };
 
   function generateActiveStyle(path: string) {
     return {
-      borderBottom: location.pathname === path ? "5px solid #6C63FF" : "5px solid transparent",
+      borderBottom:
+        location.pathname === path
+          ? "5px solid #6C63FF"
+          : "5px solid transparent",
     };
   }
 
@@ -76,35 +77,75 @@ const App: React.FC = () => {
         <nav className="navbar navbar-default navbar-expand-lg navbar-light bg-white p-2">
           {/* Logo and navigation links */}
           <Link to={"/"} className="navbar-brand">
-            <img src={logo} alt="Logo" height="50" width="160" className="logo-img" />
+            <img
+              src={logo}
+              alt="Logo"
+              height="50"
+              width="160"
+              className="logo-img"
+            />
           </Link>
 
           {/* Hamburger icon button */}
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button
+            className="navbar-toggler"
+            onClick={() => setDropdownOpen(!isDropdownOpen)}
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
 
           {currentUser ? (
             <>
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <div
+                className={`navbar-collapse collapse ${
+                  isDropdownOpen ? "show" : ""
+                }`}
+                id="navbarSupportedContent"
+              >
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
-                    <Link to={"/"} className="nav-link" style={generateActiveStyle("/")}>
+                    <Link
+                      to={"/"}
+                      className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
+                      style={generateActiveStyle("/")}
+                    >
                       Home
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/matching"} className="nav-link" style={generateActiveStyle("/matching")}>
+                    <Link
+                      to={"/matching"}
+                      className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
+                      style={generateActiveStyle("/matching")}
+                    >
                       Matching
                     </Link>
                   </li>
                   <li className="nav-item ">
-                    <Link to={"/questions"} className="nav-link" style={generateActiveStyle("/questions")}>
+                    <Link
+                      to={"/questions"}
+                      className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
+                      style={generateActiveStyle("/questions")}
+                    >
                       Questions
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/profile"} className="nav-link" style={generateActiveStyle("/profile")}>
+                    <Link
+                      to={"/profile"}
+                      className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
+                      style={generateActiveStyle("/profile")}
+                    >
                       Profile
                     </Link>
                   </li>
@@ -118,15 +159,30 @@ const App: React.FC = () => {
             </>
           ) : (
             <>
-              <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <div
+                className={`navbar-collapse collapse ${
+                  isDropdownOpen ? "show" : ""
+                }`}
+                id="navbarSupportedContent"
+              >
                 <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
-                    <Link to={"/login"} className="nav-link" style={generateActiveStyle("/login")}>
+                    <Link
+                      to={"/login"}
+                      className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
+                      style={generateActiveStyle("/login")}
+                    >
                       Login
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/register"} className="nav-link" style={generateActiveStyle("/register")}>
+                    <Link
+                      to={"/register"}
+                      className="nav-link"
+                      onClick={() => setDropdownOpen(false)}
+                      style={generateActiveStyle("/register")}
+                    >
                       Sign Up
                     </Link>
                   </li>
@@ -137,9 +193,9 @@ const App: React.FC = () => {
         </nav>
       )}
 
-      <div className={`${isCodeSpaceRoute ? '' : ' container mt-3'}`}>
+      <div className={`${isCodeSpaceRoute ? "" : " container mt-3"}`}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Navigate to="/home" />} />
           <Route
             path="/login"
             element={
@@ -189,7 +245,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/analytics"
+            path="/home"
             element={
               <Protected isLoggedIn={currentUser}>
                 <Analytics />
@@ -212,9 +268,17 @@ const App: React.FC = () => {
               </Protected>
             }
           />
+          <Route
+            path="/home/:id"
+            element={
+              <Protected isLoggedIn={currentUser}>
+                <UserAttempt />
+              </Protected>
+            }
+          />
+
           <Route path="/questions/add-question" element={<AddQuestionForm />} />
           <Route path="*" element={<PageNotFound />} />
-
         </Routes>
       </div>
     </div>

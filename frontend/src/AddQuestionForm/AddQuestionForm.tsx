@@ -1,8 +1,8 @@
 // Import MUI components
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form";
-import { Button , Paper, Typography, Container } from "@mui/material";
+import { Button, Paper, Typography, Container } from "@mui/material";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
@@ -77,7 +77,7 @@ export default function QuestionForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const QUESTION_HOST= process.env.REACT_APP_QNS_SVC || 'http://localhost:3000/api/questions';
+  const QUESTION_HOST = process.env.REACT_APP_QNS_SVC || 'http://localhost:3000/api/questions';
   const currentUser = getCurrentUser();
 
   // console.log(control._formValues.topics);
@@ -151,16 +151,14 @@ export default function QuestionForm() {
 
   return (
     <form onSubmit={(e) => onSubmit(e)}>
-      <Container
-        maxWidth="lg"
+      <div
+        className='mb-3'
         style={{
-          margin: "40px auto 0 auto",
-          backgroundColor: "#E6E6E6",
-          borderRadius: "20px",
-          maxWidth: "80%",
-          padding: "20px",
-        }}
-      >
+          margin: '10px',
+          backgroundColor: '#E6E6E6',
+          borderRadius: '20px',
+          padding: '20px',
+        }}>
         <Paper
           style={{
             display: "grid",
@@ -250,7 +248,7 @@ export default function QuestionForm() {
             </Button>
           </div>
         </Paper>
-      </Container>
+      </div>
     </form>
   );
 }

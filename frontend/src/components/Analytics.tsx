@@ -8,11 +8,10 @@ import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
 import axios from "axios";
 import authHeader from "../services/auth-header";
-import Tooltip from "@uiw/react-tooltip";
+import { useNavigate } from "react-router-dom";
 
-const USER_HOST = process.env.REACT_APP_USR_SVC_AUTH || "http://localhost:3003/api/auth";
 const USER_HISTORY =
-  process.env.REACT_APP_USR_SVC_USER || "http://localhost:3003/api/user";
+  process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/hist";
 const QUESTION_HOST =
   process.env.REACT_APP_QNS_SVC || "http://localhost:3000/api/questions";
 
@@ -61,14 +60,15 @@ const Analytics: React.FC = () => {
 
   const [allQuestionIds, setAllQuestionIds] = useState<string[]>([]);
   const [allQuestionTitles, setAllQuestionTitles] = useState<
-    { title: string; difficulty: string }[]
+    { question_id: string; title: string; difficulty: string }[]
   >([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user") || "{}");
     // fetch user history
     axios
-      .get(USER_HISTORY + "/history", { headers: authHeader() })
+      .get(USER_HISTORY + "/get", { headers: authHeader() })
       .then((res) => {
         // Assuming res.data is an array of solved questions
         const solvedQuestions = res.data;
@@ -115,9 +115,11 @@ const Analytics: React.FC = () => {
         .then((response) => {
           const data = response.data;
           const titleAndDifficulty = data.map((item: any) => ({
+            question_id: item._id,
             title: item.title,
             difficulty: item.difficulty,
           }));
+          console.log(titleAndDifficulty);
 
           setAllQuestionTitles(titleAndDifficulty);
         })
@@ -166,41 +168,49 @@ const Analytics: React.FC = () => {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    // fetch user's attempt
+  });
   return (
     <div className="container">
-      <Card
+      <Box
         sx={{
           display: "flex",
-          borderRadius: "15px",
+          flexDirection: "column",
           backgroundColor: "#E6E6E6",
+          borderRadius: "15px",
           boxShadow: "none",
+          paddingBottom: "2%",
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <CardContent>
+          <header
+            style={{
+              letterSpacing: "1px",
+              fontSize: "110%",
+              fontWeight: "bold",
+              paddingLeft: "3%",
+              paddingTop: "2%",
+            }}
+          >
+            Solved Problems
+          </header>
+        </CardContent>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "80%",
+            marginLeft: "15%",
+          }}
+        >
           <CardContent>
-            <header
-              style={{
-                // fontFamily: "Cascadia Code, Inter, sans-serif",
-                letterSpacing: "1px",
-                fontSize: "110%",
-                fontWeight: "bold",
-                paddingLeft: "20px",
-                paddingTop: "10px",
-              }}
-            >
-              Solved Problems
-            </header>
-          </CardContent>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", width: "80%" }}>
-          <CardContent style={{ marginTop: "5%" }}>
-            <div style={{ width: "78%", height: "78%" }}>
+            <div style={{ width: "90%", height: "90%" }}>
               <CircularProgressbarWithChildren
-                // number of questions user completed
                 value={userDetails.Total}
-                // number of questions in our db
                 maxValue={questionDetails.Total}
-                // text={`${userDetails.Total}`}
                 strokeWidth={5}
                 background
                 styles={buildStyles({
@@ -218,7 +228,7 @@ const Analytics: React.FC = () => {
               </CircularProgressbarWithChildren>
             </div>
           </CardContent>
-          <CardContent style={{ width: "100%", marginTop: "5%" }}>
+          <CardContent style={{ width: "100%", paddingTop: "3%" }}>
             <div
               style={{
                 display: "flex",
@@ -363,8 +373,8 @@ const Analytics: React.FC = () => {
             </div>
           </CardContent>
         </Box>
-      </Card>
-      <Box sx={{ marginBottom: 3 }}>
+      </Box>
+      <Box>
         <Card
           sx={{
             display: "flex",
@@ -375,29 +385,30 @@ const Analytics: React.FC = () => {
             width: "100%",
           }}
         >
-          <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              paddingLeft: "3%",
+              paddingRight: "3%",
+              paddingTop: "2%",
+            }}
+          >
             <CardContent>
               <header
                 style={{
-                  // fontFamily: "Cascadia Code, Inter, sans-serif",
                   letterSpacing: "1px",
                   fontSize: "100%",
-                  paddingLeft: "20px",
-                  paddingTop: "10px",
                 }}
               >
                 <strong>{userDetails.Total}</strong> submissions in the last
                 year
               </header>
             </CardContent>
-            {/* </Box> */}
-            {/* <Box sx={{ display: "flex", flexDirection: "row" }}> */}
             <CardContent
               style={{
                 display: "flex",
-                // justifyContent: "center",
-                // alignItems: "center",
-                marginLeft: "10px",
                 width: "100%",
               }}
             >
@@ -407,21 +418,6 @@ const Analytics: React.FC = () => {
                 rectSize={13}
                 weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
                 startDate={new Date("2023/01/01")}
-                // rectRender={(props, data) => {
-                //   return (
-                //     <Tooltip
-                //       key={props.key}
-                //       placement="top"
-                //       content={`count: ${data.count || 0}`}
-                //     >
-                //       <rect {...props} />
-                //     </Tooltip>
-                //   );
-                // }}
-                // endDate={new Date('2022/12/31')}
-                //legendCellSize?
-                //rectProps?
-                // go see props for css in the future
                 panelColors={{
                   0: "white", // lightest purple
                   2: "#9C96FF", // light purple
@@ -442,17 +438,17 @@ const Analytics: React.FC = () => {
           borderRadius: "15px",
           marginTop: "20px",
           boxShadow: "none",
+          paddingLeft: "3%",
+          paddingRight: "3%",
+          paddingTop: "2%",
         }}
       >
         <CardContent style={{ width: "100%" }}>
           <header
             style={{
-              fontFamily: "Cascadia Code, Inter, sans-serif",
               letterSpacing: "1px",
               fontSize: "100%",
-              paddingLeft: "20px",
-              paddingTop: "10px",
-              paddingBottom: "10px",
+              paddingBottom: "3%",
               fontWeight: "bold",
             }}
           >
@@ -468,11 +464,12 @@ const Analytics: React.FC = () => {
                 border: "1px solid white",
                 borderRadius: "5px",
                 backgroundColor: "white",
-                width: "97%",
-                marginLeft: "1.5%",
+                width: "100%",
                 marginBottom: "15px",
                 padding: "7px",
+                cursor: "pointer",
               }}
+              onClick={() => navigate(`/home/${item.question_id}`)}
             >
               <span style={{ fontWeight: "bold", paddingLeft: "1%" }}>
                 {item.title}
