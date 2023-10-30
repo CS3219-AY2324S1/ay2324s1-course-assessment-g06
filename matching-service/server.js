@@ -14,7 +14,7 @@ require("dotenv").config({ path: "../.env" });
 const app = express();
 const server = http.createServer(app);
 
-const socketIo = require('socket.io')(server, { wsEngine: 'ws' });
+const socketIo = require('socket.io');
 const socketioJwt = require('socketio-jwt');
 
 const QUESTION_HOST = process.env.QNS_SVC
