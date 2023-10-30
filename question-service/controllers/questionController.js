@@ -2,10 +2,10 @@ const Question = require('../models/question');
 const mongoose = require('mongoose');
 
 module.exports = {
-  // Controller function to get all questions
+  // Controller function to get all questions where isDeleted is false
   // Usage: Get request to http://localhost:3000/api/questions/
   getAllQuestions: (req, res) => {
-    Question.find()
+    Question.find({ isDeleted: false })
       .then((questions) => {
         res.json(questions);
       })
@@ -13,12 +13,12 @@ module.exports = {
         res.status(500).json({ error: 'Error fetching questions' });
       });
   },
-  // Controller function to get first page paginated questions
+  // Controller function to get first page paginated questions where isDeleted is false
   // Usage: Get request to http://localhost:3000/api/questions/pagination/first
   getFirstPaginatedQuestions: (req, res) => {
     const perPage = 20;
 
-    Question.find()
+    Question.find({ isDeleted: false })
       .limit(perPage)
       .then((questions) => {
         res.json(questions);
@@ -27,11 +27,11 @@ module.exports = {
         res.status(500).json({ error: 'Error fetching questions' });
       });
   },
-  // Controller function to get remaining paginated questions
+  // Controller function to get remaining paginated questions where isDeleted is false
   // Usage: Get request to http://localhost:3000/api/questions/pagination/remaining
   getRemainingPaginatedQuestions: (req, res) => {
     const perPage = 20;
-    Question.find()
+    Question.find({ isDeleted: false })
       .skip(perPage)
       .then((questions) => {
         res.json(questions);
@@ -40,12 +40,12 @@ module.exports = {
         res.status(500).json({ error: 'Error fetching questions' });
       });
   },
-  // Controller function to get a question by its _id
+  // Controller function to get a question by its _id where isDeleted is false
   // Usage: Get request to http://localhost:3000/api/questions/:id
   getQuestionById: (req, res) => {
     const { id } = req.params; // Get the _id from the request params
     console.log('Getting Qn with ID:', id);
-    Question.findById(id)
+    Question.findOne({ _id: id, isDeleted: false })
       .then((question) => {
         if (!question) {
           return res.status(404).json({ error: 'Question not found' });
@@ -81,6 +81,7 @@ module.exports = {
           content,
           category,
           topics,
+          isDeleted: false // isDeleted with a default value of false
         });
 
         newQuestion
@@ -158,7 +159,7 @@ module.exports = {
         res.status(500).json({ error: 'Error soft deleting question' });
       });
   },
-  // Controller function to delete a question by ID
+  // Extra controller function to delete a question by ID
   // Usage: Delete request to http://localhost:3000/api/questions/{id}
   deleteQuestion: (req, res) => {
     const { id } = req.params; // Get the question ID from the route parameters
@@ -180,7 +181,8 @@ module.exports = {
     const { difficulty, topics } = req.query; // Get the difficulty level and topics from the query parameters
 
     // Define a filter object based on the provided difficulty level and topics
-    const filter = {};
+    // Ensure that only questions that are not deleted are retrieved
+    const filter = { isDeleted: false };
 
     if (difficulty) {
       filter.difficulty = difficulty;
