@@ -45,7 +45,7 @@ module.exports = {
   getQuestionById: (req, res) => {
     const { id } = req.params; // Get the _id from the request params
     console.log('Getting Qn with ID:', id);
-    Question.findOne({ _id: id, isDeleted: false  })
+    Question.findOne({ _id: id })
       .then((question) => {
         if (!question) {
           return res.status(404).json({ error: 'Question not found' });
