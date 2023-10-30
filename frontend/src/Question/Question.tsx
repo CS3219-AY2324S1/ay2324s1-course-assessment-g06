@@ -37,6 +37,7 @@ interface QuestionInt {
   content: string;
   category: string;
   topics: string;
+  isDeleted: boolean;
 }
 
 const CustomDialog = styled(Dialog)``;
@@ -188,7 +189,7 @@ export default function Question() {
               </h1>
             </div>
             <div className="mb-3 ml-2">
-              {isAdmin && (
+              {(isAdmin && !question.isDeleted) && (
                 <>
                   <Button
                     variant="contained"
