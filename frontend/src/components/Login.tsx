@@ -1,15 +1,14 @@
 // Login.tsx
 import React, { useState } from "react";
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import mascot from '../images/mascot.png';
+import mascot from "../images/mascot.png";
 import { Link } from "react-router-dom";
-
 
 import { login } from "../services/auth.service";
 
-type Props = {}
+type Props = {};
 
 const Login: React.FC<Props> = () => {
   let navigate: NavigateFunction = useNavigate();
@@ -35,7 +34,7 @@ const Login: React.FC<Props> = () => {
     login(username, password)
       .then((response) => {
         setSuccessful(true);
-        navigate("/profile");
+        navigate("/home");
         window.location.reload();
       })
       .catch((error) => {
@@ -49,9 +48,9 @@ const Login: React.FC<Props> = () => {
   };
 
   const mascotStyles = {
-    height: 'auto',
-    maxWidth: '100%',
-    width: 'auto',
+    height: "auto",
+    maxWidth: "100%",
+    width: "auto",
   };
 
   return (
@@ -80,11 +79,11 @@ const Login: React.FC<Props> = () => {
                         <label
                           htmlFor="floatingUsername"
                           style={{
-                            paddingLeft: '10px',
+                            paddingLeft: "10px",
                             paddingTop: 0,
                             paddingBottom: 0,
                             paddingRight: 0,
-                            lineHeight: '3rem',
+                            lineHeight: "3rem",
                             margin: 0,
                           }}
                         >
@@ -109,12 +108,12 @@ const Login: React.FC<Props> = () => {
                         <label
                           htmlFor="floatingPassword"
                           style={{
-                            paddingLeft: '10px',
+                            paddingLeft: "10px",
                             paddingTop: 0,
                             paddingBottom: 0,
                             paddingRight: 0,
                             margin: 0,
-                            lineHeight: '3rem',
+                            lineHeight: "3rem",
                           }}
                         >
                           Password
@@ -128,23 +127,37 @@ const Login: React.FC<Props> = () => {
 
                       <div className="form-group my-3">
                         <div className="row">
-                          <div className="col-md-5 col-sm-12 text-center text-md-start mb-3" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.5)' }}>
+                          <div
+                            className="col-md-5 col-sm-12 text-center text-md-start mb-3"
+                            style={{
+                              fontFamily: "Inter, sans-serif",
+                              fontWeight: "bold",
+                              color: "rgba(0, 0, 0, 0.5)",
+                            }}
+                          >
                             No Account?&nbsp;
-                            <Link to="/register" className="d-md-block" style={{ textDecoration: 'underline', color: 'rgba(0, 0, 0, 0.5)' }}>
+                            <Link
+                              to="/register"
+                              className="d-md-block"
+                              style={{
+                                textDecoration: "underline",
+                                color: "rgba(0, 0, 0, 0.5)",
+                              }}
+                            >
                               Sign up
                             </Link>
                           </div>
-                          <div className="col-md-7 col-sm-12 mb-3" >
+                          <div className="col-md-7 col-sm-12 mb-3">
                             <div className="text-center">
                               <button
                                 type="submit"
                                 className="btn btn-block rounded-pill"
                                 style={{
-                                  backgroundColor: '#6C63FF',
-                                  color: 'white',
-                                  fontFamily: 'Inter, sans-serif',
-                                  fontWeight: 'bold',
-                                  height: '50px',
+                                  backgroundColor: "#6C63FF",
+                                  color: "white",
+                                  fontFamily: "Inter, sans-serif",
+                                  fontWeight: "bold",
+                                  height: "50px",
                                 }}
                               >
                                 Login
@@ -158,10 +171,7 @@ const Login: React.FC<Props> = () => {
 
                   {message && (
                     <div className="form-group">
-                      <div
-                        className="alert alert-danger"
-                        role="alert"
-                      >
+                      <div className="alert alert-danger" role="alert">
                         {message}
                       </div>
                     </div>
