@@ -37,6 +37,7 @@ interface QuestionInt {
   content: string;
   category: string;
   topics: string;
+  isDeleted: boolean;
 }
 
 const CustomDialog = styled(Dialog)``;
@@ -79,10 +80,20 @@ export default function Question() {
           "x-access-token": currentUser.accessToken,
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json(); // Continue processing if it's a successful response
+          } else {
+            console.error("Error fetching data:", response.statusText);
+            setIsLoading(false);
+            navigate("/404");
+          }
+        })
         .then((responseData) => {
-          setQuestion(responseData);
-          setIsLoading(false);
+          if (responseData) {
+            setQuestion(responseData);
+            setIsLoading(false);
+          }
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -93,6 +104,7 @@ export default function Question() {
 
     fetchDataWithDelay();
   }, [id, currentUser.accessToken]);
+
 
   function wrapPreTags(content: string) {
     const wrappedContent = content.replace(/<pre>/g, '<pre class="pre-wrap">');
@@ -120,7 +132,7 @@ export default function Question() {
     closeDeleteDialog();
 
     fetch(QUESTION_HOST + `/${id}`, {
-      method: "DELETE",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": currentUser.accessToken,
@@ -188,7 +200,7 @@ export default function Question() {
               </h1>
             </div>
             <div className="mb-3 ml-2">
-              {isAdmin && (
+              {(isAdmin && !question.isDeleted) && (
                 <>
                   <Button
                     variant="contained"
