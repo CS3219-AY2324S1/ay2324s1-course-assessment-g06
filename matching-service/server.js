@@ -207,7 +207,7 @@ io.on('connection', async (socket) => {
     // Check if the sender belongs to the same room
     if (socket.rooms.has(roomId)) {
       // Broadcast the code change only to sockets in the same room
-      io.broadcast.to(roomId).emit('codeChange', newCode);
+      socket.broadcast.to(roomId).emit('codeChange', newCode);
     }
   });
 
