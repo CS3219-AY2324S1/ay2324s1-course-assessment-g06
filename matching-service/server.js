@@ -204,8 +204,6 @@ io.on('connection', async (socket) => {
 
   // Listen for the 'codeChange' event from the client
   socket.on('codeChange', (newCode, roomId) => {
-    console.log('emit codechange from server');
-
     // Check if the sender belongs to the same room
     if (socket.rooms.has(roomId)) {
       // Broadcast the code change only to sockets in the same room
@@ -215,7 +213,6 @@ io.on('connection', async (socket) => {
 
   // Listen for the 'sendMessage' event from the client
   socket.on('sendMessage', (data) => {
-    console.log('emit receiveMessage from server');
     // Check if the sender belongs to the same room
     if (socket.rooms.has(data.roomId)) {
       // Broadcast the code change only to sockets in the same room

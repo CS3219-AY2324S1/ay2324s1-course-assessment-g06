@@ -269,14 +269,11 @@ const CodeSpace = () => {
 
   // Inside your component
   useEffect(() => {
-    console.log('from on effect' + code);
     if (submitFlag && socket) {
       // Emit a "submitSession" event to the server with the updated code
-      console.log('submitting session with code: ' + code)
       socket.emit('submitSession', roomId, questionId, questionDifficulty);
 
       closeSubmitRequestDialog();
-      console.log("submitting session");
 
       saveSessionHistory(questionId, questionDifficulty);
 
@@ -293,14 +290,12 @@ const CodeSpace = () => {
   useEffect(() => {
     // Handle all socket events listened from server
     if (socket) {
-      console.log("connected to socket", socket, socket.id);
       const matchedSocket = socket;
       // Below change then wont work properly
       // const matchedSocket = io(MATCHING_SERVICE_CORS, {query: { roomId }});
 
       // Handle for initial connection event from server
       matchedSocket.on('connect', () => {
-        console.log('Connected to matched socket');
         // Emit the "userConnected" event when the socket connects
         matchedSocket.emit('userConnected', socketId, roomId);
         // Emit the "joinRoom" event when the socket connects
@@ -310,12 +305,10 @@ const CodeSpace = () => {
       // Listen for 'codeChange' events from the server
       matchedSocket.on('codeChange', (newCode: string) => {
         setCode(newCode); // Update the value with the new code
-        console.log('from codechange ' + code);
       });
 
       // Listen for 'receive message' events from the server
       matchedSocket.on('receiveMessage', (data) => {
-        console.log('receiveMessage from server');
         setMessageList((list) => [...list, data]); // Update the selected language
       });
 
@@ -326,9 +319,6 @@ const CodeSpace = () => {
 
       // Listen for 'userConnected' and 'userDisconnected' events from the server
       matchedSocket.on('userConnected', (connectedSocket) => {
-        console.log('receive userConnected from server');
-        console.log("current" + socketId)
-        console.log("connected" + connectedSocket)
         setIsAccessAllowed(true);
 
         if (connectedSocket !== socketId) {
@@ -382,14 +372,12 @@ const CodeSpace = () => {
 
       // Handle user run code
       matchedSocket.on('codeRun', (ranCodeParams) => {
-        console.log("received codeRun from other user");
         setRanCodeStatus(ranCodeParams[0]);
         setRanCodeException(ranCodeParams[1]);
         setRanCodeOutput(ranCodeParams[2]);
         setRanCodeError(ranCodeParams[3]);
         setRanCodeInput(ranCodeParams[4]);
         setRanCodeExecutionTime(ranCodeParams[5]);
-        console.log(ranCodeException);
       })
 
       // Handle disconnection event
@@ -485,15 +473,12 @@ const CodeSpace = () => {
       // Emit a "quitSession" event to the server
       socket.emit('quitSession', roomId);
     }
-    console.log("quitting session");
-
     // alert('You have quit the session');
     navigate("/matching");
   };
 
   // Handle submit session logic
   const handleSubmitSession = () => {
-    console.log("submitcode: " + code)
     setSubmitFlag(true);
   };
 
@@ -524,14 +509,12 @@ const CodeSpace = () => {
       // Emit a "submitSession" event to the server
       socket.emit('submitIndividualSession', roomId, questionId, questionDifficulty);
     }
-    console.log("submitting session");
     saveSessionHistory(questionId, questionDifficulty);
     // alert("You have submitted the session.");
     navigate("/matching");
   };
 
   const handleRunCode = () => {
-    console.log("Code run button clicked");
     // Fixed default code
     const input = "";
     runCode(code, input, language, fileName);
@@ -555,7 +538,6 @@ const CodeSpace = () => {
         setQuestion(data);
         setQuestiondId(data._id);
         setQuestiondDifficulty(data.difficulty);
-        console.log("question is ", data);
       } else {
         console.error('Error fetching room data:', response.status);
         navigate("/404"); // Redirect to the 404 error page
@@ -589,11 +571,9 @@ const CodeSpace = () => {
 
       if (socket) {
         const ranCodeParams = [updatedStatus, updatedException, updatedOutput, updatedError, updatedInput, updatedExecutionTime];
-        console.log(ranCodeParams);
         socket.emit('codeRun', roomId, ranCodeParams);
       }
     } catch (error) {
-      console.log("Error in execution/run: ", error);
       setRanCodeStatus("failed");
       setRanCodeError("Error in code execution");
 
@@ -617,11 +597,9 @@ const CodeSpace = () => {
   };
 
   const saveSessionHistory = (questionId: string, questionDifficulty: string) => {
-    console.log("submitting session");
     addHistory(questionId, questionDifficulty, code).then(
       (response) => {
         setMessage(response.data.message);
-        console.log("message:", message);
       },
       (error) => {
         const resMessage =
@@ -630,7 +608,6 @@ const CodeSpace = () => {
             error.response.data.message) ||
           error.message ||
           error.toString();
-        console.log("Error in submission: ", resMessage);
       }
     );
   };
