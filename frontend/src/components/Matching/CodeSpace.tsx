@@ -17,8 +17,6 @@ import Receiver from "../../images/chatPicture2.png";
 import CodeExecutionSuccess from "../../images/codeExecutionSuccess.png";
 import CodeExecutionFail from "../../images/codeExecutionFail.png";
 import './CodeSpace.css';
-import Editor from "@monaco-editor/react";
-
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {
@@ -596,6 +594,7 @@ const CodeSpace = () => {
     }
   };
 
+
   const saveSessionHistory = (questionId: string, questionDifficulty: string) => {
     addHistory(questionId, questionDifficulty, code).then(
       (response) => {
@@ -759,26 +758,11 @@ const CodeSpace = () => {
               <div className="card-header">
                 Code ({fileName})
               </div>
-              {/* <CodeMirror
+              <CodeMirror
                 value={code}
                 height="300px"
                 onChange={onChange}
                 extensions={getCodeMirrorExtensions()}
-              /> */}
-              <Editor
-                defaultLanguage={language}
-                language={language}
-                height="300px"
-                onChange={(code) => {
-                  if (code !== undefined) {
-                    setCode(code);
-                    // Emit the 'codeChange' event to the server only if it's a change by this client
-                    if (socket) {
-                      socket.emit('codeChange', code, roomId); // Pass roomId or any identifier
-                    }
-                  }
-                }}
-                value={code}
               />
             </div>
           </div>
