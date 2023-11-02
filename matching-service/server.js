@@ -150,7 +150,8 @@ io.on('connection', async (socket) => {
   
   socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage, accessToken) => {
     const userId = socket.decoded_token.id;
-
+    console.log("--Waiting Queue--")
+    console.log(waitingQueue)
     if (waitingQueue.find(user => user.userId === userId)) {
       console.log('User is already in the queue and cannot self-match.');
     } else {
@@ -162,6 +163,8 @@ io.on('connection', async (socket) => {
       if (matchingUserIndex !== -1) {
         console.log('User match!');
         const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
+        console.log("--Waiting Queue--")
+        console.log(waitingQueue)
         startMatch(user1, socket, selectedDifficulty, selectedTopic, accessToken);
       } else {
         console.log('No user found');
@@ -171,6 +174,8 @@ io.on('connection', async (socket) => {
         socket.selectedLanguage = selectedLanguage;
         socket.accessToken = accessToken;
         waitingQueue.push(socket);
+        console.log("--Waiting Queue--")
+        console.log(waitingQueue)
       }
     }
   });
@@ -182,6 +187,8 @@ io.on('connection', async (socket) => {
       console.log('Matching canceled by user');
       socket.emit('match canceled');
     }
+    console.log("--Waiting Queue--")
+    console.log(waitingQueue)
   });
 
   // Listen for the 'joinRoom' event from the client
