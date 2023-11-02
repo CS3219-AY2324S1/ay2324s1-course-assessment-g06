@@ -284,9 +284,11 @@ const App: React.FC = () => {
             }
           />
           <Route path="/questions/add-question" element={
-            <AdminProtected token={currentUserAccessToken}>
-              <AddQuestionForm />
-            </AdminProtected>
+            <Protected isLoggedIn={currentUser}>
+              <AdminProtected token={currentUserAccessToken}>
+                <AddQuestionForm />
+              </AdminProtected>
+            </Protected>
             } />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
