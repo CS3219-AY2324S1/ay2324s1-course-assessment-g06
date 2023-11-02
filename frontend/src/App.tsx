@@ -17,6 +17,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Protected from "./components/Protected";
+import AdminProtected from "./components/AdminProtected/AdminProtected";
 import PageNotFound from "./components/PageNotFound/PageNotFound";
 import GuestRoute from "./components/GuestRoute";
 import EventBus from "./common/EventBus";
@@ -26,6 +27,7 @@ import Analytics from "./components/Analytics";
 import "./App.css";
 import "./Table/Table";
 import UserAttempt from "./UserAttempt/UserAttempt";
+import { getCurrentUser } from "./services/auth.service";
 
 const App: React.FC = () => {
   console.log("QNS_SVC: ", process.env.REACT_APP_QNS_SVC);
@@ -36,6 +38,11 @@ const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
     localStorage.getItem("user") ? true : false
   );
+
+  const [currentUserAccessToken, setCurrentUserAccessToken] = useState<string>(() => {
+    return getCurrentUser()?.accessToken || "";
+  });
+
   const location = useLocation(); // Get the current location
   const isCodeSpaceRoute = location.pathname.startsWith("/match/");
 
@@ -276,8 +283,13 @@ const App: React.FC = () => {
               </Protected>
             }
           />
-
-          <Route path="/questions/add-question" element={<AddQuestionForm />} />
+          <Route path="/questions/add-question" element={
+            <Protected isLoggedIn={currentUser}>
+              <AdminProtected token={currentUserAccessToken}>
+                <AddQuestionForm />
+              </AdminProtected>
+            </Protected>
+            } />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
