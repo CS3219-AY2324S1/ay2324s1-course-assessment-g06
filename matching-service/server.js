@@ -2,8 +2,7 @@ require("dotenv").config({ path: "../.env" });
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const socketIo = require('socket.io');
-const socketioJwt = require('socketio-jwt');
+
 const { v4: uuidv4 } = require('uuid');
 // To keep track of active rooms
 const rooms = new Map();
@@ -14,6 +13,9 @@ require("dotenv").config({ path: "../.env" });
 
 const app = express();
 const server = http.createServer(app);
+
+const socketIo = require('socket.io');
+const socketioJwt = require('socketio-jwt');
 
 const QUESTION_HOST = process.env.QNS_SVC
   ? process.env.QNS_SVC
@@ -148,7 +150,8 @@ io.on('connection', async (socket) => {
   
   socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage, accessToken) => {
     const userId = socket.decoded_token.id;
-
+    console.log("--Waiting Queue--")
+    console.log(waitingQueue)
     if (waitingQueue.find(user => user.userId === userId)) {
       console.log('User is already in the queue and cannot self-match.');
     } else {
@@ -160,6 +163,8 @@ io.on('connection', async (socket) => {
       if (matchingUserIndex !== -1) {
         console.log('User match!');
         const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
+        console.log("--Waiting Queue--")
+        console.log(waitingQueue)
         startMatch(user1, socket, selectedDifficulty, selectedTopic, accessToken);
       } else {
         console.log('No user found');
@@ -169,6 +174,8 @@ io.on('connection', async (socket) => {
         socket.selectedLanguage = selectedLanguage;
         socket.accessToken = accessToken;
         waitingQueue.push(socket);
+        console.log("--Waiting Queue--")
+        console.log(waitingQueue)
       }
     }
   });
@@ -180,6 +187,8 @@ io.on('connection', async (socket) => {
       console.log('Matching canceled by user');
       socket.emit('match canceled');
     }
+    console.log("--Waiting Queue--")
+    console.log(waitingQueue)
   });
 
   // Listen for the 'joinRoom' event from the client
@@ -202,18 +211,15 @@ io.on('connection', async (socket) => {
 
   // Listen for the 'codeChange' event from the client
   socket.on('codeChange', (newCode, roomId) => {
-    console.log('emit codechange from server');
-
     // Check if the sender belongs to the same room
     if (socket.rooms.has(roomId)) {
       // Broadcast the code change only to sockets in the same room
-      io.to(roomId).emit('codeChange', newCode);
+      socket.broadcast.to(roomId).emit('codeChange', newCode);
     }
   });
 
   // Listen for the 'sendMessage' event from the client
   socket.on('sendMessage', (data) => {
-    console.log('emit receiveMessage from server');
     // Check if the sender belongs to the same room
     if (socket.rooms.has(data.roomId)) {
       // Broadcast the code change only to sockets in the same room
