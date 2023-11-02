@@ -73,7 +73,7 @@ const CodeSpace = () => {
   const [hasQuitRoom, setHasQuitRoom] = useState(false);
 
   // Initilise timer for the collaboration session
-  const [timer, setTimer] = useState(10000);
+  const [timer, setTimer] = useState(100);
   const [isTimerEnded, setIsTimerEnded] = useState(false);
   const [formattedTime, setformattedTime] = useState("");
 
@@ -613,7 +613,7 @@ const CodeSpace = () => {
 
   /////////////////// HANDLE FRONTEND COMPONENTS  ///////////////////
   return (
-    <div style={{ backgroundColor: '#E6E6E6', padding: '15px' }}>
+    <div style={{ backgroundColor: 'white', padding: '15px' }}>
 
       {/* Header */}
       <div className='p-1 row'>
