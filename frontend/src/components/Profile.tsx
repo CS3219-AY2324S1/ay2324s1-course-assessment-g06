@@ -160,6 +160,7 @@ const Profile: React.FC = () => {
           setUserErrorMessage(err.response.data.message);
           setErrorType("user");
           setShowErrorModal(true);
+          resetForm();
         });
     },
     enableReinitialize: true,
