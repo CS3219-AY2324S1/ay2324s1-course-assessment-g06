@@ -155,20 +155,24 @@ export default function UserAttempt() {
   }
 
   if (question === null) {
-    return <div>Loading...</div>;
+    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <CircularProgress color="inherit" />
+    </div>
+      ;
   }
 
   return (
-    <Container
-      maxWidth="lg"
+    <div
+      className="mb-3"
       style={{
-        margin: "40px auto 0 auto",
+        margin: "10px",
         backgroundColor: "#E6E6E6",
         borderRadius: "20px",
-        width: "80%",
         padding: "20px",
       }}
     >
+
+
       <Paper
         style={{
           padding: "20px",
@@ -178,25 +182,25 @@ export default function UserAttempt() {
         <Grid sx={{ flexGrow: 1 }} container spacing={1}>
           <Grid item xs={12} container justifyContent="space-between">
             <div>
-              <h1 style={{ fontSize: "25px", fontWeight: "bold" }}>
+              <h1
+                style={{
+                  fontSize: "25px",
+                  fontWeight: "bold",
+                  paddingLeft: "10px",
+                }}
+              >
                 {question.title}
               </h1>
             </div>
           </Grid>
 
-          <Grid item xs={1.5}>
-            <CategoryWrapper>{question.difficulty}</CategoryWrapper>
-          </Grid>
-
-          {question.topics.split(", ").map((topic, index) => (
-            <Grid
-              item
-              xs={topic.length < 10 ? 1.5 : topic.length < 14 ? 2 : 3}
-              key={index}
-            >
-              <QuestionWrapper>{topic}</QuestionWrapper>
-            </Grid>
-          ))}
+          {/* Tags */}
+          <div className="question-tag-container row-md-1">
+            <div className="difficulty-tag">{question.difficulty}</div>
+            {question.topics.split(", ").map((topic, index) => (
+              <div className="topic-tag">{topic}</div>
+            ))}
+          </div>
 
           <Container maxWidth="lg" style={{ marginTop: "25px" }}>
             <Grid item xs={12}>
@@ -252,6 +256,6 @@ export default function UserAttempt() {
           <ArrowBackIcon />
         </BackButton>
       </Grid>
-    </Container>
+    </div>
   );
 }
