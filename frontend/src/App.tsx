@@ -16,9 +16,9 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
-import Protected from "./components/Protected";
+import Protected from "./components/Protected/Protected";
 import AdminProtected from "./components/AdminProtected/AdminProtected";
-import PageNotFound from "./components/PageNotFound/PageNotFound";
+import ErrorPage from "./components/ErrorPage";
 import GuestRoute from "./components/GuestRoute";
 import EventBus from "./common/EventBus";
 import logo from "./images/peerPrepLogo.png";
@@ -222,7 +222,7 @@ const App: React.FC = () => {
           <Route
             path="/profile"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <Profile />
               </Protected>
             }
@@ -230,7 +230,7 @@ const App: React.FC = () => {
           <Route
             path="/questions"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <BasicTable />
               </Protected>
             }
@@ -238,7 +238,7 @@ const App: React.FC = () => {
           <Route
             path="/questions/:id"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <Question />
               </Protected>
             }
@@ -246,7 +246,7 @@ const App: React.FC = () => {
           <Route
             path="/matching"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <Matching />
               </Protected>
             }
@@ -254,7 +254,7 @@ const App: React.FC = () => {
           <Route
             path="/home"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <Analytics />
               </Protected>
             }
@@ -262,7 +262,7 @@ const App: React.FC = () => {
           <Route
             path="/match/:roomId"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <CodeSpace />
               </Protected>
             }
@@ -270,7 +270,7 @@ const App: React.FC = () => {
           <Route
             path="/questions/:id/update"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <UpdateQuestionForm />
               </Protected>
             }
@@ -278,19 +278,19 @@ const App: React.FC = () => {
           <Route
             path="/home/:id"
             element={
-              <Protected isLoggedIn={currentUser}>
+              <Protected token={currentUserAccessToken}>
                 <UserAttempt />
               </Protected>
             }
           />
           <Route path="/questions/add-question" element={
-            <Protected isLoggedIn={currentUser}>
+            <Protected token={currentUserAccessToken}>
               <AdminProtected token={currentUserAccessToken}>
                 <AddQuestionForm />
               </AdminProtected>
             </Protected>
             } />
-          <Route path="*" element={<PageNotFound />} />
+          <Route path="*" element={<ErrorPage errorCode="404"/>} />
         </Routes>
       </div>
     </div>

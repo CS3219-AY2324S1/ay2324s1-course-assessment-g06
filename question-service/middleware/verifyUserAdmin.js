@@ -7,7 +7,7 @@ const verifyUserAdmin = (req, res, next) => {
     const token = req.headers['x-access-token'];
 
     if (!token) {
-        return res.status(403).send({ message: "No token provided!" });
+        return res.status(401).send({ message: "No token provided!" });
     }
 
     // Directly check if user is an admin
@@ -16,13 +16,18 @@ const verifyUserAdmin = (req, res, next) => {
     })
     .then(adminResponse => {
         if (adminResponse.status === 200) {
-            next();  // Move to the next middleware or request handler
+            next();  // The user is a valid admin, proceed to the next middleware
         } else {
-            res.status(401).send({ message: "User is not an admin!" });
+            // Forward the status code from the adminResponse
+            res.status(adminResponse.status).send({ message: adminResponse.data.message });
         }
     })
     .catch(error => {
-        res.status(401).send({ message: "Unauthorized! by qns svc" });
+        console.log(error);
+        // Forward the status code from the error response
+        const status = error.response ? error.response.status : 500;
+        const message = error.response ? error.response.data.message : "Internal Server Error";
+        res.status(status).send({ message: message });
     });
 };
 

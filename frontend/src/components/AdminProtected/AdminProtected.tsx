@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
 import useAdminCheck from './useAdminCheck';
-import Unauthorised from '../Unauthorised/Unauthorised';
-import './AdminProtected.css';  // Import your CSS here
+import './AdminProtected.css';
+import ErrorPage from '../ErrorPage';
 
 interface AdminProtectedProps {
   token: string;
@@ -17,8 +16,7 @@ const AdminProtected: React.FC<AdminProtectedProps> = ({ token, children }) => {
   }
 
   if (!isAdmin) {
-    // return <Navigate to="/login" replace />;
-    return <Unauthorised />;
+    return <ErrorPage errorCode='403' />;
   }
 
   return <>{children}</>;
