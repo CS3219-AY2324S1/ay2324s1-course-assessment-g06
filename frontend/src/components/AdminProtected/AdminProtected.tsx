@@ -1,8 +1,7 @@
 import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
 import useAdminCheck from './useAdminCheck';
-import Unauthorised from '../Unauthorised/Unauthorised';
-import './AdminProtected.css';  // Import your CSS here
+import ErrorPage from '../ErrorPage';
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface AdminProtectedProps {
   token: string;
@@ -13,12 +12,13 @@ const AdminProtected: React.FC<AdminProtectedProps> = ({ token, children }) => {
   const { isAdmin, isLoading } = useAdminCheck(token);
 
   if (isLoading) {
-    return <div className="spinner"></div>;
+    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+      <CircularProgress color="inherit" />
+    </div>;
   }
 
   if (!isAdmin) {
-    // return <Navigate to="/login" replace />;
-    return <Unauthorised />;
+    return <ErrorPage errorCode='403' />;
   }
 
   return <>{children}</>;

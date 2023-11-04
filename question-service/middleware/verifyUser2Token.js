@@ -13,20 +13,20 @@ const verifyUser2Token = (req, res, next) => {
     axios.get(`${auth_server}/verifyToken`, { 
         headers: { 'x-access-token': token }
     })
-    .then(response => {
-        if (response.status === 200) {
-            next();
+    .then(userResponse => {
+        if (userResponse.status === 200) {
+            next();  // The user is a valid user, proceed to the next middleware
         } else {
-            console.log(response);
-            res.status(401).send({ message: "Failed user verification!" });
+            // Forward the status code from the adminResponse
+            res.status(userResponse.status).send({ message: userResponse.data.message });
         }
     })
     .catch(error => {
-        if (error.response.status === 401) {
-            res.status(401).send({ message: "Token 2 Failed Authentication!" });
-        } else {
-            res.status(500).send({ message: "Something went wrong with the auth service" });
-        }
+        console.log(error);
+        // Forward the status code from the error response
+        const status = error.response ? error.response.status : 500;
+        const message = error.response ? error.response.data.message : "Internal Server Error";
+        res.status(status).send({ message: message });
     });
 };
 
