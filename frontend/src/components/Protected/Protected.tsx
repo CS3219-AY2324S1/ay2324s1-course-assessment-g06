@@ -40,7 +40,9 @@ const Protected: React.FC<userProtectedProps> = ({ token, children }) => {
   }
 
   if (isLoading) {
-    return <CircularProgress color="inherit" />;
+    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+    <CircularProgress color="inherit" />
+  </div>;
   }
 
   if (!isUser) {
