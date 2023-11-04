@@ -13,7 +13,9 @@ const AdminProtected: React.FC<AdminProtectedProps> = ({ token, children }) => {
   const { isAdmin, isLoading } = useAdminCheck(token);
 
   if (isLoading) {
-    return <CircularProgress color="inherit" />;
+    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <CircularProgress color="inherit" />
+    </div>;
   }
 
   if (!isAdmin) {
