@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import useAdminCheck from './useAdminCheck';
-import './AdminProtected.css';
 import ErrorPage from '../ErrorPage';
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -13,7 +12,7 @@ const AdminProtected: React.FC<AdminProtectedProps> = ({ token, children }) => {
   const { isAdmin, isLoading } = useAdminCheck(token);
 
   if (isLoading) {
-    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
       <CircularProgress color="inherit" />
     </div>;
   }

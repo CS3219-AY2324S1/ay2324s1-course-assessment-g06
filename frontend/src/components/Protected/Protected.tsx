@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import useUserCheck from './useUserCheck';
 import ErrorPage from '../ErrorPage';
 import { logout } from '../../services/auth.service';
-import './Protected.css';
 import CircularProgress from "@mui/material/CircularProgress";
 
 
@@ -40,7 +39,7 @@ const Protected: React.FC<userProtectedProps> = ({ token, children }) => {
   }
 
   if (isLoading) {
-    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
     <CircularProgress color="inherit" />
   </div>;
   }
