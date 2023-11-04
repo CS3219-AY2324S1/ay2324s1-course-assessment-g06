@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import useAdminCheck from './useAdminCheck';
 import './AdminProtected.css';
 import ErrorPage from '../ErrorPage';
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface AdminProtectedProps {
   token: string;
@@ -12,7 +13,7 @@ const AdminProtected: React.FC<AdminProtectedProps> = ({ token, children }) => {
   const { isAdmin, isLoading } = useAdminCheck(token);
 
   if (isLoading) {
-    return <div className="spinner"></div>;
+    return <CircularProgress color="inherit" />;
   }
 
   if (!isAdmin) {
