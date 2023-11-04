@@ -17,6 +17,8 @@ import {
   updateUserProfile,
 } from "../services/user.service";
 import profilepic from "../images/profilepicture.png";
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 interface User {
   username: string;
@@ -66,6 +68,7 @@ const Profile: React.FC = () => {
   const [showBackButton, setShowBackButton] = useState(false);
   const [isTextFieldClicked, setIsTextFieldClicked] = useState(false);
   const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
+  const [isLoading, setIsLoading] = useState(true);
 
   const enableTextField = () => {
     setIsTextFieldClicked(true);
@@ -83,9 +86,11 @@ const Profile: React.FC = () => {
     getUserProfile(currentUser.accessToken)
       .then((response) => {
         setProfile(response.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false);
       });
   }, []);
   // const location = useLocation();
