@@ -271,7 +271,9 @@ const App: React.FC = () => {
             path="/questions/:id/update"
             element={
               <Protected token={currentUserAccessToken}>
-                <UpdateQuestionForm />
+                <AdminProtected token={currentUserAccessToken}>
+                  <UpdateQuestionForm />
+                </AdminProtected>
               </Protected>
             }
           />
