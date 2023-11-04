@@ -1,9 +1,11 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Navigate ,useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import useUserCheck from './useUserCheck';
 import ErrorPage from '../ErrorPage';
 import { logout } from '../../services/auth.service';
 import './Protected.css';
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 interface userProtectedProps {
   token: string;
@@ -15,18 +17,18 @@ const Protected: React.FC<userProtectedProps> = ({ token, children }) => {
   const { isUser, isLoading } = useUserCheck(token);
   const [shouldRedirect, setShouldRedirect] = useState(false);
 
-    useEffect(() => {
-      // If the user is not authenticated but has a token, set a timeout for logout and refresh + refresh
-      if (!isUser && token) {
-        const timeoutId = setTimeout(() => {
-          logout(); // Call logout from auth service
-          setShouldRedirect(true); // Trigger state change for redirect
-        }, 5000);
+  useEffect(() => {
+    // If the user is not authenticated but has a token, set a timeout for logout and refresh + refresh
+    if (!isUser && token) {
+      const timeoutId = setTimeout(() => {
+        logout(); // Call logout from auth service
+        setShouldRedirect(true); // Trigger state change for redirect
+      }, 5000);
 
-        // Cleanup timeout on component unmount
-        return () => clearTimeout(timeoutId);
-      }
-    }, [isUser, token]);
+      // Cleanup timeout on component unmount
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isUser, token]);
 
   // Redirect to login after logout
   if (shouldRedirect) {
@@ -38,7 +40,7 @@ const Protected: React.FC<userProtectedProps> = ({ token, children }) => {
   }
 
   if (isLoading) {
-    return <div className="spinner"></div>;
+    return <CircularProgress color="inherit" />;
   }
 
   if (!isUser) {
