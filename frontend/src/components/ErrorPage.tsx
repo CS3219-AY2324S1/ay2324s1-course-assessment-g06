@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface ErrorPageProps {
   errorCode: '401' | '403' | '404';
@@ -7,7 +7,7 @@ interface ErrorPageProps {
 const errorMessages: Record<ErrorPageProps['errorCode'], { title: string; message: string }> = {
   '401': {
     title: '401 Unauthorised',
-    message: 'You are not authorised to view this page. Redirecting to login in 5 seconds.',
+    message: 'You are not authorised to view this page. Redirecting to login in ',
   },
   '403': {
     title: '403 Forbidden',
@@ -21,11 +21,28 @@ const errorMessages: Record<ErrorPageProps['errorCode'], { title: string; messag
 
 const ErrorPage: React.FC<ErrorPageProps> = ({ errorCode }) => {
   const error = errorMessages[errorCode];
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    if (errorCode === '401') {
+      const countdownInterval = setInterval(() => {
+        if (countdown > 0) {
+          setCountdown(countdown - 1);
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(countdownInterval);
+      };
+    }
+  }, [errorCode, countdown]);
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
       <h1>{error.title}</h1>
-      <p>{error.message}</p>
+      <p>
+        {errorCode === '401' ? `${error.message} ${countdown} seconds.` : error.message}
+      </p>
     </div>
   );
 };
