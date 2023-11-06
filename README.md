@@ -1,11 +1,12 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/6BOvYMwN)
-# AssignmentTemplate
 
-Frontend:
+> **[ IMPORTANT FOR NUS CONNECTIONS!]**\
+> If you are connected to the NUS Campus Network (either directly or indirectly), you will not be able to connect to MongoDB Atlas and Google Cloud SQL, which is required by our application. You can circumvent this by going through a VPN.
 
-`npm install`
-`npm start``
+# Application Installation and Setup
 
-Backend development:
-`npm install`
-`nodemon server.js`
+Click for instructions for the respective modes:
+
+- [Running Locally](docs/RunLocally.md)
+- [Running on Docker](docs/RunOnDocker.md)
+
