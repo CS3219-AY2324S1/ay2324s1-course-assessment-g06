@@ -2,7 +2,7 @@
 
 # 👋 Welcome to PeerPrep! 👋
 
- Hello and welcome to the GitHub repository for PeerPrep, a collaborative platform dedicated to empowering and connecting learners from around the globe!
+ Hello and welcome to the GitHub repository for PeerPrep, a collaborative platform dedicated to empowering and connecting learners from around the globe! This is done by Group G06 for CS3219 in AY23/24 Semester 1!
 
 ### What is PeerPrep?
 PeerPrep is an innovative platform designed to enhance your learning journey through collaborative preparation. Whether you're gearing up for exams, mastering a new subject, or simply quenching your thirst for knowledge, PeerPrep is here to make the process interactive, effective, and enjoyable.
