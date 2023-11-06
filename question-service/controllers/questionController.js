@@ -107,8 +107,8 @@ module.exports = {
     const { title, frontendQuestionId, difficulty, content, category, topics } =
       req.body;
 
-    // Check if a question with the same title other than itself already exists
-    Question.findOne({ title })
+    // Check if a question with the same title and not soft deleted other than itself already exists
+    Question.findOne({ title, isDeleted: false })
       .then((existingQuestion) => {
         if (existingQuestion && existingQuestion.id != id) {
           return res
