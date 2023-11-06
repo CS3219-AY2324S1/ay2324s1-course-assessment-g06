@@ -61,6 +61,7 @@ cd ay2324s1-course-assessment-g06/
     MONGO_USERNAME=<Your username>
     MONGO_PASSWORD=<Your Password>
     MONGO_HOST=<Your Cluster>
+    ```
 
 ## Start Docker and Check Version
 
