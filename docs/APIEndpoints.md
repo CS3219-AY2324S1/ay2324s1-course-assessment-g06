@@ -1,6 +1,10 @@
  # API Endpoints
 
-🔨 Working In Progress 🔨
+Welcome to the PeerPrep API Endpoints guide! This guide will help you understand the various API endpoints used in our services. This is ideal for developers and testers who want to interact with our services programmatically.
+
+Before you start, please ensure you have a basic understanding of HTTP methods, API routes, and JSON. This guide assumes you are familiar with the concepts of user authentication, user history, question service, and matching service.
+
+Follow the guide carefully to understand the purpose of each endpoint, the required headers, parameters, and whether admin privileges are required. Let's dive in!
 
 ## User Service
 
@@ -56,3 +60,13 @@ Matching administration and Code execution is done in `Matching-Service`. The fo
 | GET         | `/api/room/:roomId`        | Retrieve room information by ID               | -               | - | None | N |
 | POST        | `/api/code/run`            | Run user submitted code                       | `x-access-token`| `code, input, language, fileName` | None | N |
 
+---
+That concludes our guide to the API endpoints used in PeerPrep. We hope this guide has been helpful in understanding the various endpoints and their purposes. 
+
+Remember, when testing these endpoints, ensure you have the necessary permissions and provide the correct headers and parameters. 
+
+🌟 Don't forget to star the repo if you find PeerPrep exciting and useful!
+
+Thank you for visiting, and happy coding!
+
+-CS3219 Team G06
