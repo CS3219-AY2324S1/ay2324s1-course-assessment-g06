@@ -7,8 +7,8 @@
 
 Click for instructions for the respective modes:
 
-- [Running Locally](docs/RunLocally.md)
-- [Running on Docker](docs/RunOnDocker.md)
+- [Running Locally](docs/RunningLocally.md)
+- [Running on Docker](docs/RunningOnDocker.md)
 
 # Resources for Developer / Tester
 
@@ -16,8 +16,39 @@ Click for instructions for the respective modes:
 
 For development, you may also want to install:
 
-- [MongoDB Compass](https://www.mongodb.com/try/download/compass)
 - [Docker Desktop](https://www.docker.com/get-started/)
 - [Postman](https://www.postman.com/downloads/)
+- [MySQLWorkBench](https://dev.mysql.com/downloads/workbench/)
 
 ## Documentation
+
+- [API Endpoints](docs/ApiEndpoints.md)
+- [Containerization](docs/Containerization.md)
+
+## Microservices
+These are the microservices we defined for our application. Each microservice is a separate folder. You can start individual services separately to test, but there are dependencies among the services, they might not function as expected on it's own.
+
+- [User Service](user-service)
+- [Matching Service](matching-service)
+- [Question Service](question-service)
+- [Frontend](frontend)
+
+To run User-Service
+1. `cd user-service`
+2. `npm install`
+3. `nodemon server.js`
+
+To run Matching-Service
+1. `cd matching-service`
+2. `npm install`
+3. `nodemon server.js`
+
+To run Question-Service
+1. `cd question-service`
+2. `npm install`
+3. `nodemon server.js`
+
+To run Frontend
+1. `cd frontend`
+2. `npm install`
+3. `npm start`
