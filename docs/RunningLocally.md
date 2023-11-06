@@ -1,4 +1,4 @@
-# 🔨 Working In Progress 🔨 Running Locally  
+# Running Locally  
 
 Welcome to PeerPrep! This guide will help you set up and run our services on your local machine. This is ideal for development and testing purposes. 
 
@@ -38,6 +38,7 @@ cd ay2324s1-course-assessment-g06/
    ```
    cd docs/
    cp template.env ../.env
+   cp template.env ../frontend/.env
    cd ..
    ```
 3. Open `.env` file
@@ -78,3 +79,16 @@ Run these on commands individual terminals
 - ```cd matching-service; nodemon server.js```
 
 You should be able to access the server on http://localhost:3001 now!
+
+## Stopping Applications
+
+When you're done testing or developing, you can stop all the services by pressing `Ctrl + C` in each terminal where the services are running. This will stop the execution of the services.
+
+---
+Thank you for following along with this guide. We hope it has been helpful in setting up and running our application locally. 
+
+🌟 Don't forget to star the repo if you find PeerPrep exciting and useful!
+
+Thank you for visiting, and happy coding!
+
+-CS3219 Team G06

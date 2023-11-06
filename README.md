@@ -30,11 +30,12 @@ For development, you may also want to install:
 - [Docker Desktop](https://www.docker.com/get-started/)
 - [Postman](https://www.postman.com/downloads/)
 - [MySQLWorkBench](https://dev.mysql.com/downloads/workbench/)
+- [NodeJS](https://nodejs.org/en/download)
+- [MySQL](https://dev.mysql.com/downloads/mysql/)
 
 ## Documentation
 
 - [API Endpoints](docs/APIEndpoints.md)
-- [Containerization](docs/Containerization.md)
 
 ## Microservices
 These are the microservices we defined for our application. Each microservice is a separate folder. You can start individual services separately to test, but there are dependencies among the services, they might not function as expected on it's own.

@@ -1,3 +1,0 @@
-# Containerization
-
- 🔨 Work In Progress 🔨
