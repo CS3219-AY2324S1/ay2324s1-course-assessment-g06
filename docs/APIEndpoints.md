@@ -29,6 +29,7 @@ User History in `User-Service` is implemented using [MySQL](https://www.mysql.co
 | GET         | `/api/hist/attempts`        | Get all attempted dates from history  | `x-access-token`| None                                          | N            |
 | GET         | `/api/hist/getall`          | Get all questions from user history   | `x-access-token`| None                                          | N            |
 
+## Question Service
 
 Questions in `Question-Service` are implemented using [MongoDB](https://www.mongodb.com/). The following table lists the API endpoints for questions.
 
@@ -46,6 +47,7 @@ Questions in `Question-Service` are implemented using [MongoDB](https://www.mong
 | POST        | `/api/questions/questionbyid` | Retrieve questions by IDs                  | `x-access-token`| `ids` (array)     | None             | N |
 | GET         | `/api/questions/total`     | Get total number of questions per difficulty  | None            | None              | None             | -            |
 
+## Matching Service
 
 Matching administration and Code execution is done in `Matching-Service`. The following table lists the API endpoints.
 
