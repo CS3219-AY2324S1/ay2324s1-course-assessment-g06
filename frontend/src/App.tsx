@@ -121,7 +121,7 @@ const App: React.FC = () => {
                       to={"/"}
                       className="nav-link"
                       onClick={() => setDropdownOpen(false)}
-                      style={generateActiveStyle("/")}
+                      style={generateActiveStyle("/home")}
                     >
                       Home
                     </Link>
@@ -157,7 +157,7 @@ const App: React.FC = () => {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <a href="/login" className="nav-link" onClick={logOut}>
+                    <a href="/" className="nav-link" onClick={logOut}>
                       Log Out
                     </a>
                   </li>
@@ -202,7 +202,14 @@ const App: React.FC = () => {
 
       <div className={`${isCodeSpaceRoute ? "" : " container mt-3"}`}>
         <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
+          <Route
+            path="/"
+            element={
+              <GuestRoute isLoggedIn={currentUser}>
+                <Home />
+              </GuestRoute>
+            }
+          />
           <Route
             path="/login"
             element={
@@ -300,3 +307,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
