@@ -2,7 +2,9 @@
 
 🔨 Working In Progress 🔨
 
-User Authentication in `User-Service` is implemented using [JWT](https://jwt.io/). The following table lists the API endpoints for `User-Service`.
+## User Service
+
+User Authentication in `User-Service` is implemented using [JWT](https://jwt.io/). The following table lists the API endpoints for user authentication.
 
 | HTTP Method | API Route                 | Purpose                 | Headers         | Parameters (JSON)                             | User Roles    |
 |-------------|---------------------------|-------------------------|-----------------|-----------------------------------------------|---------------|
@@ -15,4 +17,6 @@ User Authentication in `User-Service` is implemented using [JWT](https://jwt.io/
 | GET         | `/api/auth/verifytoken`   | Verify JWT Token        | `x-access-token`| None                                          | User / Admin  |
 | GET         | `/api/auth/verifyadmin`   | Verify if User is Admin | `x-access-token`| None                                          | Admin Only    |
 
+
+User History in `User-Service` is implemented using [MySQL](https://www.mysql.com/). The following table lists the API endpoints for user history.
 
