@@ -22,7 +22,7 @@ For development, you may also want to install:
 
 ## Documentation
 
-- [API Endpoints](docs/ApiEndpoints.md)
+- [API Endpoints](docs/APIEndpoints.md)
 - [Containerization](docs/Containerization.md)
 
 ## Microservices
