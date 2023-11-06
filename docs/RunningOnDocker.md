@@ -1,6 +1,10 @@
 # Running on Docker
 
-Welcome to our guide on running our application using Docker. This document will provide you with step-by-step instructions to get our application up and running on your local machine using Docker. Whether you're a seasoned developer or just starting out, we've got you covered. Let's get started!
+Welcome to our guide on running our application using Docker. This document will provide you with step-by-step instructions to get our application up and running on your local machine using Docker.
+
+Before you start, please ensure you have the necessary software installed and have internet access. This guide assumes you are using a Unix-like operating system such as Linux or MacOS. If you're using a different OS, the steps should be similar, but some commands may vary.
+
+Follow the instructions carefully to clone our repository, setup environment variables and run the applications on docker! Let's get started!
 
 ## Software Requirements
 
