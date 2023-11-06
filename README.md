@@ -1,5 +1,16 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/6BOvYMwN)
 
+# 👋 Welcome to PeerPrep! 👋
+
+ Hello and welcome to the GitHub repository for PeerPrep, a collaborative platform dedicated to empowering and connecting learners from around the globe!
+
+### What is PeerPrep?
+PeerPrep is an innovative platform designed to enhance your learning journey through collaborative preparation. Whether you're gearing up for exams, mastering a new subject, or simply quenching your thirst for knowledge, PeerPrep is here to make the process interactive, effective, and enjoyable.
+
+Check out our deployment of the code on [GCP](https://fe-a2rwifv3ta-dt.a.run.app/)!
+
+---
+
 > **[ IMPORTANT FOR NUS CONNECTIONS!]**\
 > If you are connected to the NUS Campus Network (either directly or indirectly), you will not be able to connect to MongoDB Atlas and Google Cloud SQL, which is required by our application. You can circumvent this by going through a VPN.
 
@@ -52,3 +63,11 @@ To run Frontend
 1. `cd frontend`
 2. `npm install`
 3. `npm start`
+
+---
+
+🌟 Don't forget to star the repo if you find PeerPrep exciting and useful!
+
+Thank you for visiting, and happy coding!
+
+-CS3219 Team G06
