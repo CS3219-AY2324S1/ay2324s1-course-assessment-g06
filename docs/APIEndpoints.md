@@ -8,8 +8,8 @@ User Authentication in `User-Service` is implemented using [JWT](https://jwt.io/
 
 | HTTP Method | API Route                 | Purpose                 | Headers         | Parameters (JSON)                             | User Roles    |
 |-------------|---------------------------|-------------------------|-----------------|-----------------------------------------------|---------------|
-| POST        | `/api/auth/signup`        | User Signup             | -               | `username, email, password, roles (optional)` | Any           |
-| POST        | `/api/auth/signin`        | User Signin             | -               | `username, password`                          | Any           |
+| POST        | `/api/auth/signup`        | User Signup             | -               | `username, email, password, roles (optional)` | -             |
+| POST        | `/api/auth/signin`        | User Signin             | -               | `username, password`                          | -             |
 | DELETE      | `/api/auth/removeuser`    | Remove a User           | `x-access-token`| None                                          | -             |
 | PATCH       | `/api/auth/updateprofile` | Update User Profile     | `x-access-token`| `username, email`                             | User / Admin  |
 | PATCH       | `/api/auth/updatepassword`| Update User Password    | `x-access-token`| `currentPassword, newPassword`                | User / Admin  |
@@ -17,6 +17,13 @@ User Authentication in `User-Service` is implemented using [JWT](https://jwt.io/
 | GET         | `/api/auth/verifytoken`   | Verify JWT Token        | `x-access-token`| None                                          | User / Admin  |
 | GET         | `/api/auth/verifyadmin`   | Verify if User is Admin | `x-access-token`| None                                          | Admin Only    |
 
-
 User History in `User-Service` is implemented using [MySQL](https://www.mysql.com/). The following table lists the API endpoints for user history.
 
+| HTTP Method | API Route                   | Purpose                               | Headers         | Parameters (JSON)                             | User Roles         |
+|-------------|-----------------------------|---------------------------------------|-----------------|-----------------------------------------------|--------------------|
+| POST        | `/api/hist/save`            | Save user history                     | `x-access-token`| `questionId`, `difficulty`, `attempt`         | Authenticated User |
+| POST        | `/api/hist/customsave`      | Save custom user history              | `x-access-token`| `questionId`, `difficulty`, `attempt`, `date` | Authenticated User |
+| GET         | `/api/hist/get`             | Get all unique questions from history | `x-access-token`| None                                          | Authenticated User |
+| GET         | `/api/hist/get/:difficulty` | Get unique questions by difficulty    | `x-access-token`| None                                          | Authenticated User |
+| GET         | `/api/hist/attempts`        | Get all attempted dates from history  | `x-access-token`| None                                          | Authenticated User |
+| GET         | `/api/hist/getall`          | Get all questions from user history   | `x-access-token`| None                                          | Authenticated User |
