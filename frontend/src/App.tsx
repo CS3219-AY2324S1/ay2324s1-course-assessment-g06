@@ -121,7 +121,7 @@ const App: React.FC = () => {
                       to={"/"}
                       className="nav-link"
                       onClick={() => setDropdownOpen(false)}
-                      style={generateActiveStyle("/")}
+                      style={generateActiveStyle("/home")}
                     >
                       Home
                     </Link>
