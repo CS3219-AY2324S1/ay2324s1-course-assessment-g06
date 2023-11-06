@@ -10,3 +10,14 @@ Click for instructions for the respective modes:
 - [Running Locally](docs/RunLocally.md)
 - [Running on Docker](docs/RunOnDocker.md)
 
+# Resources for Developer / Tester
+
+## Software
+
+For development, you may also want to install:
+
+- [MongoDB Compass](https://www.mongodb.com/try/download/compass)
+- [Docker Desktop](https://www.docker.com/get-started/)
+- [Postman](https://www.postman.com/downloads/)
+
+## Documentation
