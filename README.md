@@ -75,7 +75,7 @@ To run Frontend
   <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/google-cloud-run.svg"/>
   <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/nodemon.svg"/>
   <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/jwt-icon.svg"/>
-  <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/javascript-icon.svg"/>
+  <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/javascript.svg"/>
   <img width="55" src="https://raw.githubusercontent.com/gilbarbara/logos/master/logos/typescript-icon.svg"/>
 </div>
 
