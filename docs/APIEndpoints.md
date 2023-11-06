@@ -33,7 +33,7 @@ User History in `User-Service` is implemented using [MySQL](https://www.mysql.co
 Questions in `Question-Service` are implemented using [MongoDB](https://www.mongodb.com/). The following table lists the API endpoints for questions.
 
 | HTTP Method | API Route                  | Purpose                                       | Headers         | Parameters (JSON) | Query Parameters |Require Admin?|
-|-------------|----------------------------|-----------------------------------------------|-----------------|-------------------|------------------|------------------|
+|-------------|----------------------------|-----------------------------------------------|-----------------|-------------------|------------------|--------------|
 | GET         | `/api/questions/`          | Retrieve all questions                        | `x-access-token`| None              | None             | N |
 | GET         | `/api/questions/pagination/first` | Retrieve first page of paginated questions | `x-access-token`| None              | None             | N |
 | GET         | `/api/questions/pagination/remaining` | Retrieve remaining paginated questions   | `x-access-token`| None              | None             | N |
@@ -47,4 +47,10 @@ Questions in `Question-Service` are implemented using [MongoDB](https://www.mong
 | GET         | `/api/questions/total`     | Get total number of questions per difficulty  | None            | None              | None             | -            |
 
 
-Matching administration and Code execution is done in `Matching-Service`. The following table lists the API endpoints for Code execution
+Matching administration and Code execution is done in `Matching-Service`. The following table lists the API endpoints.
+
+| HTTP Method | API Route                  | Purpose                                       | Headers         | Parameters (JSON) | Query Parameters |Require Admin?|
+|-------------|----------------------------|-----------------------------------------------|-----------------|-------------------|------------------|--------------|
+| GET         | `/api/room/:roomId`        | Retrieve room information by ID               | -               | - | None | N |
+| POST        | `/api/code/run`            | Run user submitted code                       | `x-access-token`| `code, input, language, fileName` | None | N |
+
