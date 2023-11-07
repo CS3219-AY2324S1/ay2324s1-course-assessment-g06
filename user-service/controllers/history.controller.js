@@ -6,7 +6,6 @@ const Op = db.Sequelize.Op;
 const sequelize = db.Sequelize;
 
 // Controller function to create a user history
-// Usage: Post request to http://localhost:3003/api/user/history
 // NEW Usage: Post request to http://localhost:3003/api/hist/save
 exports.addHistory = async (req, res) => {
   console.log("controller.save req.body:", req.body);
@@ -22,12 +21,10 @@ exports.addHistory = async (req, res) => {
       // Handle the case where 'attempt' is missing
       console.log("Input arguments invalid in save controller");
       console.log(req.body);
-      return res
-        .status(400)
-        .send({
-          message:
-            "Invalid request data. Check if there are missing parameters or empty user ids.",
-        });
+      return res.status(400).send({
+        message:
+          "Invalid request data. Check if there are missing parameters or empty user ids.",
+      });
     }
 
     // Create an array to store the promises for creating rows
@@ -74,18 +71,15 @@ exports.addHistory = async (req, res) => {
   } catch (error) {
     // Handle any unexpected errors that occur outside of the Promise chain
     console.log("Save Controller Error => " + error);
-    res
-      .status(500)
-      .send({
-        message: `Error outside of promise chain, req.body value is ${JSON.stringify(
-          req.body
-        )}`,
-      });
+    res.status(500).send({
+      message: `Error outside of promise chain, req.body value is ${JSON.stringify(
+        req.body
+      )}`,
+    });
   }
 };
 
 // Controller function to create a user history with custom date
-// Usage: Post request to http://localhost:3003/api/user/customhistory
 // NEW Usage: Post request to http://localhost:3003/api/hist/customsave
 exports.addCustomHistory = (req, res) => {
   const userId = req.userId;
@@ -106,63 +100,8 @@ exports.addCustomHistory = (req, res) => {
     });
 };
 
-// Controller function to get all unique questions id
-// Usage: Get request to http://localhost:3003/api/user/history/:id
-// NEW Usage: Get request to http://localhost:3003/api/hist/get/:id
-exports.getAllUniqueQuestions = (req, res) => {
-  const userId = req.userId;
-
-  UserQuestions.findAll({
-    where: { userId: userId },
-    attributes: [
-      "question_id",
-      "difficulty",
-      [sequelize.fn("MAX", sequelize.col("attemptedAt")), "latestAttemptedAt"],
-    ],
-    group: ["question_id", "difficulty"],
-    order: [[sequelize.literal("latestAttemptedAt"), "ASC"]],
-  })
-    .then((userQuestions) => {
-      if (userQuestions) {
-        return res.status(200).send(userQuestions);
-      }
-      return res.status(404).send({ message: "User Questions not found!" });
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
-};
-
-// Controller function to get all questions id
-// Usage: Get request to http://localhost:3003/api/user/history/:id/Medium
-// NEW Usage: Get request to http://localhost:3003/api/hist/:difficulty
-exports.getAllUniqueQuestionsByDifficulty = (req, res) => {
-  const userId = req.userId;
-  const { difficulty } = req.params;
-
-  UserQuestions.findAll({
-    where: { userId: userId, difficulty: difficulty },
-    attributes: [
-      "question_id",
-      [sequelize.fn("MAX", sequelize.col("attemptedAt")), "latestAttemptedAt"],
-    ],
-    group: ["question_id"],
-    order: [[sequelize.literal("latestAttemptedAt"), "ASC"]],
-  })
-    .then((userQuestions) => {
-      if (userQuestions) {
-        return res.status(200).send(userQuestions);
-      }
-      return res.status(404).send({ message: "User Questions not found!" });
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
-};
-
 // Controller function to get all questions id for one user
-// Usage: Get request to http://localhost:3003/api/user/allhistory/:id
-// NEW Usage: Get request to http://localhost:3003/api/user/hist/getall
+// NEW Usage: Get request to http://localhost:3003/api/user/hist/get
 exports.getAllQuestions = (req, res) => {
   const userId = req.userId;
 
@@ -183,7 +122,6 @@ exports.getAllQuestions = (req, res) => {
 };
 
 // Controller function to get all questions attempt date for one user
-// Usage: Get request to http://localhost:3003/api/user/allhistory/:id
 // NEW Usage: Get request to http://localhost:3003/api/hist/attempts
 exports.getAttemptedDates = (req, res) => {
   const userId = req.userId;
