@@ -102,7 +102,6 @@ const Analytics: React.FC = () => {
             title: item.title,
             difficulty: item.difficulty,
           }));
-          console.log(idAndtitleAndDifficulty);
 
           setAllQuestionTitles(idAndtitleAndDifficulty);
         })

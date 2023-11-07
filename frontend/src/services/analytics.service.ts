@@ -13,17 +13,11 @@ export const fetchUserHistory = () => {
 export const fetchAttemptedQuestions = (questionId: string[]) => {
   return axios.post(
     QUESTION_HOST + "/questionbyid",
-    {
-      questionId,
-    },
+    { ids: questionId },
     {
       headers: authHeader(),
     }
   );
-};
-
-export const fetchUserAttempt = () => {
-  return axios.get(USER_HISTORY + "/attempts", { headers: authHeader() });
 };
 
 export const fetchUserAttemptsDates = () => {
