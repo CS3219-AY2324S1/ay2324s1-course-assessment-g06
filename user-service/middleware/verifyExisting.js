@@ -51,7 +51,6 @@ checkExistingEmail = (req, res, next) => {
 
 
   const verifyExisting = {
-    checkDuplicate: checkExistingUsernameEmail,
     checkEmail: checkExistingEmail,
     checkUsername: checkExistingUsername,
   };
