@@ -25,13 +25,14 @@ Click for instructions for the respective modes:
 
 ## Software
 
-For development, you may also want to install:
+For development, you may also want to install or subscribe to:
 
 - [Docker Desktop](https://www.docker.com/get-started/)
 - [Postman](https://www.postman.com/downloads/)
 - [MySQLWorkBench](https://dev.mysql.com/downloads/workbench/)
 - [NodeJS](https://nodejs.org/en/download)
 - [MySQL](https://dev.mysql.com/downloads/mysql/)
+- [OneCompiler on RapidAPI](https://rapidapi.com/onecompiler-onecompiler-default/api/onecompiler-apis/)
 
 ## Documentation
 
