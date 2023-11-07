@@ -5,7 +5,6 @@ const { Op } = require("sequelize");
 
 checkExistingUsernameEmail = (req, res, next) => {
   const userId = req.userId;
-  console.log(userId);
   const { username, email } = req.body;
   // Username
   User.count({
