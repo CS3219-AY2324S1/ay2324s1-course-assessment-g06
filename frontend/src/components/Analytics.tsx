@@ -37,6 +37,7 @@ type HeatMapValue = {
 };
 
 const Analytics: React.FC = () => {
+  const navigate = useNavigate();
   const [heatData, setHeatData] = useState<Array<HeatMapValue>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userDetails, setUserDetails] = useState<UserDetails>({
@@ -46,20 +47,16 @@ const Analytics: React.FC = () => {
     Total: 0,
     Questions: [],
   });
-
   const [questionDetails, setQuestionDetails] = useState<QuestionDetails>({
     Easy: 1,
     Medium: 1,
     Hard: 1,
     Total: 0,
   });
-
   const [allQuestionIds, setAllQuestionIds] = useState<string[]>([]);
   const [allQuestionTitles, setAllQuestionTitles] = useState<
     { question_id: string; title: string; difficulty: string }[]
   >([]);
-
-  const navigate = useNavigate();
 
   // Fetch user's history
   useEffect(() => {
