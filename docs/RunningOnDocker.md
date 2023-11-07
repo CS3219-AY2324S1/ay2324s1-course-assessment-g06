@@ -62,7 +62,7 @@ cd ay2324s1-course-assessment-g06/
      `JWT_SECRET=yoursecret`
 6. Fill up the MongoDB Atlas connection string
     ```
-    MONGO_USERNAME=<Your username>
+    MONGO_USERNAME=<Your Username>
     MONGO_PASSWORD=<Your Password>
     MONGO_HOST=<Your Cluster>
     ```
