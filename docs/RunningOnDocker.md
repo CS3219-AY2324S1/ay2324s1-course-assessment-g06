@@ -54,11 +54,11 @@ cd ay2324s1-course-assessment-g06/
 3. Open `.env` file
 4. Fill up the MYSQL root password
    (previously configured when installing MySQL)
-   - Example: if your root password is "password1234",
+   - Example: if your root password is "yourrootpassword",
      `SQL_PASSWORD=yourrootpassword`
 5. Fill up a JWT token password
    (for generating and decoding JWT tokens)
-   - Example: if you want to set the password to "password",
+   - Example: if you want to set the password to "yoursecret",
      `JWT_SECRET=yoursecret`
 6. Fill up the MongoDB Atlas connection string
     ```
