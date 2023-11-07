@@ -28,8 +28,6 @@ User History in `User-Service` is implemented using [MySQL](https://www.mysql.co
 |-------------|-----------------------------|---------------------------------------|-----------------|-----------------------------------------------|--------------|
 | POST        | `/api/hist/save`            | Save user history                     | `x-access-token`| `questionId`, `difficulty`, `attempt`         | N            |
 | POST        | `/api/hist/customsave`      | Save custom user history              | `x-access-token`| `questionId`, `difficulty`, `attempt`, `date` | N            |
-| GET         | `/api/hist/get`             | Get all unique questions from history | `x-access-token`| None                                          | N            |
-| GET         | `/api/hist/get/:difficulty` | Get unique questions by difficulty    | `x-access-token`| None                                          | N            |
 | GET         | `/api/hist/attempts`        | Get all attempted dates from history  | `x-access-token`| None                                          | N            |
 | GET         | `/api/hist/getall`          | Get all questions from user history   | `x-access-token`| None                                          | N            |
 
