@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import { NavigateFunction, useNavigate, useLocation } from "react-router-dom";
-import { Alert, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -18,7 +18,6 @@ import {
 } from "../services/user.service";
 import profilepic from "../images/profilepicture.png";
 import CircularProgress from "@mui/material/CircularProgress";
-
 
 interface User {
   username: string;
@@ -51,12 +50,11 @@ const BackButton = styled(Button)`
 `;
 
 const Profile: React.FC = () => {
+  let navigate: NavigateFunction = useNavigate();
   const currentUser = getCurrentUser();
   const [profile, setProfile] = useState<User | null>(null);
   const [userErrorMessage, setUserErrorMessage] = useState("");
-  const [openUpdateUserModel, setOpenUpdateUserModal] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const [openUpdatePasswordModel, setOpenUpdatePasswordModal] = useState(false);
   const [openDeleteModel, setOpenDeleteModal] = useState(false);
   const [showPasswordTextFields, setShowPasswordTextFields] = useState(false);
   const [textFieldsEnabled, setTextFieldsEnabled] = useState(false);
@@ -70,17 +68,7 @@ const Profile: React.FC = () => {
   const isAdmin = currentUser && currentUser.roles.includes("ROLE_ADMIN");
   const [isLoading, setIsLoading] = useState(true);
 
-  const enableTextField = () => {
-    setIsTextFieldClicked(true);
-  };
-
-  const toggleTextFields = () => {
-    setShowPasswordTextFields(!showPasswordTextFields);
-    setTextFieldsEnabled(false);
-    setPasswordButtonClicked(true);
-    setShowBackButton(!showBackButton);
-  };
-
+  // Fetch user details to display
   useEffect(() => {
     const id = getCurrentUser().id;
     getUserProfile(currentUser.accessToken)
@@ -93,31 +81,34 @@ const Profile: React.FC = () => {
         setIsLoading(false);
       });
   }, []);
-  // const location = useLocation();
-  // const setCurrentUser = location.state;
-  let navigate: NavigateFunction = useNavigate();
-  // delete code
+
+  const enableTextField = () => {
+    setIsTextFieldClicked(true);
+  };
+
+  const toggleTextFields = () => {
+    setShowPasswordTextFields(!showPasswordTextFields);
+    setTextFieldsEnabled(false);
+    setPasswordButtonClicked(true);
+    setShowBackButton(!showBackButton);
+  };
+
+  // Function to toggle delete modal window
   const toggleDeleteModal = () => {
     setOpenDeleteModal(!openDeleteModel);
   };
 
+  // Function to delete user account
   const deleteUserAccount = async () => {
     try {
       await deleteUser();
       logout();
     } catch (err) {
-      // useState to log api error?
       console.log(err);
     } finally {
-      // need to figure out how to not force it without context
       navigate("/login");
       window.location.reload();
     }
-  };
-
-  // update user
-  const toggleUpdateUserModal = () => {
-    setOpenUpdateUserModal(!openUpdateUserModel);
   };
 
   const updateProfileSchema = Yup.object().shape({
@@ -144,7 +135,6 @@ const Profile: React.FC = () => {
       updateUserProfile(values, currentUser.accessToken)
         .then((response) => {
           console.log(response);
-          // console.log(values);
           setProfile((prevProfile) => {
             if (!prevProfile) {
               return null;
@@ -157,7 +147,6 @@ const Profile: React.FC = () => {
           });
           setUserErrorMessage("");
           resetForm();
-          toggleUpdateUserModal();
           setShowSuccessModal(true);
         })
         .catch((err) => {
@@ -170,11 +159,6 @@ const Profile: React.FC = () => {
     },
     enableReinitialize: true,
   });
-
-  //Update Password
-  const toggleUpdatePasswordModal = () => {
-    setOpenUpdatePasswordModal(!openUpdatePasswordModel);
-  };
 
   const updatePasswordSchema = Yup.object().shape({
     currentPassword: Yup.string()
@@ -215,12 +199,9 @@ const Profile: React.FC = () => {
           console.log(response);
           setUserErrorMessage("");
           resetForm();
-          toggleUpdatePasswordModal();
           setShowSuccessModal(true);
         })
         .catch((err) => {
-          // console.log(err);
-          // console.log(err.response.data)
           setPasswordErrorMessage(err.response.data.message);
           setErrorType("password");
           setShowErrorModal(true);
@@ -248,14 +229,23 @@ const Profile: React.FC = () => {
     <div className="container">
       <div
         className="jumbotron"
-        style={{ borderRadius: "10px", backgroundColor: "#E6E6E6", paddingLeft: "20px", paddingRight: "20px" }}
+        style={{
+          borderRadius: "10px",
+          backgroundColor: "#E6E6E6",
+          paddingLeft: "20px",
+          paddingRight: "20px",
+        }}
       >
         <form onSubmit={updateFormik.handleSubmit}>
           <div className="container">
             <div className="row justify-content-center align-items-center">
               <div className="col-12 col-md-4">
                 <div className="d-flex align-items-center justify-content-center">
-                  <img src={profilepic} alt="picture" className="img-fluid my-2" />
+                  <img
+                    src={profilepic}
+                    alt="picture"
+                    className="img-fluid my-2"
+                  />
                 </div>
                 <div
                   style={{
@@ -263,22 +253,25 @@ const Profile: React.FC = () => {
                     marginTop: "20px",
                   }}
                 >
-                  {!isAdmin && (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleDeleteModal();
-                      }}
-                      style={{
-                        position: "relative",
-                        border: "none",
-                        textDecoration: "underline",
-                        color: "#9BA4B5",
-                        background: "none",
-                      }}
-                    >
-                      delete account
-                    </button>)}
+                  <form>
+                    {!isAdmin && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleDeleteModal();
+                        }}
+                        style={{
+                          position: "relative",
+                          border: "none",
+                          textDecoration: "underline",
+                          color: "#9BA4B5",
+                          background: "none",
+                        }}
+                      >
+                        delete account
+                      </button>
+                    )}
+                  </form>
                 </div>
               </div>
               <div className="col-12 col-md-7">
@@ -289,10 +282,16 @@ const Profile: React.FC = () => {
                       alignItems: "center",
                       marginBottom: "20px",
                       marginTop: "40px",
-
                     }}
                   >
-                    <label htmlFor="username" style={{ position: "relative", marginRight: "-5px", fontSize: "18px" }}>
+                    <label
+                      htmlFor="username"
+                      style={{
+                        position: "relative",
+                        marginRight: "-5px",
+                        fontSize: "18px",
+                      }}
+                    >
                       Username
                     </label>
                     <TextField
@@ -342,7 +341,7 @@ const Profile: React.FC = () => {
                       style={{
                         position: "relative",
                         paddingRight: "34px",
-                        fontSize: '18px'
+                        fontSize: "18px",
                       }}
                     >
                       Email
@@ -392,7 +391,11 @@ const Profile: React.FC = () => {
                     >
                       <label
                         htmlFor="password"
-                        style={{ position: "relative", paddingRight: "-2px", fontSize: '18px' }}
+                        style={{
+                          position: "relative",
+                          paddingRight: "-2px",
+                          fontSize: "18px",
+                        }}
                       >
                         Password
                       </label>
@@ -429,7 +432,7 @@ const Profile: React.FC = () => {
                           style={{
                             position: "relative",
                             marginRight: "-66px",
-                            fontSize: "18px"
+                            fontSize: "18px",
                           }}
                         >
                           Current Password
@@ -529,7 +532,7 @@ const Profile: React.FC = () => {
                         style={{
                           position: "relative",
                           marginRight: "-70px",
-                          fontSize: "18px"
+                          fontSize: "18px",
                         }}
                       >
                         Confirm Password
@@ -568,7 +571,6 @@ const Profile: React.FC = () => {
                   </>
                 )}
 
-
                 <div
                   style={{
                     display: "flex",
@@ -576,7 +578,7 @@ const Profile: React.FC = () => {
                     marginBottom: "20px",
                     paddingLeft: "10px",
                     paddingRight: "10px",
-                    marginTop: "40px"
+                    marginTop: "40px",
                   }}
                 >
                   {showBackButton && (
