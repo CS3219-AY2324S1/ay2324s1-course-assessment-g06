@@ -40,15 +40,6 @@ const CustomDialogActions = styled(DialogActions)`
   justify-content: space-between;
 `;
 
-const BackButton = styled(Button)`
-  background-color: #d8d8d8;
-  color: white;
-  font-weight: bold;
-  &:hover {
-    background-color: #6c63ff;
-  }
-`;
-
 const Profile: React.FC = () => {
   let navigate: NavigateFunction = useNavigate();
   const currentUser = getCurrentUser();
