@@ -66,6 +66,11 @@ cd ay2324s1-course-assessment-g06/
     MONGO_PASSWORD=<Your Password>
     MONGO_HOST=<Your Cluster>
     ```
+7. Fill up the RapidAPI host and key for code execution
+    ```
+    CDEX_KEY=<Your X-RapidAPI-Key from RapidAPI>
+    CDEX_HOST=<Your X-RapidAPI-Host from RapidAPI>
+    ```
 
 ## Start Docker and Check Version
 
