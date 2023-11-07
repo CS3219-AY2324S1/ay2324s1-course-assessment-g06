@@ -6,19 +6,14 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
-import axios from "axios";
-import authHeader from "../services/auth-header";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
   fetchUserHistory,
   fetchAttemptedQuestions,
+  fetchQuestionsDetails,
+  fetchUserAttemptsDates,
 } from "../services/analytics.service";
-
-const USER_HISTORY =
-  process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/hist";
-const QUESTION_HOST =
-  process.env.REACT_APP_QNS_SVC || "http://localhost:3000/api/questions";
 
 type QuestionDetails = {
   Easy: number;
@@ -99,7 +94,7 @@ const Analytics: React.FC = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  // Fetch attempted questions id, title and difficulty
+  // Fetch user attempted questions id, title and difficulty
   useEffect(() => {
     if (allQuestionIds.length > 0) {
       fetchAttemptedQuestions(allQuestionIds)
@@ -110,6 +105,7 @@ const Analytics: React.FC = () => {
             title: item.title,
             difficulty: item.difficulty,
           }));
+          console.log(idAndtitleAndDifficulty);
 
           setAllQuestionTitles(idAndtitleAndDifficulty);
         })
@@ -119,13 +115,38 @@ const Analytics: React.FC = () => {
     }
   }, [allQuestionIds]);
 
+  // Fetch total number of questions in the database and total number of questions per category
   useEffect(() => {
-    // fetch user attempts data
-    axios
-      .get(USER_HISTORY + "/attempts", { headers: authHeader() })
+    fetchQuestionsDetails()
       .then((response) => {
-        console.log(response.data);
-        // update heat data state
+        const data = response.data;
+        let total = 0;
+        data.forEach((item: any) => {
+          total += item.count;
+          setQuestionDetails((prevQuestionDetails) => ({
+            ...prevQuestionDetails,
+            [item.difficulty]: item.count,
+          }));
+        });
+
+        setQuestionDetails((prevQuestionDetails) => ({
+          ...prevQuestionDetails,
+          Total: total || 1,
+        }));
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        // Data fetch completed, set loading to false
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Fetch user attempts dates
+  useEffect(() => {
+    fetchUserAttemptsDates()
+      .then((response) => {
         setHeatData(response.data);
       })
       .catch((err) => {
