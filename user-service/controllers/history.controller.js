@@ -8,9 +8,6 @@ const sequelize = db.Sequelize;
 // Controller function to create a user history
 // NEW Usage: Post request to http://localhost:3003/api/hist/save
 exports.addHistory = async (req, res) => {
-  console.log("controller.save req.body:", req.body);
-  console.log("controller.save req.userId:", req.userId);
-
   try {
     const userId = req.userId;
     const question_id = req.body.questionId;
@@ -18,9 +15,6 @@ exports.addHistory = async (req, res) => {
     const attempt = req.body.attempt;
 
     if (!question_id || !difficulty || !attempt) {
-      // Handle the case where 'attempt' is missing
-      console.log("Input arguments invalid in save controller");
-      console.log(req.body);
       return res.status(400).send({
         message:
           "Invalid request data. Check if there are missing parameters or empty user ids.",
@@ -54,7 +48,6 @@ exports.addHistory = async (req, res) => {
 
       upsertPromises.push(Promise.resolve("Record executed successfully."));
     } catch (error) {
-      console.log("Error in promise chain, " + error);
       upsertPromises.push(Promise.reject(error));
     }
 
@@ -70,7 +63,6 @@ exports.addHistory = async (req, res) => {
       });
   } catch (error) {
     // Handle any unexpected errors that occur outside of the Promise chain
-    console.log("Save Controller Error => " + error);
     res.status(500).send({
       message: `Error outside of promise chain, req.body value is ${JSON.stringify(
         req.body
