@@ -8,7 +8,7 @@ interface ProtectedProps {
 
 const GuestRoute: React.FC<ProtectedProps> = ({ isLoggedIn, children }) => {
     if (isLoggedIn) {
-      return <Navigate to="/" />;
+      return <Navigate to="/home" />;
     }
     
     return <>{children}</>;
