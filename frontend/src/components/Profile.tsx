@@ -82,10 +82,12 @@ const Profile: React.FC = () => {
       });
   }, []);
 
+  // Function to enable the password text fields when they are clicked
   const enableTextField = () => {
     setIsTextFieldClicked(true);
   };
 
+  // Function to handle event when change password button is clicked
   const toggleTextFields = () => {
     setShowPasswordTextFields(!showPasswordTextFields);
     setTextFieldsEnabled(false);
