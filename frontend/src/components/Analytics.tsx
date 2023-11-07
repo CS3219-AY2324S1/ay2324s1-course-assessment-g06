@@ -10,7 +10,10 @@ import axios from "axios";
 import authHeader from "../services/auth-header";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import {
+  fetchUserHistory,
+  fetchAttemptedQuestions,
+} from "../services/analytics.service";
 
 const USER_HISTORY =
   process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/hist";
@@ -24,14 +27,12 @@ type QuestionDetails = {
   Total: number;
 };
 
-// how many the user solved
 type UserDetails = {
   Easy: number;
   Medium: number;
   Hard: number;
   Total: number;
   Questions: [];
-  //need attempted
 };
 
 type HeatMapValue = {
@@ -40,9 +41,7 @@ type HeatMapValue = {
   count: number;
 };
 
-type questionData = {};
 const Analytics: React.FC = () => {
-  // all unique values
   const [heatData, setHeatData] = useState<Array<HeatMapValue>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userDetails, setUserDetails] = useState<UserDetails>({
@@ -67,15 +66,12 @@ const Analytics: React.FC = () => {
 
   const navigate = useNavigate();
 
+  // Fetch user's history
   useEffect(() => {
-    // fetch user history
-    axios
-      .get(USER_HISTORY + "/get", { headers: authHeader() })
+    fetchUserHistory()
       .then((res) => {
-        // Assuming res.data is an array of solved questions
         const solvedQuestions = res.data;
 
-        // Calculate the count for each difficulty level
         const easyCount = solvedQuestions.filter(
           (q: any) => q.difficulty === "Easy"
         ).length;
@@ -86,7 +82,6 @@ const Analytics: React.FC = () => {
           (q: any) => q.difficulty === "Hard"
         ).length;
 
-        // update user details state
         setUserDetails({
           ...userDetails,
           Easy: easyCount,
@@ -96,7 +91,6 @@ const Analytics: React.FC = () => {
           Questions: solvedQuestions,
         });
 
-        // consolidate all question Ids in user history
         const questionIds = solvedQuestions.map(
           (item: any) => item.question_id
         );
@@ -105,60 +99,25 @@ const Analytics: React.FC = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  // Fetch attempted questions id, title and difficulty
   useEffect(() => {
     if (allQuestionIds.length > 0) {
-      const requestBody = {
-        ids: allQuestionIds,
-      };
-      axios
-        .post(QUESTION_HOST + "/questionbyid", requestBody, {
-          headers: authHeader(),
-        })
+      fetchAttemptedQuestions(allQuestionIds)
         .then((response) => {
           const data = response.data;
-          const titleAndDifficulty = data.map((item: any) => ({
+          const idAndtitleAndDifficulty = data.map((item: any) => ({
             question_id: item._id,
             title: item.title,
             difficulty: item.difficulty,
           }));
-          console.log(titleAndDifficulty);
 
-          setAllQuestionTitles(titleAndDifficulty);
+          setAllQuestionTitles(idAndtitleAndDifficulty);
         })
         .catch((err) => {
           console.log(err);
         });
     }
   }, [allQuestionIds]);
-
-  useEffect(() => {
-    // fetch total question data
-    axios
-      .get(QUESTION_HOST + "/total", { headers: authHeader() })
-      .then((response) => {
-        const data = response.data; // Assuming your data is an array of objects
-        let total = 0;
-        data.forEach((item: any) => {
-          total += item.count;
-          setQuestionDetails((prevQuestionDetails) => ({
-            ...prevQuestionDetails,
-            [item.difficulty]: item.count,
-          }));
-        });
-
-        // Update the total count
-        setQuestionDetails((prevQuestionDetails) => ({
-          ...prevQuestionDetails,
-          Total: total || 1,
-        }));
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false); // Data fetch completed, set loading to false
-      });;
-  }, []);
 
   useEffect(() => {
     // fetch user attempts data
@@ -174,9 +133,6 @@ const Analytics: React.FC = () => {
       });
   }, []);
 
-  useEffect(() => {
-    // fetch user's attempt
-  });
   return (
     <div className="container">
       {isLoading ? (
@@ -292,7 +248,9 @@ const Analytics: React.FC = () => {
                       borderRadius: "20px",
                     }}
                     variant="determinate"
-                    value={100 * (userDetails.Easy / (questionDetails.Easy || 1))}
+                    value={
+                      100 * (userDetails.Easy / (questionDetails.Easy || 1))
+                    }
                     className="MuiLinearProgress-colorPrimary"
                   />
                 </div>
@@ -386,7 +344,9 @@ const Analytics: React.FC = () => {
                       borderRadius: "20px",
                     }}
                     variant="determinate"
-                    value={100 * (userDetails.Hard / (questionDetails.Hard || 1))}
+                    value={
+                      100 * (userDetails.Hard / (questionDetails.Hard || 1))
+                    }
                   />
                 </div>
               </CardContent>
@@ -502,10 +462,10 @@ const Analytics: React.FC = () => {
                         item.difficulty === "Easy"
                           ? "#BCDEB6" // Background color for "Easy" difficulty
                           : item.difficulty === "Medium"
-                            ? "#F2CE6F" // Background color for "Medium" difficulty
-                            : item.difficulty === "Hard"
-                              ? "#F14949" // Background color for "Hard" difficulty
-                              : "transparent", // Default background color if none of the conditions match
+                          ? "#F2CE6F" // Background color for "Medium" difficulty
+                          : item.difficulty === "Hard"
+                          ? "#F14949" // Background color for "Hard" difficulty
+                          : "transparent", // Default background color if none of the conditions match
                     }}
                   >
                     {item.difficulty}
@@ -513,8 +473,9 @@ const Analytics: React.FC = () => {
                 </div>
               ))}
             </CardContent>
-          </Card></>)}
-
+          </Card>
+        </>
+      )}
     </div>
   );
 };
