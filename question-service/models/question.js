@@ -8,7 +8,7 @@ const questionSchema = new mongoose.Schema({
   category: String,
   topics: String,
   isDeleted: { type: Boolean, default: false },
-});
+}, {collection: 'serverless'});
 
 const Question = mongoose.model("Question", questionSchema);
 
