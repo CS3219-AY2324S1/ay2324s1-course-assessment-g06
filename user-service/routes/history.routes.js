@@ -10,46 +10,69 @@ module.exports = function (app) {
     next();
   });
 
+  // Endpoint to save user history
+  // Returns:
+  // 200 OK on success
+  // 400 Bad Request for validation errors
+  // 500 on Unexpected errors
   app.post("/api/hist/save", [authJwt.verifyToken], controller.addHistory);
-  // app.post('/api/user/history', [authJwt.verifyToken], controller.addHistory);
 
+  // Endpoint to save custom user history
+  // Returns:
+  // 200 OK on success
+  // 401 Unauthorized if not authenticated or no token provided
+  // 500 on Unexpected errors
   app.post(
     "/api/hist/customsave",
     [authJwt.verifyToken],
     controller.addCustomHistory
   );
-  // app.post('/api/hist/customhistory', [authJwt.verifyToken], controller.addCustomHistory);
 
+  // Endpoint to get all unique questions from user history
+  // Returns:
+  // 200 OK on success
+  // 401 Unauthorized if not authenticated or no token provided
+  // 404 on User questions not found
+  // 500 on Unexpected errors
   app.get(
     "/api/hist/get",
     [authJwt.verifyToken],
     controller.getAllUniqueQuestions
   );
-  // app.get('/api/user/history', [authJwt.verifyToken], controller.getAllUniqueQuestions);
 
+  // Endpoint to get all unique questions from user history by difficulty
+  // Returns:
+  // 200 OK on success
+  // 401 Unauthorized if not authenticated or no token provided
+  // 404 on User questions not found
+  // 500 on Unexpected errors
   app.get(
     "/api/hist/get/:difficulty",
     [authJwt.verifyToken],
     controller.getAllUniqueQuestionsByDifficulty
   );
 
-  // app.get(
-  //   '/api/user/history/:difficulty',
-  //   [authJwt.verifyToken],
-  //   controller.getAllUniqueQuestionsByDifficulty
-  // );
+  // Endpoint to get all attempted dates from user history
+  // Returns:
+  // 200 OK on success
+  // 401 Unauthorized if not authenticated or no token provided
+  // 404 on User questions not found
+  // 500 on Unexpected errors
   app.get(
     "/api/hist/attempts",
     [authJwt.verifyToken],
     controller.getAttemptedDates
   );
-  // app.get('/api/user/attempts', [authJwt.verifyToken], controller.getAttemptedDates);
 
+  // Endpoint to get all questions from user history
+  // Returns:
+  // 200 OK on success
+  // 401 Unauthorized if not authenticated or no token provided
+  // 404 on User questions not found
+  // 500 on Unexpected errors
   app.get(
     "/api/hist/getall",
     [authJwt.verifyToken],
     controller.getAllQuestions
   );
 };
-//   app.get('/api/user/allhistory', [authJwt.verifyToken], controller.getAllQuestions);
-// };

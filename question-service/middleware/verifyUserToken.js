@@ -17,7 +17,7 @@ const verifyUserToken = (req, res, next) => {
         if (userResponse.status === 200) {
             next();  // The user is a valid user, proceed to the next middleware
         } else {
-            // Forward the status code from the adminResponse
+            // Forward the status code from the userResponse
             res.status(userResponse.status).send({ message: userResponse.data.message });
         }
     })
