@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../css/Matching.css';
 import { iconCategories } from './IconMatching';
 import { langNames } from '@uiw/codemirror-extensions-langs';
-import { getCurrentUser } from '../../services/auth.service';
+import { getCurrentUser } from '../../utils/auth.service';
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;

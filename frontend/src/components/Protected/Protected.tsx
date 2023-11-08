@@ -1,8 +1,8 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import useUserCheck from './useUserCheck';
-import ErrorPage from '../ErrorPage';
-import { logout } from '../../services/auth.service';
+import ErrorPage from '../../pages/ErrorPage';
+import { logout } from '../../utils/auth.service';
 import CircularProgress from "@mui/material/CircularProgress";
 
 

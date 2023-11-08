@@ -1,33 +1,33 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import BasicTable from "./Table/Table";
-import Question from "./Question/Question";
-import Matching from "./components/Matching/Matching";
-import CodeSpace from "./components/Matching/CodeSpace";
-import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
+import BasicTable from "./pages/Table/Table";
+import Question from "./pages/Question/Question";
+import Matching from "./pages/Matching/Matching";
+import CodeSpace from "./pages/Matching/CodeSpace";
+import AddQuestionForm from "./pages/AddQuestionForm/AddQuestionForm";
 import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import $ from "jquery"; // Import jQuery
 import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Import Bootstrap JavaScript (with Popper.js included)
-import * as AuthService from "./services/auth.service";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Home from "./components/Home";
-import Profile from "./components/Profile";
+import * as AuthService from "./utils/auth.service";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 import Protected from "./components/Protected/Protected";
 import AdminProtected from "./components/AdminProtected/AdminProtected";
-import ErrorPage from "./components/ErrorPage";
+import ErrorPage from "./pages/ErrorPage";
 import GuestRoute from "./components/GuestRoute";
 import EventBus from "./common/EventBus";
 import logo from "./images/peerPrepLogo.png";
-import Analytics from "./components/Analytics";
+import Analytics from "./pages/Analytics";
 
 import "./App.css";
-import "./Table/Table";
-import UserAttempt from "./UserAttempt/UserAttempt";
-import { getCurrentUser } from "./services/auth.service";
+import "./pages/Table/Table";
+import UserAttempt from "./pages/UserAttempt/UserAttempt";
+import { getCurrentUser } from "./utils/auth.service";
 
 const App: React.FC = () => {
   console.log("QNS_SVC: ", process.env.REACT_APP_QNS_SVC);

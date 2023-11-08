@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import { Button, Container, Grid, Paper } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getCurrentUser } from "../services/auth.service";
+import { getCurrentUser } from "../../utils/auth.service";
 
 interface QuestionInt {
   _id: string;

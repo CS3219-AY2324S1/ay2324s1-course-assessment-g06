@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCurrentUser, deleteUser, logout } from "../services/auth.service";
+import { getCurrentUser, deleteUser, logout } from "../utils/auth.service";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -15,7 +15,7 @@ import {
   getUserProfile,
   updateUserPassword,
   updateUserProfile,
-} from "../services/user.service";
+} from "../utils/user.service";
 import profilepic from "../images/profilepicture.png";
 import CircularProgress from "@mui/material/CircularProgress";
 
