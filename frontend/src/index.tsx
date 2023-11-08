@@ -10,7 +10,7 @@ import Question from "./pages/Question/Question";
 import Matching from "./pages/Matching/Matching";
 import CodeSpace from "./pages/Matching/CodeSpace";
 import AddQuestionForm from "./pages/AddQuestionForm/AddQuestionForm";
-import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
+import UpdateQuestionForm from "./components/UpdateQuestionForm/UpdateQuestionForm";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";

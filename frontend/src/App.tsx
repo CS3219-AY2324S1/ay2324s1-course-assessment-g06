@@ -5,7 +5,7 @@ import Question from "./pages/Question/Question";
 import Matching from "./pages/Matching/Matching";
 import CodeSpace from "./pages/Matching/CodeSpace";
 import AddQuestionForm from "./pages/AddQuestionForm/AddQuestionForm";
-import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
+import UpdateQuestionForm from "./components/UpdateQuestionForm/UpdateQuestionForm";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
@@ -20,7 +20,7 @@ import Protected from "./components/Protected/Protected";
 import AdminProtected from "./components/AdminProtected/AdminProtected";
 import ErrorPage from "./pages/ErrorPage";
 import GuestRoute from "./components/GuestRoute";
-import EventBus from "./common/EventBus";
+import EventBus from "./components/common/EventBus";
 import logo from "./images/peerPrepLogo.png";
 import Analytics from "./pages/Analytics";
 
