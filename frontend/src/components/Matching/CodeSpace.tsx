@@ -16,7 +16,7 @@ import Sender from "../../images/chatPicture1.png";
 import Receiver from "../../images/chatPicture2.png";
 import CodeExecutionSuccess from "../../images/codeExecutionSuccess.png";
 import CodeExecutionFail from "../../images/codeExecutionFail.png";
-import './CodeSpace.css';
+import "../../css/CodeSpace.css";
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { socket } from './socket';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-import './Matching.css';
+import '../../css/Matching.css';
 import { iconCategories } from './IconMatching';
 import { langNames } from '@uiw/codemirror-extensions-langs';
 import { getCurrentUser } from '../../services/auth.service';
