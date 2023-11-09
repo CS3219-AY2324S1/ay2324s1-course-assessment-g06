@@ -3,7 +3,7 @@ import { socket } from './socket';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import '../../css/Matching.css';
-import { iconCategories } from './IconMatching';
+import { iconCategories } from '../../components/Matching/TopicIcons';
 import { langNames } from '@uiw/codemirror-extensions-langs';
 import { getCurrentUser } from '../../utils/auth.service';
 

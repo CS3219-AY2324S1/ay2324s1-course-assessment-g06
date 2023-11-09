@@ -16,7 +16,7 @@ import {
   updateUserPassword,
   updateUserProfile,
 } from "../utils/user.service";
-import profilepic from "../images/profilepicture.png";
+import profilepic from "../images/default-user.png";
 import CircularProgress from "@mui/material/CircularProgress";
 
 

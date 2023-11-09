@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import BasicTable from "./pages/Table/Table";
-import Question from "./pages/Question/Question";
+import BasicTable from "./pages/Question/QuestionsTable";
+import Question from "./pages/Question/ViewQuestion";
 import Matching from "./pages/Matching/Matching";
 import CodeSpace from "./pages/Matching/CodeSpace";
-import AddQuestionForm from "./pages/AddQuestionForm/AddQuestionForm";
-import UpdateQuestionForm from "./components/UpdateQuestionForm/UpdateQuestionForm";
+import AddQuestionForm from "./pages/Question/AddQuestion";
+import UpdateQuestionForm from "./pages/Question/UpdateQuestion";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
@@ -16,17 +16,17 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import Protected from "./components/Protected/Protected";
-import AdminProtected from "./components/AdminProtected/AdminProtected";
-import ErrorPage from "./pages/ErrorPage";
-import GuestRoute from "./components/GuestRoute";
-import EventBus from "./components/common/EventBus";
-import logo from "./images/peerPrepLogo.png";
+import Protected from "./components/Authentication/Protected";
+import AdminProtected from "./components/Authentication/AdminProtected";
+import ErrorPage from "./pages/Error";
+import GuestRoute from "./components/Authentication/GuestRoute";
+import EventBus from "./components/EventBus";
+import logo from "./images/logo.png";
 import Analytics from "./pages/Analytics";
 
 import "./App.css";
-import "./pages/Table/Table";
-import UserAttempt from "./pages/UserAttempt/UserAttempt";
+import "./pages/Question/QuestionsTable";
+import UserAttempt from "./pages/Question/QuestionAttempt";
 import { getCurrentUser } from "./utils/auth.service";
 
 const App: React.FC = () => {

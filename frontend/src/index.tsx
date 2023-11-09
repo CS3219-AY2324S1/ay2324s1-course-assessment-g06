@@ -5,12 +5,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import BasicTable from "./pages/Table/Table";
-import Question from "./pages/Question/Question";
+import BasicTable from "./pages/Question/QuestionsTable";
+import Question from "./pages/Question/ViewQuestion";
 import Matching from "./pages/Matching/Matching";
 import CodeSpace from "./pages/Matching/CodeSpace";
-import AddQuestionForm from "./pages/AddQuestionForm/AddQuestionForm";
-import UpdateQuestionForm from "./components/UpdateQuestionForm/UpdateQuestionForm";
+import AddQuestionForm from "./pages/Question/AddQuestion";
+import UpdateQuestionForm from "./pages/Question/UpdateQuestion";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
