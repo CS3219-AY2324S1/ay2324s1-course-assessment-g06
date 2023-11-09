@@ -6,7 +6,7 @@ const Op = db.Sequelize.Op;
 const sequelize = db.Sequelize;
 
 // Controller function to create a user history
-// NEW Usage: Post request to http://localhost:3003/api/hist/save
+// Usage: Post request to http://localhost:3003/api/hist/save
 exports.addHistory = async (req, res) => {
   try {
     const userId = req.userId;
