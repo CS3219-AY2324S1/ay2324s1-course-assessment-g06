@@ -21,7 +21,7 @@ const QUESTION_HOST = process.env.QNS_SVC
   ? process.env.QNS_SVC
   : 'http://localhost:3000/api/questions';
 
-const MATCHING_PORT = process.env.MTC_SVC_PORT 
+const MATCHING_PORT = process.env.MTC_SVC_PORT
   ? process.env.MTC_SVC_PORT
   : 3002;
 
@@ -46,7 +46,7 @@ const axios = require('axios');
 async function isTokenValid(accessToken) {
   try {
     const response = await axios.get(`${USER_SERVICE}/verifyToken`, {
-      headers: { "x-access-token":accessToken}
+      headers: { "x-access-token": accessToken }
     });
     return response.status === 200;
   } catch (error) {
@@ -145,13 +145,17 @@ io.use(socketioJwt.authorize({
 }));
 
 io.on('connection', async (socket) => {
-  console.log('A user connected');
+  // console.log('A user connected');
   console.log('User Token:', socket.decoded_token, "connected");
-  
+
   socket.on('match me', (selectedDifficulty, selectedTopic, selectedLanguage, accessToken) => {
     const userId = socket.decoded_token.id;
-    console.log("--Waiting Queue--")
-    console.log(waitingQueue)
+    console.log("Socket ID: ", socket.id + ", User ID: " + socket.decoded_token.id);
+
+    // const socketIds = waitingQueue.map((socket) => socket.id);
+    // const queueOutput = socketIds.length > 0 ? `[${socketIds.join(', ')}]` : '[]';
+    // console.log("Matching Queue:", queueOutput);
+
     if (waitingQueue.find(user => user.userId === userId)) {
       console.log('User is already in the queue and cannot self-match.');
     } else {
@@ -159,23 +163,29 @@ io.on('connection', async (socket) => {
       const matchingUserIndex = waitingQueue.findIndex(
         (user) => user.selectedDifficulty === selectedDifficulty && user.selectedTopic === selectedTopic && user.selectedLanguage == selectedLanguage
       );
-  
+
       if (matchingUserIndex !== -1) {
         console.log('User match!');
         const user1 = waitingQueue.splice(matchingUserIndex, 1)[0];
-        console.log("--Waiting Queue--")
-        console.log(waitingQueue)
+
+        const socketIds = waitingQueue.map((socket) => socket.id);
+        const queueOutput = socketIds.length > 0 ? `[${socketIds.join(', ')}]` : '[]';
+        console.log("Matching Queue:", queueOutput);
+
+
         startMatch(user1, socket, selectedDifficulty, selectedTopic, accessToken);
       } else {
-        console.log('No user found');
+        // console.log('No user found');
         socket.userId = userId;
         socket.selectedDifficulty = selectedDifficulty;
         socket.selectedTopic = selectedTopic;
         socket.selectedLanguage = selectedLanguage;
         socket.accessToken = accessToken;
         waitingQueue.push(socket);
-        console.log("--Waiting Queue--")
-        console.log(waitingQueue)
+        const socketIds = waitingQueue.map((socket) => socket.id);
+        const queueOutput = socketIds.length > 0 ? `[${socketIds.join(', ')}]` : '[]';
+        console.log("Matching Queue:", queueOutput);
+
       }
     }
   });
@@ -184,11 +194,12 @@ io.on('connection', async (socket) => {
     const index = waitingQueue.indexOf(socket);
     if (index !== -1) {
       waitingQueue.splice(index, 1);
-      console.log('Matching canceled by user');
+      // console.log('Matching canceled by user');
       socket.emit('match canceled');
     }
-    console.log("--Waiting Queue--")
-    console.log(waitingQueue)
+    const socketIds = waitingQueue.map((socket) => socket.id);
+    const queueOutput = socketIds.length > 0 ? `[${socketIds.join(', ')}]` : '[]';
+    console.log("Matching Queue:", queueOutput);
   });
 
   // Listen for the 'joinRoom' event from the client
@@ -196,8 +207,8 @@ io.on('connection', async (socket) => {
     // Check if the user is in the specified room
     if (rooms.has(roomId)) {
       const roomInfo = rooms.get(roomId);
-      const user = socket.decoded_token; 
-  
+      const user = socket.decoded_token;
+
       if (user === roomInfo.user1 || user === roomInfo.user2) {
         socket.join(roomId);
         socket.to(roomId).emit('userConnected');
@@ -233,7 +244,7 @@ io.on('connection', async (socket) => {
 
   // Listen for the 'disconnect' event from the client
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    // console.log('A user disconnected');
 
     // Search for the room this socket disconnected from
     for (const [roomId, roomInfo] of rooms.entries()) {
@@ -254,7 +265,7 @@ io.on('connection', async (socket) => {
     removeRoomSession(roomId);
     socket.leave(roomId);
   });
-  
+
   // Disconnect users in the session
   socket.on('quitSession', (roomId) => {
     console.log("A user clicked on quit session")
@@ -267,7 +278,7 @@ io.on('connection', async (socket) => {
       // socket.to(roomId).emit('sessionEnded');
       // // Leave the room
       // socket.leave(roomId);
-  
+
       // Remove the room from the 'rooms' map
       removeRoomSession(roomId);
     }
@@ -277,7 +288,7 @@ io.on('connection', async (socket) => {
   socket.on('requestSubmitSession', (roomId, questionId, questionDifficulty, otherUserQuit) => {
     console.log("A user clicked on submit session")
     console.log("is user still with a peer? ", !otherUserQuit);
-    
+
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
@@ -296,7 +307,7 @@ io.on('connection', async (socket) => {
   // Reject submission request from other user
   socket.on('rejectSubmitRequest', (roomId, questionId, questionDifficulty) => {
     console.log("Other user has rejected the submit request")
-    
+
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the submission request is rejected
@@ -307,7 +318,7 @@ io.on('connection', async (socket) => {
   // Submit data to sql history
   socket.on('submitSession', (roomId, questionId, questionDifficulty) => {
     console.log("A user clicked on submit session")
-    
+
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
@@ -325,7 +336,7 @@ io.on('connection', async (socket) => {
   });
 
   // Other user ran code
-  socket.on('codeRun',( roomId, ranCodeParams) => {
+  socket.on('codeRun', (roomId, ranCodeParams) => {
     console.log("A user clicked on run code");
     socket.to(roomId).emit('codeRun', ranCodeParams);
   });
@@ -394,11 +405,11 @@ async function generateQuestion(difficulty, topic, accessToken1, accessToken2) {
   try {
     const response = await fetch(
       QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`, {
-        headers: {
-          "x-access-token": accessToken1,
-          "x-access-token2": accessToken2,
-        },
-      }
+      headers: {
+        "x-access-token": accessToken1,
+        "x-access-token2": accessToken2,
+      },
+    }
     );
     console.log(QUESTION_HOST);
     if (!response.ok) {
