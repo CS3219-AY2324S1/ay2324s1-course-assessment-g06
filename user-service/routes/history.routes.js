@@ -18,11 +18,7 @@ module.exports = function (app) {
     controller.addCustomHistory
   );
 
-  app.get(
-    "/api/hist/attempts",
-    [authJwt.verifyToken],
-    controller.getAttemptedDates
-  );
+  app.get("/api/hist/attempts", [authJwt.verifyToken], controller.getAttemptedDates );
 
   app.get("/api/hist/get", [authJwt.verifyToken], controller.getAllQuestions);
 };
