@@ -116,22 +116,20 @@ const Matchmaking: React.FC = () => {
   }, [isMatching]);
 
   const startTimer = () => {
-    if (timerInterval === null) {
-      console.log('start timer');
-      let seconds = 0;
-      const intervalId = setInterval(() => {
-        seconds++;
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-        setMatchStatus(`Matching... (${formattedTime})`);
-      }, 1000);
+    console.log('start timer');
+    let seconds = 0;
+    const intervalId = setInterval(() => {
+      seconds++;
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+      setMatchStatus(`Matching... (${formattedTime})`);
+    }, 1000);
 
-      // Store the timer ID on the socket object
-      customSocket.timerId = intervalId;
+    // Store the timer ID on the socket object
+    customSocket.timerId = intervalId;
 
-      setTimerInterval(intervalId);
-    }
+    setTimerInterval(intervalId);
   };
 
   const stopTimer = () => {
