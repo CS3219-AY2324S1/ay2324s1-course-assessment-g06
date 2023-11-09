@@ -12,11 +12,7 @@ module.exports = function (app) {
 
   app.post("/api/hist/save", [authJwt.verifyToken], controller.addHistory);
 
-  app.post(
-    "/api/hist/customsave",
-    [authJwt.verifyToken],
-    controller.addCustomHistory
-  );
+  app.post("/api/hist/customsave", [authJwt.verifyToken], controller.addCustomHistory);
 
   app.get("/api/hist/attempts", [authJwt.verifyToken], controller.getAttemptedDates );
 
