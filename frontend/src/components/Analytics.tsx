@@ -103,7 +103,7 @@ const Analytics: React.FC = () => {
             difficulty: item.difficulty,
           }));
 
-          setAllQuestionTitles(idAndtitleAndDifficulty);
+          setAllQuestionTitles(idAndTitleAndDifficulty);
         })
         .catch((err) => {
           console.log(err);
