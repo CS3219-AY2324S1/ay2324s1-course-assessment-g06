@@ -114,7 +114,7 @@ exports.getAllQuestions = (req, res) => {
 };
 
 // Controller function to get all questions attempt date for one user
-// NEW Usage: Get request to http://localhost:3003/api/hist/attempts
+// Usage: Get request to http://localhost:3003/api/hist/attempts
 exports.getAttemptedDates = (req, res) => {
   const userId = req.userId;
 
