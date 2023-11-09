@@ -72,7 +72,7 @@ exports.addHistory = async (req, res) => {
 };
 
 // Controller function to create a user history with custom date
-// NEW Usage: Post request to http://localhost:3003/api/hist/customsave
+// Usage: Post request to http://localhost:3003/api/hist/customsave
 exports.addCustomHistory = (req, res) => {
   const userId = req.userId;
   const { questionId, difficulty, attempt, date } = req.body;
