@@ -97,7 +97,7 @@ const Analytics: React.FC = () => {
       fetchAttemptedQuestions(allQuestionIds)
         .then((response) => {
           const data = response.data;
-          const idAndtitleAndDifficulty = data.map((item: any) => ({
+          const idAndTitleAndDifficulty = data.map((item: any) => ({
             question_id: item._id,
             title: item.title,
             difficulty: item.difficulty,
