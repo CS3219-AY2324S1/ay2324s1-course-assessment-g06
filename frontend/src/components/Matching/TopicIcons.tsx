@@ -1,5 +1,3 @@
-import React from 'react';
-
 // To dynamically import icons
 function importAll(r: any) {
   return r.keys().map(r);

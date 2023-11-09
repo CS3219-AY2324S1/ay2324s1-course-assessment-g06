@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useUserCheck from './UserCheck';
 import ErrorPage from '../../pages/Error';
 import { logout } from '../../utils/auth.service';
