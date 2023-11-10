@@ -1,5 +1,5 @@
 import axios from "axios";
-import authHeader from "../services/auth-header";
+import authHeader from "../utils/auth-header";
 
 const USER_HISTORY =
   process.env.REACT_APP_USR_SVC_HIST || "http://localhost:3003/api/hist";

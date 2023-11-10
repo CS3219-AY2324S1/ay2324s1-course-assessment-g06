@@ -6,6 +6,8 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
+import axios from "axios";
+import authHeader from "../utils/auth-header";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
@@ -13,7 +15,7 @@ import {
   fetchAttemptedQuestions,
   fetchQuestionsDetails,
   fetchUserAttemptsDates,
-} from "../services/analytics.service";
+} from "../utils/analytics.service";
 
 type QuestionDetails = {
   Easy: number;
@@ -432,6 +434,7 @@ const Analytics: React.FC = () => {
               backgroundColor: "#E6E6E6",
               borderRadius: "15px",
               marginTop: "20px",
+              marginBottom: "20px",
               boxShadow: "none",
               paddingLeft: "3%",
               paddingRight: "3%",

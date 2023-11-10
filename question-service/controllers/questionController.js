@@ -1,5 +1,4 @@
 const Question = require('../models/question');
-const mongoose = require('mongoose');
 
 module.exports = {
   // Controller function to get all questions where isDeleted is false

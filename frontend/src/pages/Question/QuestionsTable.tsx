@@ -14,9 +14,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import "./Table.css";
+import "../../css/Table.css";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getCurrentUser } from "../services/auth.service";
+import { getCurrentUser } from "../../utils/auth.service";
 
 
 const AddButton = styled(Button)`

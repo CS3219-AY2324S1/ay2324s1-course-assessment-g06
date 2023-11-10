@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import useAdminCheck from './useAdminCheck';
-import ErrorPage from '../ErrorPage';
+import useAdminCheck from './AdminCheck';
+import ErrorPage from '../../pages/Error';
 import CircularProgress from "@mui/material/CircularProgress";
 
 interface AdminProtectedProps {

@@ -25,13 +25,15 @@ exports.signup = (req, res) => {
             },
           },
         }).then((roles) => {
+          // If there are roles to be set, find them and set them.
           user.setRoles(roles).then(() => {
             res.send({ message: 'User registered successfully!' });
           });
         });
       } else {
         // Else, set as normal user
-        // user role = 1
+        // 1 = Role_User
+        // 2 = Role_Admin
         user.setRoles([1]).then(() => {
           res.send({ message: 'User registered successfully!' });
         });
@@ -43,12 +45,14 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+  // Find the user with username
   User.findOne({
     where: {
       username: req.body.username,
     },
   })
     .then((user) => {
+      // If user not found, return 401
       if (!user) {
         return res.status(401).send({ message: 'Invalid username or password' });
       }
@@ -58,6 +62,7 @@ exports.signin = (req, res) => {
         user.password
       );
 
+      // If password is invalid, return 401
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
@@ -65,12 +70,14 @@ exports.signin = (req, res) => {
         });
       }
 
+      // If user is found and password is valid, create token
       const token = jwt.sign({ id: user.id }, config.secret, {
         algorithm: 'HS256',
         allowInsecureKeySizes: true,
         expiresIn: 86400, // 24 hours
       });
 
+      // Get roles and send response with token
       var authorities = [];
       user.getRoles().then((roles) => {
         for (let i = 0; i < roles.length; i++) {
@@ -92,17 +99,21 @@ exports.signin = (req, res) => {
 
 exports.removeUser = (req, res) => {
 
+  // Extract the id from request
   const id = req.userId;
 
+  // Find the user with id
   User.findOne({
     where: {
       id: id,
     },
   })
     .then((user) => {
+      // If user not found, return 404
       if (!user) {
         return res.status(404).send({ message: 'User Not found.' });
       }
+      // Else, delete the user
       user.destroy();
       res.status(200).send({ message: 'User deleted successfully!' });
     })
@@ -112,17 +123,23 @@ exports.removeUser = (req, res) => {
 };
 
 exports.updateProfile = (req, res) => {
+  // Extract the id from request
   const id = req.userId;
+  // Extract the username and email from request
   const { username, email } = req.body;
+
+  // Find the user with id
   User.findOne({
     where: {
       id: id,
     },
   })
     .then((user) => {
+      // If user not found, return 404
       if (!user) {
         return res.status(404).send({ message: 'User Not found.' });
       }
+      // Else, update the user
       user.update({
         username,
         email,
@@ -136,22 +153,28 @@ exports.updateProfile = (req, res) => {
 
 exports.updatePassword = (req, res) => {
 
+  // Extract the id from request
   const id = req.userId;
-
+  // Extract the current password and new password from request
   const { currentPassword, newPassword } = req.body;
+
+  // Find the user with id
   User.findOne({
     where: { id: id },
   }).then((user) => {
+    // If user not found, return 404
     if (!user) {
       return res.status(404).send({ message: 'User Not found.' });
     }
     var passwordIsValid = bcrypt.compareSync(currentPassword, user.password);
+    // If password is invalid, return 401
     if (!passwordIsValid) {
       return res.status(401).send({
         accessToken: null,
         message: 'Invalid Password!',
       });
     }
+    // Else, update the user
     user.update({
       password: bcrypt.hashSync(newPassword, 8),
     });
@@ -161,18 +184,22 @@ exports.updatePassword = (req, res) => {
 
 exports.getProfile = (req, res) => {
 
+  // Extract the id from request
   const id = req.userId;
   
+  // Find the user with id
   User.findOne({
     where: {
       id: id,
     },
   })
     .then((user) => {
+      // If user not found, return 404
       if (!user) {
         return res.status(404).send({ message: 'User Not found.' });
       }
 
+      // Else, send the user
       var authorities = [];
       user.getRoles().then((roles) => {
         for (let i = 0; i < roles.length; i++) {
