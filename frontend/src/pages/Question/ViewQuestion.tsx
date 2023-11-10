@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./Question.css";
+import "../../css/Question.css";
 import { styled } from "@mui/material/styles";
 import { Button, Container, Grid, Paper } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getCurrentUser } from "../services/auth.service";
+import { getCurrentUser } from "../../utils/auth.service";
 
 import {
   Dialog,

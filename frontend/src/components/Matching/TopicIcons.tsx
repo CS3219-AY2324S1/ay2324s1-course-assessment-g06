@@ -1,12 +1,10 @@
-import React from 'react';
-
 // To dynamically import icons
 function importAll(r: any) {
   return r.keys().map(r);
 }
 
-const iconContext = require.context('./icons', false, /\.png$/);
-const activeIconContext = require.context('./icons/active', false, /\.png$/);
+const iconContext = require.context('../../images/topics', false, /\.png$/);
+const activeIconContext = require.context('../../images/topics/active', false, /\.png$/);
 
 const icons: any[] = importAll(iconContext);
 const activeIcons: any[] = importAll(activeIconContext);

@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import { Button, Container, Grid, Paper } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getCurrentUser } from "../services/auth.service";
+import { getCurrentUser } from "../../utils/auth.service";
 
 interface QuestionInt {
   _id: string;
@@ -23,34 +23,6 @@ interface AttemptInt {
   attemptedAt: string;
   attempt: string;
 }
-
-const QuestionWrapper = styled(Container)(({ theme }) => ({
-  backgroundColor: "#d8d8d8",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  fontWeight: "bold",
-  textAlign: "center",
-  borderRadius: "50px",
-  fontSize: "12px",
-  // Media query for smaller screens
-  "@media (max-width: 1200px)": {
-    fontSize: "10px", // Decrease font size for smaller screens
-  },
-}));
-
-const CategoryWrapper = styled(Container)(({ theme }) => ({
-  backgroundColor: "rgb(255, 192, 203)",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  fontWeight: "bold",
-  textAlign: "center",
-  borderRadius: "50px",
-  fontSize: "12px",
-  // Media query for smaller screens
-  "@media (max-width: 1200px)": {
-    fontSize: "10px", // Decrease font size for smaller screens
-  },
-}));
 
 const BackButton = styled(Button)`
   background-color: #d8d8d8;

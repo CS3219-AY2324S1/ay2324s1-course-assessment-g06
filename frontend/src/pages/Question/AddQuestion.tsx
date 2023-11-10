@@ -7,13 +7,13 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
 // Import customised components
-import { FormInputText } from "../form_components/FormInputText";
-import { FormInputDropdown } from "../form_components/FormInputDropdown";
-import { FormMultipleInputDropdown } from "../form_components/FormMultipleInputDropdown";
-import FormInputTextEditor from "../form_components/FormInputTextEditor";
+import { FormInputText } from "../../components/Matching/FormInputText";
+import { FormInputDropdown } from "../../components/Matching/FormInputDropdown";
+import { FormMultipleInputDropdown } from "../../components/Matching/FormMultipleInputDropdown";
+import FormInputTextEditor from "../../components/Matching/FormInputTextEditor";
 
 // Import current user for authentication
-import { getCurrentUser } from "../services/auth.service";
+import { getCurrentUser } from "../../utils/auth.service";
 
 // To instantiate form components
 interface IFormInput {

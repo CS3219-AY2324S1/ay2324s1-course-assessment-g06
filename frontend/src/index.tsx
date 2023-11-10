@@ -5,16 +5,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import BasicTable from "./Table/Table";
-import Question from "./Question/Question";
-import Matching from "./components/Matching/Matching";
-import CodeSpace from "./components/Matching/CodeSpace";
-import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
-import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Home from "./components/Home";
-import Profile from "./components/Profile";
+import BasicTable from "./pages/Question/QuestionsTable";
+import Question from "./pages/Question/ViewQuestion";
+import Matching from "./pages/Matching/Matching";
+import CodeSpace from "./pages/Matching/CodeSpace";
+import AddQuestionForm from "./pages/Question/AddQuestion";
+import UpdateQuestionForm from "./pages/Question/UpdateQuestion";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import IUser from "../types/user.type";
-import { register } from "../services/auth.service";
+import IUser from "../utils/types/user.type";
+import { register } from "../utils/auth.service";
 import mascot from '../images/mascot.png';
 import { Link } from "react-router-dom";
 

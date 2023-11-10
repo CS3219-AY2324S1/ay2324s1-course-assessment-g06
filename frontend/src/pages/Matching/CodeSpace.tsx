@@ -5,18 +5,18 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { addHistory } from "../../services/user-history.service";
-import { runcode } from "../../services/code.service";
-import logo from '../../images/peerPrepLogo.png';
+import { addHistory } from "../../utils/user-history.service";
+import { runcode } from "../../utils/code.service";
+import logo from '../../images/logo.png';
 import PublishIcon from '@mui/icons-material/Publish';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import CircularProgress from "@mui/material/CircularProgress";
-import Sender from "../../images/chatPicture1.png";
-import Receiver from "../../images/chatPicture2.png";
-import CodeExecutionSuccess from "../../images/codeExecutionSuccess.png";
-import CodeExecutionFail from "../../images/codeExecutionFail.png";
-import './CodeSpace.css';
+import Sender from "../../images/chat-sender.png";
+import Receiver from "../../images/chat-receiver.png";
+import CodeExecutionSuccess from "../../images/code-success.png";
+import CodeExecutionFail from "../../images/code-error.png";
+import "../../css/CodeSpace.css";
 
 /////////////////// INTERFACE INITIALISATION  ///////////////////
 interface Question {

@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import mascot from "../images/mascot.png";
 import { Link } from "react-router-dom";
 
-import { login } from "../services/auth.service";
+import { login } from "../utils/auth.service";
 
 type Props = {};
 

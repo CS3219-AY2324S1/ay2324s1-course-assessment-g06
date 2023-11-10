@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCurrentUser, deleteUser, logout } from "../services/auth.service";
+import { getCurrentUser, deleteUser, logout } from "../utils/auth.service";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -7,16 +7,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
-import { NavigateFunction, useNavigate, useLocation } from "react-router-dom";
-import { Alert, TextField } from "@mui/material";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { TextField } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
   getUserProfile,
   updateUserPassword,
   updateUserProfile,
-} from "../services/user.service";
-import profilepic from "../images/profilepicture.png";
+} from "../utils/user.service";
+import profilepic from "../images/default-user.png";
 import CircularProgress from "@mui/material/CircularProgress";
 
 

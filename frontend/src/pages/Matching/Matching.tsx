@@ -2,19 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { socket } from './socket';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
-import './Matching.css';
-import { iconCategories } from './IconMatching';
-import { langNames } from '@uiw/codemirror-extensions-langs';
-import { getCurrentUser } from '../../services/auth.service';
+import '../../css/Matching.css';
+import { iconCategories } from '../../components/Matching/TopicIcons';
+import { getCurrentUser } from '../../utils/auth.service';
 
 // Cast the socket to the CustomSocket type
 const customSocket = socket as CustomSocket;
-
-const scrollableContainerStyle = {
-  overflowX: 'scroll', // Enable horizontal scrolling
-  display: 'flex',     // Make the content flex
-  flexWrap: 'wrap',    // Wrap items to the next line when they exceed the container width
-};
 
 // Define a custom interface that extends the Socket interface
 interface CustomSocket extends Socket {

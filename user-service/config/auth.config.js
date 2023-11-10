@@ -1,8 +1,6 @@
 const dotenv = require('dotenv').config({ path: '../.env' });
 
-// Logging for debugging use
-console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
-
+// This takes the JWT_SECRET from the .env file and exports it to be used in other files
 module.exports = {
   secret: process.env.JWT_SECRET
 };
