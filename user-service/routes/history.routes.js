@@ -34,23 +34,7 @@ module.exports = function (app) {
   // 401 Unauthorized if not authenticated or no token provided
   // 404 on User questions not found
   // 500 on Unexpected errors
-  app.get(
-    "/api/hist/get",
-    [authJwt.verifyToken],
-    controller.getAllUniqueQuestions
-  );
-
-  // Endpoint to get all unique questions from user history by difficulty
-  // Returns:
-  // 200 OK on success
-  // 401 Unauthorized if not authenticated or no token provided
-  // 404 on User questions not found
-  // 500 on Unexpected errors
-  app.get(
-    "/api/hist/get/:difficulty",
-    [authJwt.verifyToken],
-    controller.getAllUniqueQuestionsByDifficulty
-  );
+  app.get("/api/hist/get", [authJwt.verifyToken], controller.getAllQuestions);
 
   // Endpoint to get all attempted dates from user history
   // Returns:
@@ -62,17 +46,5 @@ module.exports = function (app) {
     "/api/hist/attempts",
     [authJwt.verifyToken],
     controller.getAttemptedDates
-  );
-
-  // Endpoint to get all questions from user history
-  // Returns:
-  // 200 OK on success
-  // 401 Unauthorized if not authenticated or no token provided
-  // 404 on User questions not found
-  // 500 on Unexpected errors
-  app.get(
-    "/api/hist/getall",
-    [authJwt.verifyToken],
-    controller.getAllQuestions
   );
 };
