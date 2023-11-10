@@ -202,7 +202,7 @@ export default function Question() {
               </h1>
             </div>
             <div className="mb-3 ml-2">
-              {(isAdmin && !question.isDeleted) && (
+              {(!question.isDeleted) && (
                 <>
                   <Button
                     variant="contained"

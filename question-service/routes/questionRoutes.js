@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const questionController = require("../controllers/questionController");
-const verifyUserToken = require("../middleware/verifyUserToken");
-const verifyUserAdmin = require("../middleware/verifyUserAdmin");
-const verifyUser2Token = require("../middleware/verifyUser2Token");
+
 
 // Route for retrieving questions
 // Endpoint for retrieving all questions
@@ -11,7 +9,7 @@ const verifyUser2Token = require("../middleware/verifyUser2Token");
 // 200 OK on success
 // 401 Unauthorized if not authenticated or no token provided
 // 500 on Unexpected errors
-router.get("/", verifyUserToken, questionController.getAllQuestions);
+router.get("/", questionController.getAllQuestions);
 
 // Endpoint for retrieving first page paginated questions
 // Returns:
@@ -20,7 +18,6 @@ router.get("/", verifyUserToken, questionController.getAllQuestions);
 // 500 on Unexpected errors
 router.get(
   "/pagination/first",
-  verifyUserToken,
   questionController.getFirstPaginatedQuestions
 );
 
@@ -31,7 +28,6 @@ router.get(
 // 500 on Unexpected errors
 router.get(
   "/pagination/remaining",
-  verifyUserToken,
   questionController.getRemainingPaginatedQuestions
 );
 
@@ -43,7 +39,6 @@ router.get(
 // 500 on Unexpected errors
 router.get(
   "/matched",
-  [verifyUserToken, verifyUser2Token],
   questionController.getRandomQuestionByFilter
 );
 
@@ -68,7 +63,7 @@ router.post("/questionbyid", questionController.getQuestionsByIds);
 // 401 Unauthorized if not authenticated or no token provided
 // 403 Forbidden if user is not an admin
 // 500 on Unexpected errors
-router.post("/", verifyUserAdmin, questionController.createQuestion);
+router.post("/", questionController.createQuestion);
 
 // Endpoint for updating a question
 // Returns:
@@ -78,7 +73,7 @@ router.post("/", verifyUserAdmin, questionController.createQuestion);
 // 403 Forbidden if user is not an admin
 // 404 Not Found if question not found
 // 500 on Unexpected errors
-router.put("/:id", verifyUserAdmin, questionController.updateQuestion);
+router.put("/:id", questionController.updateQuestion);
 
 // Endpoint for retrieving a question by id
 // Returns:
@@ -86,7 +81,7 @@ router.put("/:id", verifyUserAdmin, questionController.updateQuestion);
 // 401 Unauthorized if not authenticated or no token provided
 // 404 Not Found if question not found
 // 500 on Unexpected errors
-router.get("/:id", verifyUserToken, questionController.getQuestionById);
+router.get("/:id", questionController.getQuestionById);
 
 // Endpoint for soft deleting a question
 // Returns:
@@ -95,6 +90,6 @@ router.get("/:id", verifyUserToken, questionController.getQuestionById);
 // 403 Forbidden if user is not an admin
 // 404 Not Found if question not found
 // 500 on Unexpected errors
-router.patch("/:id", verifyUserAdmin, questionController.softDeleteQuestion);
+router.patch("/:id", questionController.softDeleteQuestion);
 
 module.exports = router;

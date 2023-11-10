@@ -193,7 +193,6 @@ const BasicTable: React.FC = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Grid>
-        {isAdmin && (
           <Grid item xs={12}>
             <AddButton
               sx={{
@@ -214,8 +213,6 @@ const BasicTable: React.FC = () => {
               +
             </AddButton>
           </Grid>
-        )}
-
       </Grid>
     </Container>
   );
