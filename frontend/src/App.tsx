@@ -126,16 +126,6 @@ const App: React.FC = () => {
                       Home
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link
-                      to={"/matching"}
-                      className="nav-link"
-                      onClick={() => setDropdownOpen(false)}
-                      style={generateActiveStyle("/matching")}
-                    >
-                      Matching
-                    </Link>
-                  </li>
                   <li className="nav-item ">
                     <Link
                       to={"/questions"}
