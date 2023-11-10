@@ -2,8 +2,6 @@ import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
 import BasicTable from "./pages/Question/QuestionsTable";
 import Question from "./pages/Question/ViewQuestion";
-import Matching from "./pages/Matching/Matching";
-import CodeSpace from "./pages/Matching/CodeSpace";
 import AddQuestionForm from "./pages/Question/AddQuestion";
 import UpdateQuestionForm from "./pages/Question/UpdateQuestion";
 import { useState, useEffect } from "react";
@@ -241,26 +239,10 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/matching"
-            element={
-              <Protected token={currentUserAccessToken}>
-                <Matching />
-              </Protected>
-            }
-          />
-          <Route
             path="/home"
             element={
               <Protected token={currentUserAccessToken}>
                 <Analytics />
-              </Protected>
-            }
-          />
-          <Route
-            path="/match/:roomId"
-            element={
-              <Protected token={currentUserAccessToken}>
-                <CodeSpace />
               </Protected>
             }
           />

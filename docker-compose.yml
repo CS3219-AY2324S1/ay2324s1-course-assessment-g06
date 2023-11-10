@@ -31,24 +31,6 @@ services:
     networks:
       - service
 
-  matching-service:
-    build:
-      context: ./matching-service
-    environment:
-      - QNS_SVC=http://question-service:3000/api/questions
-      - USR_SVC_AUTH=http://user-service:3003/api/auth
-      - MTC_SVC_PORT=${MTC_SVC_PORT}
-      - JWT_SECRET=${JWT_SECRET}
-      - CDEX_KEY=${CDEX_KEY}
-      - CDEX_HOST=${CDEX_HOST}
-    ports:
-      - 3002:3002
-    depends_on:
-      - user-service
-      - question-service
-    networks:
-      - service
-
   frontend:
     build:
       context: ./frontend
@@ -56,14 +38,12 @@ services:
       - 3001:3001
     environment: 
       - REACT_APP_QNS_SVC=http://localhost:3000/api/questions
-      - REACT_APP_MTC_SVC=http://localhost:3002
       - REACT_APP_USR_SVC_HIST=http://localhost:3003/api/hist
       - REACT_APP_USR_SVC_AUTH=http://localhost:3003/api/auth
       - REACT_APP_USR_SVC_USER=http://localhost:3003/api/user
     depends_on:
       - user-service
       - question-service
-      - matching-service
     networks:
       - service
 networks:

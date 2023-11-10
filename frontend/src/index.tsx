@@ -7,8 +7,6 @@ import reportWebVitals from "./reportWebVitals";
 
 import BasicTable from "./pages/Question/QuestionsTable";
 import Question from "./pages/Question/ViewQuestion";
-import Matching from "./pages/Matching/Matching";
-import CodeSpace from "./pages/Matching/CodeSpace";
 import AddQuestionForm from "./pages/Question/AddQuestion";
 import UpdateQuestionForm from "./pages/Question/UpdateQuestion";
 import Login from "./pages/Login";
@@ -48,10 +46,6 @@ const router = createBrowserRouter([
       {
         path: "/questions/:id",
         element: <Question />
-      },
-      {
-        path: "/matching",
-        element: <CodeSpace />
       },
       {
         path: "/questions/:id/updat",
