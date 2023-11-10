@@ -108,9 +108,8 @@ const App: React.FC = () => {
           {currentUser ? (
             <>
               <div
-                className={`navbar-collapse collapse ${
-                  isDropdownOpen ? "show" : ""
-                }`}
+                className={`navbar-collapse collapse ${isDropdownOpen ? "show" : ""
+                  }`}
                 id="navbarSupportedContent"
               >
                 <ul className="navbar-nav ml-auto">
@@ -155,9 +154,8 @@ const App: React.FC = () => {
           ) : (
             <>
               <div
-                className={`navbar-collapse collapse ${
-                  isDropdownOpen ? "show" : ""
-                }`}
+                className={`navbar-collapse collapse ${isDropdownOpen ? "show" : ""
+                  }`}
                 id="navbarSupportedContent"
               >
                 <ul className="navbar-nav ml-auto">
@@ -201,17 +199,13 @@ const App: React.FC = () => {
           <Route
             path="/login"
             element={
-              <GuestRoute isLoggedIn={currentUser}>
-                <Login />
-              </GuestRoute>
+              <Login />
             }
           />
           <Route
             path="/register"
             element={
-              <GuestRoute isLoggedIn={currentUser}>
-                <Register />
-              </GuestRoute>
+              <Register />
             }
           />
           <Route
@@ -225,53 +219,41 @@ const App: React.FC = () => {
           <Route
             path="/questions"
             element={
-              <Protected token={currentUserAccessToken}>
-                <BasicTable />
-              </Protected>
+              <BasicTable />
             }
           />
           <Route
             path="/questions/:id"
             element={
-              <Protected token={currentUserAccessToken}>
-                <Question />
-              </Protected>
+              <Question />
             }
           />
           <Route
             path="/home"
             element={
-              <Protected token={currentUserAccessToken}>
-                <Analytics />
-              </Protected>
+              <Analytics />
             }
           />
           <Route
             path="/questions/:id/update"
             element={
-              <Protected token={currentUserAccessToken}>
-                <AdminProtected token={currentUserAccessToken}>
-                  <UpdateQuestionForm />
-                </AdminProtected>
-              </Protected>
+
+              <UpdateQuestionForm />
+
             }
           />
           <Route
             path="/home/:id"
             element={
-              <Protected token={currentUserAccessToken}>
-                <UserAttempt />
-              </Protected>
+              <UserAttempt />
             }
           />
           <Route path="/questions/add-question" element={
-            <Protected token={currentUserAccessToken}>
-              <AdminProtected token={currentUserAccessToken}>
-                <AddQuestionForm />
-              </AdminProtected>
-            </Protected>
-            } />
-          <Route path="*" element={<ErrorPage errorCode="404"/>} />
+
+            <AddQuestionForm />
+
+          } />
+          <Route path="*" element={<ErrorPage errorCode="404" />} />
         </Routes>
       </div>
     </div>
