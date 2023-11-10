@@ -207,7 +207,7 @@ export default function UserAttempt() {
                     paddingLeft: "40px",
                   }}
                   dangerouslySetInnerHTML={{
-                    __html: wrapPreTags(attempt.attempt),
+                    __html: wrapPreTags(attempt.attempt.replace(/\n/g, '<br>')) ,
                   }}
                 />
               </div>
