@@ -93,7 +93,7 @@ exports.addCustomHistory = (req, res) => {
 };
 
 // Controller function to get all questions id for one user
-// Usage: Get request to http://localhost:3003/api/user/hist/get
+// Usage: Get request to http://localhost:3003/api/hist/get
 exports.getAllQuestions = (req, res) => {
   const userId = req.userId;
 

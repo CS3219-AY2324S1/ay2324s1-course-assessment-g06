@@ -78,7 +78,7 @@ export default function UserAttempt() {
 
   useEffect(() => {
     const fetchUserAttempt = () => {
-      fetch(USER_HISTORY + "/getall", {
+      fetch(USER_HISTORY + "/get", {
         headers: {
           "x-access-token": currentUser.accessToken,
         },
@@ -127,10 +127,18 @@ export default function UserAttempt() {
   }
 
   if (question === null) {
-    return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
-      <CircularProgress color="inherit" />
-    </div>
-      ;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "80vh",
+        }}
+      >
+        <CircularProgress color="inherit" />
+      </div>
+    );
   }
 
   return (
@@ -143,8 +151,6 @@ export default function UserAttempt() {
         padding: "20px",
       }}
     >
-
-
       <Paper
         style={{
           padding: "20px",
