@@ -16,9 +16,11 @@ module.exports = (sequelize, Sequelize) => {
     attemptedAt: {
       type: Sequelize.DATE,
       primaryKey: true,
+      allowNull: false
     },
     attempt: {
       type: Sequelize.TEXT,
+      allowNull: false
     },
   });
 
