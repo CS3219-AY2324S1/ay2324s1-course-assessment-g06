@@ -302,7 +302,6 @@ const CodeSpace = () => {
 
       // Listen for 'codeChange' events from the server
       matchedSocket.on('codeChange', (newCode: string) => {
-        console.log(newCode);
         setCode(newCode); // Update the value with the new code
       });
 

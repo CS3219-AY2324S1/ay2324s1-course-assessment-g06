@@ -126,7 +126,6 @@ const Profile: React.FC = () => {
     onSubmit: (values, { resetForm }) => {
       updateUserProfile(values, currentUser.accessToken)
         .then((response) => {
-          console.log(response);
           setProfile((prevProfile) => {
             if (!prevProfile) {
               return null;
@@ -188,7 +187,6 @@ const Profile: React.FC = () => {
         currentUser.accessToken
       )
         .then((response) => {
-          console.log(response);
           setUserErrorMessage("");
           resetForm();
           setShowSuccessModal(true);

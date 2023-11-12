@@ -88,7 +88,6 @@ export default function UpdateForm() {
           const { title, topics, difficulty, content } = responseData;
           setValue("title", title);
           setValue("topics", topics);
-          console.log(topics);
 
           setValue("difficulty", difficulty);
           setEditorContent(content);

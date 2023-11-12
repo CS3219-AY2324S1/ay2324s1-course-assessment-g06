@@ -77,7 +77,6 @@ export default function QuestionForm() {
       content: editorContent,
     };
 
-    console.log(formDataWithEditorContent);
     for (const key in formDataWithEditorContent) {
       if (formDataWithEditorContent.hasOwnProperty(key)) {
         const value = formDataWithEditorContent[key as keyof IFormInput];
@@ -111,7 +110,6 @@ export default function QuestionForm() {
         return response.json();
       })
       .then((responseData) => {
-        console.log("response", responseData);
         const id = responseData._id;
         navigate(`/questions/${id}`);
       })

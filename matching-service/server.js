@@ -260,11 +260,6 @@ io.on('connection', async (socket) => {
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user the other party has left the session
       socket.to(roomId).emit('quitSession');
-      // Removed for now, we give user the choice to choose to leave or stay
-      // Emit an event to inform the other user that the session is ending
-      // socket.to(roomId).emit('sessionEnded');
-      // // Leave the room
-      // socket.leave(roomId);
   
       // Remove the room from the 'rooms' map
       removeRoomSession(roomId);
@@ -279,7 +274,6 @@ io.on('connection', async (socket) => {
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
-      // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
 
       // If user is alone in the room (other user has quit)
       if (otherUserQuit) {
@@ -309,7 +303,6 @@ io.on('connection', async (socket) => {
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
-      // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
       socket.to(roomId).emit('submitSession', questionId, questionDifficulty);
       // Leave the room
       socket.leave(roomId);
@@ -339,8 +332,6 @@ function removeRoomSession(roomId) {
 
 async function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic, accessToken) {
   const roomId = uuidv4();
-  // console.log("This is the accesstoken1: " + user1Socket.accessToken);
-  // console.log("This is the accesstoken2: " + accessToken);
 
   const accessToken1 = user1Socket.accessToken;
   const accessToken2 = accessToken;
@@ -388,7 +379,6 @@ async function startMatch(user1Socket, user2Socket, selectedDifficulty, selected
 }
 
 async function generateQuestion(difficulty, topic, accessToken1, accessToken2) {
-  // console.log("This is the accesstoken: " + accessToken);
   try {
     const response = await fetch(
       QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`, {
@@ -398,7 +388,6 @@ async function generateQuestion(difficulty, topic, accessToken1, accessToken2) {
         },
       }
     );
-    console.log(QUESTION_HOST);
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }

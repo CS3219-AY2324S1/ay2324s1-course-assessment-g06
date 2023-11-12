@@ -129,7 +129,6 @@ export default function Question() {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log("Question deleted successfully");
           navigate("/questions");
         } else {
           console.error("Error deleting question:", response.statusText);
