@@ -87,7 +87,6 @@ app.get('/api/room/:roomId', async (req, res) => {
   }
 
   // Access the access token from the room's data
-  // @Sean, these are the 2 access token to use for verification
   const accessToken1 = roomInfo.accessToken1;
   const accessToken2 = roomInfo.accessToken2;
 
@@ -117,7 +116,6 @@ app.get('/api/room/:roomId', async (req, res) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
         }
-        // console.log("success", response.json());
         return response.json();
       })
       .then((responseData) => {

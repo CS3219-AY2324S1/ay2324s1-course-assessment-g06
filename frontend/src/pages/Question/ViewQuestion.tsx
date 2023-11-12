@@ -18,17 +18,6 @@ import {
   Button as DialogButton,
 } from "@mui/material";
 
-const DeleteButton = styled(Button)`
-  background-color: #ff5733;
-  color: black;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  &:hover {
-    background-color: #fe6848;
-  }
-`;
-
 interface QuestionInt {
   _id: string;
   title: string;

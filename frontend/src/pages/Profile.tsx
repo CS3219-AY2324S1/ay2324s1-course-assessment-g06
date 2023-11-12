@@ -61,7 +61,6 @@ const Profile: React.FC = () => {
 
   // Fetch user details to display
   useEffect(() => {
-    const id = getCurrentUser().id;
     getUserProfile(currentUser.accessToken)
       .then((response) => {
         setProfile(response.data);

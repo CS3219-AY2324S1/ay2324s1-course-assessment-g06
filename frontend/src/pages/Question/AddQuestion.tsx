@@ -66,8 +66,6 @@ export default function QuestionForm() {
   const QUESTION_HOST = process.env.REACT_APP_QNS_SVC || 'http://localhost:3000/api/questions';
   const currentUser = getCurrentUser();
 
-  // console.log(control._formValues.topics);
-
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Access form data using methods.getValues() if you are using react-hook-form
@@ -87,7 +85,6 @@ export default function QuestionForm() {
           console.error(`${key} is empty`);
           setFormSubmitted(true);
           setErrorMessage(`Required fields cannot be empty`);
-          // setErrorMessage(`${key} is empty`);
           return;
         }
       }
@@ -131,8 +128,6 @@ export default function QuestionForm() {
   // Update editor content when it changes
   const editorHandleChange = (newContent: string) => {
     setEditorContent(newContent);
-    // console.log(control._formValues);
-
   };
 
   return (

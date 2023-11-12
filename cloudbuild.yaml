@@ -20,16 +20,8 @@ steps:
   '--image', 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA', 
   '--region', '${_REGION}',
   '--port', '${_USER_PORT}',
-  # Fack no .env file here
-  # '--env-vars-file', './.env',
-  # future iteration maybe i set it here see how
-  # '--set-env-vars=',
-  # ''
-  # kms
   "--allow-unauthenticated"
   ]
-  # if need be in the future
-  # env:
 
 # Build the question-service
 - name: 'gcr.io/cloud-builders/docker'

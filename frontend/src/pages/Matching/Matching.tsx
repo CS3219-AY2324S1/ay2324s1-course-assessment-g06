@@ -15,7 +15,6 @@ interface CustomSocket extends Socket {
 }
 
 const Matchmaking: React.FC = () => {
-  const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy');
@@ -86,14 +85,12 @@ const Matchmaking: React.FC = () => {
       if (isMatching) {
         setIsMatching(false);
       }
-      setIsConnected(true);
     }
 
     function onDisconnect() {
       if (isMatching) {
         setIsMatching(false);
       }
-      setIsConnected(false);
     }
 
     // Listen for the 'connect' event to check the connection status

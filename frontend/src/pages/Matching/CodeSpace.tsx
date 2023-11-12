@@ -381,11 +381,6 @@ const CodeSpace = () => {
 
       // Handle disconnection event
       matchedSocket.on('userDisconnected', (roomId) => {
-        // if (isTimerEndSubmitDialogOpen) {
-        //   alert('The other user has disconnected');
-        //   navigate("/matching");
-        // }
-        // openDisconnectionDialog();
 
         // Send a message to the chat when a user disconnects
         const messageData: ChatMessage = {
@@ -396,9 +391,6 @@ const CodeSpace = () => {
         };
         setHasQuitRoom(true);
         setMessageList((list) => [...list, messageData]);
-
-        // alert('The other user has disconnected');
-        // navigate("/matching");
 
         setOtherUserQuit(true);
         openQuitDialog(); // Open the confirmation dialog
