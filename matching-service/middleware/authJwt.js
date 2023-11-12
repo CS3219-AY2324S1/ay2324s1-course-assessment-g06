@@ -27,9 +27,7 @@ verifyToken = async (req, res, next) => {
     }
     // This is okay because we know the token is validated by the user-service
     let decoded = jwt.decode(token);
-    console.log("JWT claims:", decoded);
     req.userId = decoded.id;
-    console.log("req.userId:", req.userId);
     next();
   } catch (error) {
     console.error("Error verifying token with matching-service:", error.message);

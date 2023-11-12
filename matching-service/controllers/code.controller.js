@@ -44,8 +44,6 @@ exports.runcode = async (req, res) => {
       console.log("result of execution:", response.data);
     } catch (error) {
       upsertPromises.push(Promise.reject(error));
-      console.log(XApiKey);
-      console.log(XApiHost);
       console.error("error in controller:", error.response.data.message);
     }
 

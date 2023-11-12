@@ -29,11 +29,6 @@ const USER_SERVICE = process.env.USR_SVC_AUTH
   ? process.env.USR_SVC_AUTH
   : "http://localhost:3003/api/auth";
 
-console.log("process.env.QNS_SVC:", process.env.QNS_SVC);
-console.log("process.env.MTC_SVC_PORT:", process.env.MTC_SVC_PORT);
-console.log("process.env.USR_SVC_AUTH:", process.env.USR_SVC_AUTH);
-console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
-
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -69,10 +64,8 @@ server.listen(MATCHING_PORT, () => {
 });
 
 app.get('/api/room/:roomId', async (req, res) => {
-  console.log('Received GET request for /api/room/:roomId');
   const roomId = req.params.roomId;
   const roomInfo = rooms.get(roomId);
-  console.log("rooms data: ", rooms);
 
   // Check if roomInfo is defined
   if (!roomInfo) {
