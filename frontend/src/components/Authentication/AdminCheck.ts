@@ -8,13 +8,11 @@ const useAdminCheck = (token: string) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log(token);
     axios.get(`${auth_server}/verifyAdmin`, {
       headers: { 'x-access-token': token }
     })
     .then(response => {
       setIsAdmin(response.status === 200);
-      console.log(response);
     })
     .catch((e) => {
       setIsAdmin(false);

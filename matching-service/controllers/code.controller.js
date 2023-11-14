@@ -8,7 +8,6 @@ const XApiHost = process.env.CDEX_HOST;
 // USAGE: POST request to http://localhost:3002/api/code/run or
 // (For testing third-party only) directly to https://onecompiler-apis.p.rapidapi.com/api/v1/run
 exports.runcode = async (req, res) => {
-  console.log("controller.runcode req.body:", req.body);
   
   try {
     const code = req.body.code;
@@ -42,12 +41,9 @@ exports.runcode = async (req, res) => {
     try {
       const response = await axios.request(options);
       upsertPromises.push(Promise.resolve(response.data));
-      // console.log(response)
       console.log("result of execution:", response.data);
     } catch (error) {
       upsertPromises.push(Promise.reject(error));
-      console.log(XApiKey);
-      console.log(XApiHost);
       console.error("error in controller:", error.response.data.message);
     }
 

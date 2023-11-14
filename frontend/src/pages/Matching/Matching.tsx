@@ -15,7 +15,6 @@ interface CustomSocket extends Socket {
 }
 
 const Matchmaking: React.FC = () => {
-  const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
   const [matchStatus, setMatchStatus] = useState<string>('');
   const [isMatching, setIsMatching] = useState<boolean>(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Easy');
@@ -86,14 +85,12 @@ const Matchmaking: React.FC = () => {
       if (isMatching) {
         setIsMatching(false);
       }
-      setIsConnected(true);
     }
 
     function onDisconnect() {
       if (isMatching) {
         setIsMatching(false);
       }
-      setIsConnected(false);
     }
 
     // Listen for the 'connect' event to check the connection status
@@ -109,7 +106,6 @@ const Matchmaking: React.FC = () => {
   }, [isMatching]);
 
   const startTimer = () => {
-    console.log('start timer');
     let seconds = 0;
     const intervalId = setInterval(() => {
       seconds++;
@@ -127,7 +123,6 @@ const Matchmaking: React.FC = () => {
 
   const stopTimer = () => {
     if (timerInterval !== null) {
-      console.log('stop timer');
       clearInterval(timerInterval);
       setTimerInterval(null);
       setMatchStatus('');
@@ -148,7 +143,6 @@ const Matchmaking: React.FC = () => {
     } else {
       startTimer();
       setMatchStatus('Matching...');
-      console.log("matching with", selectedDifficulty, selectedTopic, selectedLanguage)
       socket.emit('match me', selectedDifficulty, selectedTopic, selectedLanguage, currentUser.accessToken);
 
       // Automatically cancel the match after 20 seconds

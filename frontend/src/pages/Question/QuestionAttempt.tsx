@@ -88,7 +88,6 @@ export default function UserAttempt() {
           const targetData = responseData.find(
             (item: any) => item.question_id === `${id}`
           );
-          console.log(targetData);
           setAttempt(targetData);
           setIsLoading(false);
         })
@@ -107,7 +106,6 @@ export default function UserAttempt() {
   }
 
   const handleBack = () => {
-    console.log("navigated back to analytics");
     navigate("/home");
   };
 

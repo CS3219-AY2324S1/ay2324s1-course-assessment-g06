@@ -6,8 +6,6 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import { useState, useEffect } from "react";
 import HeatMap from "@uiw/react-heat-map";
-import axios from "axios";
-import authHeader from "../utils/auth-header";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import {

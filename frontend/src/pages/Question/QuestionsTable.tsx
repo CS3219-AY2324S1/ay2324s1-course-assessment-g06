@@ -57,8 +57,6 @@ const BasicTable: React.FC = () => {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(currentUser.accessToken);
-        console.log(responseData);
         setData(responseData);
         setIsLoading(false);
       })
@@ -77,8 +75,6 @@ const BasicTable: React.FC = () => {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(currentUser.accessToken);
-        console.log(responseData);
         setData((prevData) => [...prevData, ...responseData]);
       })
       .catch((error) => {
