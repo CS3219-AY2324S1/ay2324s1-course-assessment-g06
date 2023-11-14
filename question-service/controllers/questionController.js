@@ -1,5 +1,4 @@
 const Question = require('../models/question');
-const mongoose = require('mongoose');
 
 module.exports = {
   // Controller function to get all questions where isDeleted is false
@@ -44,7 +43,6 @@ module.exports = {
   // Usage: Get request to http://localhost:3000/api/questions/:id
   getQuestionById: (req, res) => {
     const { id } = req.params; // Get the _id from the request params
-    console.log('Getting Qn with ID:', id);
     Question.findOne({ _id: id })
       .then((question) => {
         if (!question) {
@@ -59,9 +57,6 @@ module.exports = {
   // Controller function to create a new question
   // Usage: Post request to http://localhost:3000/api/questions
   createQuestion: (req, res) => {
-    console.log(
-      'Mongo posting question to http://localhost:3000/api/questions'
-    );
     const { title, frontendQuestionId, difficulty, content, category, topics } =
       req.body;
 
@@ -214,7 +209,6 @@ module.exports = {
   getQuestionsByIds: (req, res) => {
     const { ids } = req.body; // Get an array of _ids from the request body
 
-    console.log('Getting Questions with IDs:', ids);
 
     Question.find({ _id: { $in: ids } })
       .then((questions) => {

@@ -10,7 +10,7 @@ module.exports = function (app) {
         next();
     });
 
-    console.log("calling matching app post to /api/code/run");
+   
     app.post('/api/code/run', [authJwt.verifyToken], controller.runcode);
 
 };

@@ -1,40 +1,35 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import BasicTable from "./Table/Table";
-import Question from "./Question/Question";
-import Matching from "./components/Matching/Matching";
-import CodeSpace from "./components/Matching/CodeSpace";
-import AddQuestionForm from "./AddQuestionForm/AddQuestionForm";
-import UpdateQuestionForm from "./UpdateQuestionForm/UpdateQuestionForm";
+import BasicTable from "./pages/Question/QuestionsTable";
+import Question from "./pages/Question/ViewQuestion";
+import Matching from "./pages/Matching/Matching";
+import CodeSpace from "./pages/Matching/CodeSpace";
+import AddQuestionForm from "./pages/Question/AddQuestion";
+import UpdateQuestionForm from "./pages/Question/UpdateQuestion";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import $ from "jquery"; // Import jQuery
 import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Import Bootstrap JavaScript (with Popper.js included)
-import * as AuthService from "./services/auth.service";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Home from "./components/Home";
-import Profile from "./components/Profile";
-import Protected from "./components/Protected/Protected";
-import AdminProtected from "./components/AdminProtected/AdminProtected";
-import ErrorPage from "./components/ErrorPage";
-import GuestRoute from "./components/GuestRoute";
-import EventBus from "./common/EventBus";
-import logo from "./images/peerPrepLogo.png";
-import Analytics from "./components/Analytics";
+import * as AuthService from "./utils/auth.service";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
+import Protected from "./components/Authentication/Protected";
+import AdminProtected from "./components/Authentication/AdminProtected";
+import ErrorPage from "./pages/Error";
+import GuestRoute from "./components/Authentication/GuestRoute";
+import EventBus from "./components/EventBus";
+import logo from "./images/logo.png";
+import Analytics from "./pages/Analytics";
 
 import "./App.css";
-import "./Table/Table";
-import UserAttempt from "./UserAttempt/UserAttempt";
-import { getCurrentUser } from "./services/auth.service";
+import "./pages/Question/QuestionsTable";
+import UserAttempt from "./pages/Question/QuestionAttempt";
+import { getCurrentUser } from "./utils/auth.service";
 
 const App: React.FC = () => {
-  console.log("QNS_SVC: ", process.env.REACT_APP_QNS_SVC);
-  console.log("MTC_SVC: ", process.env.REACT_APP_MTC_SVC);
-  console.log("REACT_APP_USR_SVC_HIST: ", process.env.REACT_APP_USR_SVC_HIST);
-  console.log("REACT_APP_USR_SVC_AUTH: ", process.env.REACT_APP_USR_SVC_AUTH);
-  console.log("REACT_APP_USR_SVC_USER: ", process.env.REACT_APP_USR_SVC_USER);
   const [currentUser, setCurrentUser] = useState<boolean>(() =>
     localStorage.getItem("user") ? true : false
   );

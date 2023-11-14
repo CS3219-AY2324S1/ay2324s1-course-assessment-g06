@@ -29,11 +29,6 @@ const USER_SERVICE = process.env.USR_SVC_AUTH
   ? process.env.USR_SVC_AUTH
   : "http://localhost:3003/api/auth";
 
-console.log("process.env.QNS_SVC:", process.env.QNS_SVC);
-console.log("process.env.MTC_SVC_PORT:", process.env.MTC_SVC_PORT);
-console.log("process.env.USR_SVC_AUTH:", process.env.USR_SVC_AUTH);
-console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
-
 const io = socketIo(server, {
   cors: {
     origin: "*",
@@ -69,10 +64,8 @@ server.listen(MATCHING_PORT, () => {
 });
 
 app.get('/api/room/:roomId', async (req, res) => {
-  console.log('Received GET request for /api/room/:roomId');
   const roomId = req.params.roomId;
   const roomInfo = rooms.get(roomId);
-  console.log("rooms data: ", rooms);
 
   // Check if roomInfo is defined
   if (!roomInfo) {
@@ -87,7 +80,6 @@ app.get('/api/room/:roomId', async (req, res) => {
   }
 
   // Access the access token from the room's data
-  // @Sean, these are the 2 access token to use for verification
   const accessToken1 = roomInfo.accessToken1;
   const accessToken2 = roomInfo.accessToken2;
 
@@ -117,7 +109,6 @@ app.get('/api/room/:roomId', async (req, res) => {
         if (!response.ok) {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
         }
-        // console.log("success", response.json());
         return response.json();
       })
       .then((responseData) => {
@@ -262,11 +253,6 @@ io.on('connection', async (socket) => {
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user the other party has left the session
       socket.to(roomId).emit('quitSession');
-      // Removed for now, we give user the choice to choose to leave or stay
-      // Emit an event to inform the other user that the session is ending
-      // socket.to(roomId).emit('sessionEnded');
-      // // Leave the room
-      // socket.leave(roomId);
   
       // Remove the room from the 'rooms' map
       removeRoomSession(roomId);
@@ -281,7 +267,6 @@ io.on('connection', async (socket) => {
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
-      // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
 
       // If user is alone in the room (other user has quit)
       if (otherUserQuit) {
@@ -311,7 +296,6 @@ io.on('connection', async (socket) => {
     // Check if the user is in the specified room
     if (socket.rooms.has(roomId)) {
       // Emit an event to inform the other user that the session is being submitted
-      // console.log("sharing id and difficulty: ", questionId, questionDifficulty);
       socket.to(roomId).emit('submitSession', questionId, questionDifficulty);
       // Leave the room
       socket.leave(roomId);
@@ -341,8 +325,6 @@ function removeRoomSession(roomId) {
 
 async function startMatch(user1Socket, user2Socket, selectedDifficulty, selectedTopic, accessToken) {
   const roomId = uuidv4();
-  // console.log("This is the accesstoken1: " + user1Socket.accessToken);
-  // console.log("This is the accesstoken2: " + accessToken);
 
   const accessToken1 = user1Socket.accessToken;
   const accessToken2 = accessToken;
@@ -390,7 +372,6 @@ async function startMatch(user1Socket, user2Socket, selectedDifficulty, selected
 }
 
 async function generateQuestion(difficulty, topic, accessToken1, accessToken2) {
-  // console.log("This is the accesstoken: " + accessToken);
   try {
     const response = await fetch(
       QUESTION_HOST + `/matched?difficulty=${difficulty}&topics=${topic}`, {
@@ -400,7 +381,6 @@ async function generateQuestion(difficulty, topic, accessToken1, accessToken2) {
         },
       }
     );
-    console.log(QUESTION_HOST);
     if (!response.ok) {
       throw new Error(`Failed to fetch question. Status: ${response.status}`);
     }
