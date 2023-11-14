@@ -81,7 +81,7 @@ steps:
   "--allow-unauthenticated"
   ]
 
-# testing
+# Images to store in Container Registry
 images:
 - 'gcr.io/$PROJECT_ID/user-service:$COMMIT_SHA'
 - 'gcr.io/$PROJECT_ID/question-service:$COMMIT_SHA'
