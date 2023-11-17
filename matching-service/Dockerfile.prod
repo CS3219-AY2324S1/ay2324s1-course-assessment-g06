@@ -1,0 +1,11 @@
+FROM node:alpine as build
+WORKDIR /src/app
+
+COPY package*.json ./
+RUN npm install
+
+
+COPY . .
+EXPOSE 3002
+CMD [ "node", "server.js" ]
+

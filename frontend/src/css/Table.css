@@ -1,0 +1,11 @@
+.table-row:hover {
+  background-color: #f0f0f0; /* Change the background color when hovering */
+}
+
+.MuiTablePagination-selectLabel {
+  margin-bottom: 0;
+}
+
+.MuiTablePagination-displayedRows {
+  margin-bottom: 0;
+}

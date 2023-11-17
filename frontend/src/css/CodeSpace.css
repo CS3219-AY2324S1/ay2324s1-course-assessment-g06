@@ -1,0 +1,376 @@
+/* CodeSpace.css */
+
+h1.question-title {
+  font-size: 25px;
+  font-weight: bold;
+  padding: 0px 0px 0px 0px;
+}
+
+br.column-view {
+  display: none;
+  /* Hide <br /> by default */
+}
+
+/* Media query to hide */
+@media screen and (min-width: 767px) {
+  br.column-view {
+    display: block;
+  }
+}
+
+/* Style for the chat container */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  /* Change the direction to column */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: 388px;
+  width: 100%;
+}
+
+/* Style for chat messages */
+.chat-messages {
+  flex-grow: 1;
+  /* Make the chat messages expand and fill the available space */
+  margin-bottom: 10px;
+  /* Add some spacing at the bottom */
+  max-height: 100%;
+  /* Ensure messages don't overflow */
+  overflow-y: auto;
+  padding: 5px;
+}
+
+/* Style for individual chat messages */
+.chat-message {
+  margin-bottom: 5px;
+  padding: 10px 15px;
+  background-color: #f5f5f5;
+  border-radius: 15px;
+  word-wrap: break-word;
+}
+
+/* Style for code mirror */
+.cm-editor {
+  border-radius: 0 0 15px 15px;
+}
+
+.cm-glutters {
+  border-radius: 0 0 15px 15px;
+}
+
+.cm-scroller {
+  border-radius: 0 0 15px 15px;
+}
+
+/* Style for the chat input field */
+.chat-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  border-radius: 15px;
+  background-color: rgb(240, 240, 240);
+}
+
+
+/* Style for the chat input field and button */
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  /* Make the input field transparent */
+}
+
+.chat-input input:focus {
+  outline: none;
+  /* Disable the focus outline */
+}
+
+.chat-message {
+  display: flex;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
+.message-meta {
+  margin-left: 5px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: gray;
+  /* Add styles for meta information here */
+}
+
+.message-container {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.question-container {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  min-height: 535px;
+  height: 535px;
+  max-height: 535px;
+
+  width: 100%;
+  height: 100%;
+  border-radius: 15px !important;
+  max-width: 100%;
+  /* max-height: 800px; */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* overflow-x: hidden; */
+}
+
+.question-content-container {
+  overflow-x: hidden;
+  padding: 25px;
+  min-height: 500px;
+  height: 500px;
+  max-height: 500px;
+  overflow-y: auto;
+
+  border-radius: 15px !important;
+}
+
+/* Code Execution Component Styles */
+.code-output-container {
+  overflow-y: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px !important;
+  max-width: 100%;
+
+  min-height: 185px;
+  height: 185px;
+  max-height: 185px;
+
+  /* max-height: 800px; */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
+}
+
+.code-output-content-container {
+  font-family: "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+  font-size: 14px;
+  overflow-x: hidden;
+  padding: 15px 10px 10px 20px;
+  min-height: 160px;
+  height: 160px;
+  max-height: 160px;
+  overflow-y: auto;
+
+  border-radius: 15px !important;
+}
+
+.success-status {
+  height: 17px;
+  width: 17px;
+}
+
+.failed-status {
+  height: 17px;
+  width: 17px;
+}
+
+p {
+  size: 12px;
+}
+
+/* Quit button */
+button.quit-button {
+  background-color: #ff4646;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+/* Submit button */
+button.submit-button {
+  background-color: #6C63FF;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+/* Run button */
+button.run-button {
+  background-color: rgb(240, 240, 240);
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 20px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+button.submit-button:hover {
+  background-color: #9792f9;
+  color: white;
+}
+
+button.quit-button:hover {
+  background-color: #ff6464;
+  color: white;
+}
+
+hr {
+  margin: 0 auto !important;
+  margin-top: 10px;
+  display: block;
+  width: 95%;
+  background-color: black;
+  height: 1px;
+}
+
+button.submit-button:hover {
+  background-color: #fdfdfd;
+  color: black;
+}
+
+.timer {
+  font-weight: bold;
+  font-size: 25px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  /* Center vertically */
+  line-height: 40px;
+  padding-top: 10px;
+  padding-right: 7px;
+}
+
+/* Style for card headers */
+.card-header {
+  font-size: 12px;
+  background-color: rgb(240, 240, 240) !important;
+  padding-top: 5px !important;
+  padding-left: 20px !important;
+  height: 30px;
+  border-radius: 15px 15px 0px 0px !important;
+  font-weight: bold;
+}
+
+.tag-container {
+  max-width: 100%;
+  padding: 0px 0px 20px 10px;
+}
+
+/* Style for question tags */
+.topic-tag {
+  background-color: #d8d8d8;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50px;
+  font-size: 12px;
+  float: left;
+  padding: 5px 15px;
+  margin-right: 5px;
+}
+
+.difficulty-tag {
+  background-color: rgb(255, 192, 203);
+  font-weight: bold;
+  text-align: center;
+  border-radius: 50px;
+  font-size: 12px;
+  float: left;
+  padding: 5px 15px;
+  margin-right: 5px;
+}
+
+/* Style for codespace */
+.codespace {
+  margin: 0 auto;
+  border-radius: 15px !important;
+  width: 100%;
+  max-width: 100%;
+  /* max-height: 800px; */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for 'own' messages */
+.own {
+  justify-content: flex-start;
+  background-color: rgb(240, 240, 240);
+  float: right;
+  margin-right: 15px;
+}
+
+/* Style for 'other' messages */
+.other {
+  justify-content: flex-end;
+  background-color: rgb(240, 240, 240);
+  float: left;
+  margin-left: 15px;
+}
+
+.chat-avatar-message {
+  height: 60px;
+}
+
+/* Style for 'own' messages avatar */
+.sender-avatar {
+  clear: both;
+  float: left;
+  height: 45px;
+  width: 45px;
+  margin-left: 10px;
+}
+
+/* Style for 'other' messages avatar */
+.receiver-avatar {
+  clear: both;
+  float: right;
+  height: 45px;
+  width: 45px;
+  margin-right: 10px;
+}
+
+/* Style for typing indicator */
+.typing-indicator {
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
+  margin-right: 15px;
+}
+
+/* CSS for System Messages */
+.system {
+  font-weight: bold;
+  text-align: center;
+  /* Center-align the system message */
+  margin: 0 auto;
+  /* Center horizontally */
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px;
+  max-width: 80%;
+  /* Adjust the maximum width as needed */
+  clear: both;
+}

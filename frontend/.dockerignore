@@ -1,0 +1,4 @@
+**/node_modules
+**/np-debug.log
+*.build
+*./.env
